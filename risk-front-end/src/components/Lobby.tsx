@@ -1,8 +1,13 @@
+import {useTranslation} from 'react-i18next';
+
+
 export default function Lobby() {
+    const {t} = useTranslation();
+
 
     return (
         <div>
-            Dit is de lobby
+            {t('welcome_message')}
         </div>
     );
 }
