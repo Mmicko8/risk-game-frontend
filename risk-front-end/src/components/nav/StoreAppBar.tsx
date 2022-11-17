@@ -6,6 +6,9 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import {Link} from "react-router-dom";
+import {useContext} from "react";
+import UserContext, {IUserContext} from "../../context/UserContext";
+import Button from '@mui/material/Button';
 
 type HeaderProps = {
     onOpenDrawer: () => void;
@@ -15,7 +18,7 @@ type HeaderProps = {
  */
 export default function StoreAppBar({onOpenDrawer}: HeaderProps) {
     //hooks
-
+    const {player, togglePlayer} = useContext<IUserContext>(UserContext);
 
     //appbar tonen op het scherm
     return (
@@ -26,11 +29,12 @@ export default function StoreAppBar({onOpenDrawer}: HeaderProps) {
                         <MenuIcon/>
                     </IconButton>
                     <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
-                        <Link style={{textDecoration: "none", color: "white"}} to={"/departments"}>
-                            StoreManager
+                        <Link style={{textDecoration: "none", color: "white"}} to={"/"}>
+                            Risky Business
                         </Link>
                     </Typography>
-
+                    <Button onClick={togglePlayer}
+                            color="inherit">{player == null ? "Log in" : player.name + " Log uit"}</Button>
                 </Toolbar>
             </AppBar>
         </Box>
