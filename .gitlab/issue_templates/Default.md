@@ -8,11 +8,11 @@
 
 ### Acceptance criteria
 
-### Testdata
+#### Testdata
 
-### Scenarios
+#### Scenarios
 
-Definition of Ready checklist
+### Definition of Ready checklist
 - [x] Independent  Kan de user story voldoende op zichzelf ontwikkeld worden
 - [ ] Negotiable Is er voldoende gediscussieerd over de inhoud
 - [ ] Valuable Kan je een duidelijke prioriteit vastleggen
