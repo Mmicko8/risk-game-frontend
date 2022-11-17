@@ -1,16 +1,16 @@
-User story description
+### User story description
 
-Preconditions
+### Preconditions
 
-Postconditions
+### Postconditions
 
-Default proces description
+### Default proces description
 
-Acceptance criteria
+### Acceptance criteria
 
-Testdata
+### Testdata
 
-Scenarios
+### Scenarios
 
 Definition of Ready checklist
 - [x] Independent  Kan de user story voldoende op zichzelf ontwikkeld worden
