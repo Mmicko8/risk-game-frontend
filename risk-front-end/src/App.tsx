@@ -1,26 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+import React, {useState} from 'react';
+import axios from "axios";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import Lobby from "./components/Lobby";
+import StoreAppBar from "./components/nav/StoreAppBar";
+import {Navigation} from "./components/nav/Navigation";
+
+
+axios.defaults.baseURL = "http://localhost:3001";
+const queryClient = new QueryClient();
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const [drawerOpen, setDrawerOpen] = useState(false);
+
+    const handleDrawerToggle = () => {
+        setDrawerOpen(!drawerOpen);
+    }
+
+    return (
+        <>
+            <QueryClientProvider client={queryClient}>
+                <BrowserRouter>
+                    <StoreAppBar onOpenDrawer={handleDrawerToggle}/>
+                    <Navigation isOpen={drawerOpen} onClose={() => setDrawerOpen(false)}/>
+                    <Routes>
+                        <Route path="/" element={<Lobby/>}/>
+                    </Routes>
+                </BrowserRouter>
+            </QueryClientProvider>
+        </>
+    );
 }
 
 export default App;
