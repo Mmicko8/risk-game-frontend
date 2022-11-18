@@ -6,6 +6,9 @@ import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import Lobby from "./components/Lobby";
 import StoreAppBar from "./components/nav/StoreAppBar";
 import {Navigation} from "./components/nav/Navigation";
+import {Login} from "@mui/icons-material";
+import SignIn from "./components/identity/SignIn";
+import Register from "./components/identity/Register";
 
 
 axios.defaults.baseURL = "http://localhost:3001";
@@ -26,6 +29,8 @@ function App() {
                     <Navigation isOpen={drawerOpen} onClose={() => setDrawerOpen(false)}/>
                     <Routes>
                         <Route path="/" element={<Lobby/>}/>
+                        <Route path="/sign_in" element={<SignIn/>}/>
+                        <Route path="/register" element={<Register/>}/>
                     </Routes>
                 </BrowserRouter>
             </QueryClientProvider>

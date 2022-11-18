@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {useContext} from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -6,7 +7,6 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import {Link} from "react-router-dom";
-import {useContext} from "react";
 import UserContext, {IUserContext} from "../../context/UserContext";
 import Button from '@mui/material/Button';
 
@@ -33,8 +33,14 @@ export default function StoreAppBar({onOpenDrawer}: HeaderProps) {
                             Risky Business
                         </Link>
                     </Typography>
-                    <Button onClick={togglePlayer}
-                            color="inherit">{player == null ? "Log in" : player.name + " Log uit"}</Button>
+                    <Link style={{textDecoration: 'none'}} to={`/register`}>
+                        <Button
+                            color="inherit">Register</Button>
+                    </Link>
+                    <Link style={{textDecoration: 'none'}} to={`/sign_in`}>
+                        <Button
+                            color="inherit">Sign in</Button>
+                    </Link>
                 </Toolbar>
             </AppBar>
         </Box>
