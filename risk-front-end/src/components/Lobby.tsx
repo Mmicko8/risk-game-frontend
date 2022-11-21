@@ -5,7 +5,7 @@ import {useState} from "react";
 
 export default function Lobby() {
 
-    const selectCountry = (e: string, country: string) => {
+    const selectCountry = (e: any, country: string) => {
         console.log(e, country);
     };
 
