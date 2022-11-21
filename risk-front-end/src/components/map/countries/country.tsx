@@ -5,10 +5,15 @@ interface CountryProps {
     d: string;
     name: string;
     _armies: number;
+    callback: (e: any, country: string ) => void;
 }
 
-export default function Country({d, name, _armies}: CountryProps) {
+/**
+ * A country on the map
+ */
+export default function Country({d, name, _armies,callback}: CountryProps) {
+
     return <g>
-        <Path name={name} d={d}/>
+        <Path callback={callback} name={name} d={d}/>
     </g>
 }

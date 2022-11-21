@@ -4,10 +4,9 @@ import {useState} from "react";
 
 
 export default function Lobby() {
-    const {t} = useTranslation();
-    const [ countries, setCountries ] = useState([]);
 
     const selectCountry = (e: string, country: string) => {
+        console.log(e, country);
     };
 
     return (
@@ -15,7 +14,7 @@ export default function Lobby() {
             <svg xmlns="http://www.w3.org/2000/svg"
                  width={'70%'} height={'70%'}
                  viewBox={`0 0 ${1024} ${792}`}>
-                <Board selectCountry={selectCountry} countries={countries}/>
+                <Board selectCountry={selectCountry}/>
             </svg>
         </div>
     );
