@@ -12,7 +12,7 @@ import Ural from '../countries/as/ural';
 import Yakutsk from '../countries/as/yakutsk';
 
 interface ContinentProps {
-    selectCountry: (e: any, country: string ) => void
+    selectCountry: (e: any, country: string) => void
 }
 
 export default function asia({selectCountry}: ContinentProps) {

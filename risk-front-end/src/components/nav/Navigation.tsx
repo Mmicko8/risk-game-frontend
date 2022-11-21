@@ -19,6 +19,7 @@ export function Navigation({isOpen, onClose}: NavigationProps) {
                 <List sx={{width: 200}}>
                     {[
                         {label: "Lobby", link: "/", icon: <BoardsIcon/>},
+                        {label: "Game", link: "/game", icon: <BoardsIcon/>},
                     ].map((menuItem) => (
                         <ListItem disableGutters key={menuItem.link}>
                             <ListItemButton component={Link} to={menuItem.link}>

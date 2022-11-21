@@ -6,7 +6,7 @@ import SouthAfrica from "../countries/af/south";
 import NorthAfrica from "../countries/af/north";
 
 interface ContinentProps {
-    selectCountry: (e: any, country: string ) => void
+    selectCountry: (e: any, country: string) => void
 
 }
 

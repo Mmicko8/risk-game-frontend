@@ -4,7 +4,7 @@ import Peru from '../countries/sa/peru';
 import Venezuela from '../countries/sa/venezuela';
 
 interface ContinentProps {
-    selectCountry: (e: any, country: string ) => void
+    selectCountry: (e: any, country: string) => void
 }
 
 export default function SouthAmerica({selectCountry}: ContinentProps) {

@@ -3,7 +3,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './language.tsx';
-import React,{Suspense} from 'react';
+import React, {Suspense} from 'react';
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement

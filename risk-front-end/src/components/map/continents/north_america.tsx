@@ -9,7 +9,7 @@ import WestUS from '../countries/na/west';
 import Quebec from '../countries/na/quebec';
 
 interface ContinentProps {
-    selectCountry: (e: any, country: string ) => void
+    selectCountry: (e: any, country: string) => void
 
 }
 

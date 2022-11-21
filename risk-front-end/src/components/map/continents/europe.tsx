@@ -7,7 +7,7 @@ import Ukraine from '../countries/eu/ukraine';
 import WestEurope from '../countries/eu/west';
 
 interface ContinentProps {
-    selectCountry: (e: any, country: string ) => void
+    selectCountry: (e: any, country: string) => void
 }
 
 export default function Europe({selectCountry}: ContinentProps) {

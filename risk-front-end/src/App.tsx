@@ -6,9 +6,10 @@ import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import Lobby from "./components/Lobby";
 import StoreAppBar from "./components/nav/StoreAppBar";
 import {Navigation} from "./components/nav/Navigation";
-import {Login} from "@mui/icons-material";
 import SignIn from "./components/identity/SignIn";
 import Register from "./components/identity/Register";
+import Board from "./components/Board";
+import Game from "./components/Game";
 
 
 axios.defaults.baseURL = "http://localhost:3001";
@@ -31,6 +32,7 @@ function App() {
                         <Route path="/" element={<Lobby/>}/>
                         <Route path="/sign_in" element={<SignIn/>}/>
                         <Route path="/register" element={<Register/>}/>
+                        <Route path="/game" element={<Game/>}/>
                     </Routes>
                 </BrowserRouter>
             </QueryClientProvider>
