@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Country from '../country';
+import Country from '../Country';
 
 export default function Alaska({ callback }) {
   const [coords,setCoords] = useState([[]]);

@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import Country from '../country';
+import Country from '../Country';
 
 
 export default function Congo({ callback }) {

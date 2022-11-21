@@ -1,3 +1,5 @@
+import './Path.css';
+
 interface PathRouteProps {
     d: string;
     name: string;
