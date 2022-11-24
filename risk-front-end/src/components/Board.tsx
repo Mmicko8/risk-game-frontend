@@ -1,6 +1,5 @@
 import Australia from "./map/continents/australia";
 import Africa from "./map/continents/africa";
-import Seas from "./map/continents/seas";
 import Europe from "./map/continents/europe";
 import NorthAmerica from "./map/continents/north_america";
 import SouthAmerica from "./map/continents/south_america";
@@ -17,7 +16,6 @@ export default function Board({selectCountry}: BoardProps) {
                  width={'70%'} height={'70%'}
                  viewBox={`0 0 ${1024} ${792}`}>
                 <g id="map" fill="none" strokeWidth="1.5">
-                    <Seas/>
                     <Africa selectCountry={selectCountry}/>
                     <Asia selectCountry={selectCountry}/>
                     <Australia selectCountry={selectCountry}/>

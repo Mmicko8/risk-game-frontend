@@ -5,18 +5,18 @@ import "./Path.css";
 interface CountryProps {
     d: string;
     name: string;
-    _armies: number;
+    _troopCount?: number;
     callback: (e: any, country: string) => void;
 }
 
 /**
  * A country on the map
  */
-export default function Country({d, name, _armies, callback}: CountryProps) {
+export default function Country({d, name, _troopCount=0, callback}: CountryProps) {
     const ref = useRef<SVGPathElement>(null);
     const [centerX, setCenterX] = useState(0);
     const [centerY, setCenterY] = useState(0)
-    const [armyPieces, setArmyPieces] = useState(0);
+    const [troopCount, setTroopCount] = useState(_troopCount);
 
     useEffect(() => {
         if (ref.current) {
@@ -26,10 +26,11 @@ export default function Country({d, name, _armies, callback}: CountryProps) {
         }
     }, [])
 
+    const digitOffset = troopCount > 9 ? -5 : 0;
 
     return <g>
         <Path callback={callback} name={name} d={d} innerRef={ref}/>
-        <circle cx={centerX + 4} cy={centerY - 6} r={10}/>
-        <text className="country-name" x={centerX} y={centerY}>{armyPieces}</text>
+        <circle cx={centerX + 4} cy={centerY - 6} r={11}/>
+        <text className="country-name" x={centerX + digitOffset} y={centerY}>{troopCount}</text>
     </g>
 }
