@@ -1,5 +1,5 @@
 
-import Country from "./map/countries/Country";
+import Country from "./map/Country";
 import {territories} from "../data/TerritoryData";
 
 interface BoardProps {
