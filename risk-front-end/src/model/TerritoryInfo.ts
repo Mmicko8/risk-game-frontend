@@ -1,10 +1,9 @@
 
 
 export interface TerritoryInfo {
-    name: string;
-    troopCount: number;
-    coordinates: string;
+    fillColor: string;
+    strokeColor: string;
     xOffset: number;
     yOffset: number;
-    occupierId: number;
+    drawPath: string;
 }
