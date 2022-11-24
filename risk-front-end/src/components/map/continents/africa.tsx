@@ -1,10 +1,8 @@
 import EastAfrica from "../countries/af/east";
 import Egypt from "../countries/af/egypt";
-import Congo from "../countries/af/congo";
 import Madagascar from "../countries/af/madagascar";
 import SouthAfrica from "../countries/af/south";
 import NorthAfrica from "../countries/af/north";
-import {TerritoryInfo} from "../../../model/TerritoryInfo";
 import Country from "../countries/Country";
 
 interface ContinentProps {
@@ -21,7 +19,7 @@ export default function Africa({selectCountry}: ContinentProps) {
 
     return <g id="Africa" stroke="rgb(198,138,49)" fill="#CEA252" visibility="visible">
         {territories.map((territory) => (
-            <Country d={territory.coordinates} name={territory.name} _troopCount={territory.troopCount} callback={selectCountry}/>
+            <Country drawPath={territory.coordinates} name={territory.name} _troopCount={territory.troopCount} callback={selectCountry}/>
         ))}
         <EastAfrica callback={selectCountry}/>
         <Egypt callback={selectCountry}/>

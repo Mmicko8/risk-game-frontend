@@ -3,7 +3,7 @@ import Path from './Path';
 import "./Path.css";
 
 interface CountryProps {
-    d: string;
+    drawPath: string;
     name: string;
     _troopCount?: number;
     callback: (e: any, country: string) => void;
@@ -12,7 +12,7 @@ interface CountryProps {
 /**
  * A country on the map
  */
-export default function Country({d, name, _troopCount=0, callback}: CountryProps) {
+export default function Country({drawPath, name, _troopCount=0, callback}: CountryProps) {
     const ref = useRef<SVGPathElement>(null);
     const [centerX, setCenterX] = useState(0);
     const [centerY, setCenterY] = useState(0)
@@ -29,7 +29,7 @@ export default function Country({d, name, _troopCount=0, callback}: CountryProps
     const digitOffset = troopCount > 9 ? -5 : 0;
 
     return <g>
-        <Path callback={callback} name={name} d={d} innerRef={ref}/>
+        <Path callback={callback} name={name} d={drawPath} innerRef={ref}/>
         <circle cx={centerX + 4} cy={centerY - 6} r={11}/>
         <text className="country-name" x={centerX + digitOffset} y={centerY}>{troopCount}</text>
     </g>
