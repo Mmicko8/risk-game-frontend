@@ -1,9 +1,13 @@
-import {territories} from "../services/TerritoryService";
+
 import Country from "./map/countries/Country";
+import {territories} from "../data/TerritoryData";
 
 interface BoardProps {
     selectCountry: (e: string, country: string) => void;
 }
+
+const NAME = 0;
+const TERRITORY_INFO = 1;
 
 export default function Board({selectCountry}: BoardProps) {
     return (
@@ -13,9 +17,9 @@ export default function Board({selectCountry}: BoardProps) {
                  viewBox={`0 0 ${1024} ${792}`}>
                 <g id="map" fill="none" strokeWidth="1.5">
                     {Object.entries(territories).map((props) => (
-                        <g key={props[0]} stroke={props[1].strokeColor} fill={props[1].fillColor}
-                           visibility="visible">
-                            <Country drawPath={props[1].drawPath} name={props[0]} _troopCount={10}
+                        <g key={props[NAME]} stroke={props[TERRITORY_INFO].strokeColor}
+                           fill={props[TERRITORY_INFO].fillColor} visibility="visible">
+                            <Country drawPath={props[TERRITORY_INFO].drawPath} name={props[NAME]} _troopCount={10}
                                      callback={selectCountry}/>
                         </g>
                     ))}
