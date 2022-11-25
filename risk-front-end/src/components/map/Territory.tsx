@@ -29,6 +29,7 @@ export default function Territory({drawPath, name, _troopCount=0, callback, xOff
     }, [])
 
     // offset to center the troopcount in the circle
+    // optional: fix for triple digits
     const digitXOffset = troopCount > 9 ? -5 : 0;
 
     return <g>
