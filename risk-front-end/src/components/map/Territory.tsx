@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import Path from './Path';
 import "./Path.css";
 
-interface CountryProps {
+interface TerritoryProps {
     drawPath: string;
     name: string;
     _troopCount?: number;
@@ -12,7 +12,7 @@ interface CountryProps {
 /**
  * A country on the map
  */
-export default function Country({drawPath, name, _troopCount=0, callback}: CountryProps) {
+export default function Territory({drawPath, name, _troopCount=0, callback}: TerritoryProps) {
     const ref = useRef<SVGPathElement>(null);
     const [centerX, setCenterX] = useState(0);
     const [centerY, setCenterY] = useState(0)
