@@ -8,11 +8,10 @@ import StoreAppBar from "./components/nav/StoreAppBar";
 import {Navigation} from "./components/nav/Navigation";
 import SignIn from "./components/identity/SignIn";
 import Register from "./components/identity/Register";
-import Board from "./components/Board";
 import Game from "./components/Game";
 
 
-axios.defaults.baseURL = "http://localhost:3001";
+axios.defaults.baseURL = "http://localhost:8080";
 const queryClient = new QueryClient();
 
 function App() {
