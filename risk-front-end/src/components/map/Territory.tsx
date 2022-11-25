@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import Path from './Path';
-import "./Path.css";
+import "./Territory.css";
 
 interface TerritoryProps {
     drawPath: string;
@@ -32,8 +32,8 @@ export default function Territory({drawPath, name, _troopCount=0, callback, xOff
     // optional: fix for triple digits
     const digitXOffset = troopCount > 9 ? -5 : 0;
 
-    return <g>
-        <Path callback={callback} name={name} d={drawPath} innerRef={ref}/>
+    return <g className="territory" onClick={(e) => callback(e, name)}>
+        <Path name={name} d={drawPath} innerRef={ref}/>
         <circle cx={centerX + xOffset + 4} cy={centerY + yOffset - 6} r={11}/>
         <text className="country-name" x={centerX + xOffset + digitXOffset} y={centerY + yOffset}>{troopCount}</text>
     </g>
