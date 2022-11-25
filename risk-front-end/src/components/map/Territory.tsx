@@ -7,12 +7,14 @@ interface TerritoryProps {
     name: string;
     _troopCount?: number;
     callback: (e: any, country: string) => void;
+    xOffset: number;
+    yOffset: number;
 }
 
 /**
  * A Territory on the map
  */
-export default function Territory({drawPath, name, _troopCount=0, callback}: TerritoryProps) {
+export default function Territory({drawPath, name, _troopCount=0, callback, xOffset, yOffset}: TerritoryProps) {
     const ref = useRef<SVGPathElement>(null);
     const [centerX, setCenterX] = useState(0);
     const [centerY, setCenterY] = useState(0)
@@ -31,7 +33,7 @@ export default function Territory({drawPath, name, _troopCount=0, callback}: Ter
 
     return <g>
         <Path callback={callback} name={name} d={drawPath} innerRef={ref}/>
-        <circle cx={centerX + 4} cy={centerY - 6} r={11}/>
-        <text className="country-name" x={centerX + digitXOffset} y={centerY}>{troopCount}</text>
+        <circle cx={centerX + xOffset + 4} cy={centerY + yOffset - 6} r={11}/>
+        <text className="country-name" x={centerX + xOffset + digitXOffset} y={centerY + yOffset}>{troopCount}</text>
     </g>
 }
