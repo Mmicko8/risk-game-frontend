@@ -1,5 +1,5 @@
 
-import Country from "./map/Country";
+import Territory from "./map/Territory";
 import {territories} from "../data/TerritoryData";
 
 interface BoardProps {
@@ -19,9 +19,9 @@ export default function Board({selectCountry}: BoardProps) {
                     {Object.entries(territories).map((props) => (
                         <g key={props[NAME]} stroke={props[TERRITORY_INFO].strokeColor}
                            fill={props[TERRITORY_INFO].fillColor} visibility="visible">
-                            <Country drawPath={props[TERRITORY_INFO].drawPath} name={props[NAME]} _troopCount={10}
-                                     callback={selectCountry} xOffset={props[TERRITORY_INFO].xOffset}
-                                     yOffset={props[TERRITORY_INFO].yOffset}/>
+                            <Territory drawPath={props[TERRITORY_INFO].drawPath} name={props[NAME]} _troopCount={10}
+                                       callback={selectCountry} xOffset={props[TERRITORY_INFO].xOffset}
+                                       yOffset={props[TERRITORY_INFO].yOffset}/>
                         </g>
                     ))}
                 </g>
