@@ -16,12 +16,7 @@ import {Link} from "react-router-dom";
 function Copyright(props: any) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
-            {'Copyright © '}
-            <Link color="inherit" to={"/"}>
-                Risky Business
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
+            Copyright © Risky Business {new Date().getFullYear()}.
         </Typography>
     );
 }
