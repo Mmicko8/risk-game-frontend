@@ -5,7 +5,7 @@ export default function Game() {
         console.log(e, country);
     }
     return (
-        <div>
+        <div style={{backgroundColor:"lightblue"}}>
             <Board selectCountry={selectCountry}/>
         </div>
     );

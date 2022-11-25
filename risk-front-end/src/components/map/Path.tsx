@@ -9,12 +9,12 @@ interface PathRouteProps {
 }
 
 /**
- * specific shape of the country
+ * specific shape of the Territory
  */
 export default function Path({d, name, callback, innerRef}: PathRouteProps) {
     return <path
         ref={innerRef}
-        className="country"
+        className="territory"
         id={name}
         d={d}
         onClick={(e) => callback(e, name)}/>

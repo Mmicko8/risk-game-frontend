@@ -1,14 +1,13 @@
-import Australia from "./map/continents/australia";
-import Africa from "./map/continents/africa";
-import Seas from "./map/continents/seas";
-import Europe from "./map/continents/europe";
-import NorthAmerica from "./map/continents/north_america";
-import SouthAmerica from "./map/continents/south_america";
-import Asia from "./map/continents/asia";
+
+import Territory from "./map/Territory";
+import {territories} from "../data/TerritoryData";
 
 interface BoardProps {
     selectCountry: (e: string, country: string) => void;
 }
+
+const NAME = 0;
+const TERRITORY_INFO = 1;
 
 export default function Board({selectCountry}: BoardProps) {
     return (
@@ -17,13 +16,14 @@ export default function Board({selectCountry}: BoardProps) {
                  width={'70%'} height={'70%'}
                  viewBox={`0 0 ${1024} ${792}`}>
                 <g id="map" fill="none" strokeWidth="1.5">
-                    <Seas/>
-                    <Africa selectCountry={selectCountry}/>
-                    <Asia selectCountry={selectCountry}/>
-                    <Australia selectCountry={selectCountry}/>
-                    <Europe selectCountry={selectCountry}/>
-                    <NorthAmerica selectCountry={selectCountry}/>
-                    <SouthAmerica selectCountry={selectCountry}/>
+                    {Object.entries(territories).map((props) => (
+                        <g key={props[NAME]} stroke={props[TERRITORY_INFO].strokeColor}
+                           fill={props[TERRITORY_INFO].fillColor} visibility="visible">
+                            <Territory drawPath={props[TERRITORY_INFO].drawPath} name={props[NAME]} _troopCount={10}
+                                       callback={selectCountry} xOffset={props[TERRITORY_INFO].xOffset}
+                                       yOffset={props[TERRITORY_INFO].yOffset}/>
+                        </g>
+                    ))}
                 </g>
             </svg>
         </div>
