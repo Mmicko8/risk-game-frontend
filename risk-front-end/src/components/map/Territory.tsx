@@ -10,7 +10,7 @@ interface TerritoryProps {
 }
 
 /**
- * A country on the map
+ * A Territory on the map
  */
 export default function Territory({drawPath, name, _troopCount=0, callback}: TerritoryProps) {
     const ref = useRef<SVGPathElement>(null);
@@ -26,11 +26,12 @@ export default function Territory({drawPath, name, _troopCount=0, callback}: Ter
         }
     }, [])
 
-    const digitOffset = troopCount > 9 ? -5 : 0;
+    // offset to center the troopcount in the circle
+    const digitXOffset = troopCount > 9 ? -5 : 0;
 
     return <g>
         <Path callback={callback} name={name} d={drawPath} innerRef={ref}/>
         <circle cx={centerX + 4} cy={centerY - 6} r={11}/>
-        <text className="country-name" x={centerX + digitOffset} y={centerY}>{troopCount}</text>
+        <text className="country-name" x={centerX + digitXOffset} y={centerY}>{troopCount}</text>
     </g>
 }
