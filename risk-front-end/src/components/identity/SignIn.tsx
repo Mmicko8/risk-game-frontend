@@ -12,8 +12,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import {Link} from "react-router-dom";
 import {logIn} from "../../services/LoginService";
-import {useForm} from "react-hook-form";
-import {Player} from "../../model/Player";
+import {useForm, Controller} from "react-hook-form";
 import {SignInCredentials} from "../../model/SignInCredentials";
 
 function Copyright(props: any) {
@@ -26,6 +25,7 @@ function Copyright(props: any) {
 
 export default function SignIn() {
     const {
+        control,
         handleSubmit,
         reset,
     } = useForm({
@@ -59,25 +59,37 @@ export default function SignIn() {
                         Sign in
                     </Typography>
                     <Box component="form" onSubmit={handleSubmit(_onSubmit)} noValidate sx={{mt: 1}}>
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="username"
-                            label="Username"
+                        <Controller
                             name="username"
-                            autoComplete="username"
-                            autoFocus
+                            control={control}
+                            render={({field}) => (
+                                <TextField
+                                    {...field}
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    id="username"
+                                    label="Username"
+                                    autoComplete="username"
+                                    autoFocus
+                                />
+                            )}
                         />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
+                        <Controller
                             name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                            autoComplete="current-password"
+                            control={control}
+                            render={({field}) => (
+                                <TextField
+                                    {...field}
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    label="Password"
+                                    type="password"
+                                    id="password"
+                                    autoComplete="current-password"
+                                />
+                            )}
                         />
                         <FormControlLabel
                             control={<Checkbox value="remember" color="primary"/>}
