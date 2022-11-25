@@ -10,8 +10,11 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import {createTheme, ThemeProvider} from '@mui/material/styles';
 import {Link} from "react-router-dom";
+import {logIn} from "../../services/LoginService";
+import {useForm} from "react-hook-form";
+import {Player} from "../../model/Player";
+import {SignInCredentials} from "../../model/SignInCredentials";
 
 function Copyright(props: any) {
     return (
@@ -21,20 +24,24 @@ function Copyright(props: any) {
     );
 }
 
-const theme = createTheme();
-
 export default function SignIn() {
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+    const {
+        handleSubmit,
+        reset,
+    } = useForm({
+        defaultValues: {
+            username: '',
+            password: '',
+        }
+    })
+
+    const _onSubmit = (data: SignInCredentials) => {
+        console.log(data.username, data.password);
+        logIn(data.username, data.password)
+        reset();
     };
 
     return (
-        <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs">
                 <CssBaseline/>
                 <Box
@@ -51,15 +58,15 @@ export default function SignIn() {
                     <Typography component="h1" variant="h5">
                         Sign in
                     </Typography>
-                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 1}}>
+                    <Box component="form" onSubmit={handleSubmit(_onSubmit)} noValidate sx={{mt: 1}}>
                         <TextField
                             margin="normal"
                             required
                             fullWidth
-                            id="email"
-                            label="Email Address"
-                            name="email"
-                            autoComplete="email"
+                            id="username"
+                            label="Username"
+                            name="username"
+                            autoComplete="username"
                             autoFocus
                         />
                         <TextField
@@ -100,6 +107,5 @@ export default function SignIn() {
                 </Box>
                 <Copyright sx={{mt: 8, mb: 4}}/>
             </Container>
-        </ThemeProvider>
     );
 }
