@@ -1,0 +1,10 @@
+image: docker:latest
+
+variables:
+  IMAGE_TAG: "risk-frontend-react_alpine:1.0.0"
+
+build image:
+  script:
+    - docker build -t $IMAGE_TAG .
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker push $IMAGE_TAG
