@@ -1,6 +1,6 @@
 #Stage 1
 FROM node:17-alpine as builder
-WORKDIR front-end/risk-front-end
+WORKDIR risk-front-end
 COPY package.json .
 COPY package-lock.json .
 RUN npm install
