@@ -22,7 +22,7 @@ export function Navigation({isOpen, onClose}: NavigationProps) {
                         {label: "Game", link: "/game", icon: <BoardsIcon/>},
                     ].map((menuItem) => (
                         <ListItem disableGutters key={menuItem.link}>
-                            <ListItemButton component={Link} to={menuItem.link}>
+                            <ListItemButton component={Link} to={menuItem.link} onClick={onClose}>
                                 <ListItemIcon>{menuItem.icon}</ListItemIcon>
                                 <ListItemText primary={menuItem.label}/>
                             </ListItemButton>
