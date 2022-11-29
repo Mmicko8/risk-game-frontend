@@ -1,6 +1,6 @@
 
 import Territory from "./map/Territory";
-import {territories} from "../data/TerritoryData";
+import {getTerritoriesDrawData} from "../services/territoryService";
 
 interface BoardProps {
     selectCountry: (e: string, country: string) => void;
@@ -16,10 +16,10 @@ export default function Board({selectCountry}: BoardProps) {
                  width={'70%'} height={'70%'}
                  viewBox={`0 0 ${1024} ${792}`}>
                 <g id="map" fill="none" strokeWidth="1.5">
-                    {Object.entries(territories).map((props) => (
+                    {Object.entries(getTerritoriesDrawData()).map((props) => (
                         <g key={props[NAME]} stroke={props[TERRITORY_INFO].strokeColor}
                            fill={props[TERRITORY_INFO].fillColor} visibility="visible">
-                            <Territory drawPath={props[TERRITORY_INFO].drawPath} name={props[NAME]} _troopCount={10}
+                            <Territory drawPath={props[TERRITORY_INFO].drawPath} name={props[NAME]} troopCount={10}
                                        callback={selectCountry} xOffset={props[TERRITORY_INFO].xOffset}
                                        yOffset={props[TERRITORY_INFO].yOffset}/>
                         </g>
