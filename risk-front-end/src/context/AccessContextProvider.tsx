@@ -10,12 +10,13 @@ export default function AccessTokenContextProvider({children}: IWithChildren) {
     const [username, setUsername, removeUsername] = useLocalStorage<string | null>("username", null);
     const [accessToken, setAccessToken, removeAccessToken] = useLocalStorage<string | null>("accessToken", null);
 
-    const logout = () => {
-        removeUsername();
-        removeAccessToken();
-    }
+    // TODO why not work
+    // const logout = () => {
+    //     removeUsername();
+    //     removeAccessToken();
+    // }
 
-    return (<AccessContext.Provider value={{accessToken, setAccessToken, username, setUsername, logout}}>
+    return (<AccessContext.Provider value={{accessToken, setAccessToken, username, setUsername, removeUsername, removeAccessToken}}>
             {children}
         </AccessContext.Provider>
     );

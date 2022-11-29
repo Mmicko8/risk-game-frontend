@@ -5,7 +5,8 @@ export interface IUserContext {
     username: string | null;
     setAccessToken: (token: string) => void;
     setUsername: (username: string) => void;
-    logout: () => void;
+    removeUsername: () => void;
+    removeAccessToken: () => void;
 }
 
 export default createContext<IUserContext>(
@@ -14,5 +15,6 @@ export default createContext<IUserContext>(
         username: null,
         setAccessToken: () => {},
         setUsername: () => {},
-        logout: () => {}
+        removeUsername: () => {},
+        removeAccessToken: () => {}
     });

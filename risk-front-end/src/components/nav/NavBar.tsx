@@ -13,7 +13,7 @@ import AccessContext from "../../context/AccessContext";
 function UserManagementButtons() {
     const navigate = useNavigate();
 
-    const {username, logout} = useContext(AccessContext);
+    const {username, removeUsername, removeAccessToken} = useContext(AccessContext);
     if (!username)
         return <>
             <Button color="inherit" onClick={() => navigate("/register")}>Register</Button>
@@ -22,7 +22,7 @@ function UserManagementButtons() {
     else {
         return <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
             <Typography variant="body2">{username}</Typography>
-            <Button style={{marginLeft: "16px", color: "white"}} onClick={() => logout}>
+            <Button style={{marginLeft: "16px", color: "white"}} onClick={() => {removeUsername(); removeAccessToken()}}>
                 <Typography variant="body2">logout</Typography>
             </Button>
         </div>
