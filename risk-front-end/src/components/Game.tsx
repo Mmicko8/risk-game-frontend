@@ -23,7 +23,6 @@ export default function Game() {
     }
 
     return (
-        <div style={{backgroundColor:"white"}}>
             <Grid container>
                 <Grid item xs={10}>
                     <Board selectCountry={selectCountry} territories={getAllTerritoriesFromGameState(game)}/>
@@ -32,6 +31,5 @@ export default function Game() {
                     <PlayerFrame/>
                 </Grid>
             </Grid>
-        </div>
     );
 }
