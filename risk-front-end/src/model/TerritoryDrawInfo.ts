@@ -1,6 +1,6 @@
 
 
-export interface TerritoryInfo {
+export interface TerritoryDrawInfo {
     fillColor: string;
     strokeColor: string;
     xOffset: number;

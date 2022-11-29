@@ -11,11 +11,11 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import {Link} from "react-router-dom";
-import {logIn} from "../../services/LoginService";
+import {logIn} from "../../services/loginService";
 import {useForm, Controller} from "react-hook-form";
 import {SignInCredentials} from "../../model/SignInCredentials";
 import {useContext} from "react";
-import UserContext from "../../context/UserContext";
+import AccessContext from "../../context/AccessContext";
 
 function Copyright(props: any) {
     return (
@@ -37,12 +37,14 @@ export default function SignIn() {
         }
     })
 
-    const {setPlayer} = useContext(UserContext);
+    const {setAccessToken, setUsername} = useContext(AccessContext);
 
-    const _onSubmit = (data: SignInCredentials) => {
-        console.log(data.username, data.password);
-        logIn(data.username, data.password);
-        setPlayer({username: data.username, password: data.password});
+    const _onSubmit = async (data: SignInCredentials) => {
+        const accessToken = await logIn(data.username, data.password);
+        if (accessToken) {
+            setAccessToken(accessToken);
+            setUsername(data.username);
+        }
         reset();
     };
 

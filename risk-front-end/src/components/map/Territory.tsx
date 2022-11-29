@@ -5,7 +5,7 @@ import "./Territory.css";
 interface TerritoryProps {
     drawPath: string;
     name: string;
-    _troopCount?: number;
+    troopCount?: number;
     callback: (e: any, country: string) => void;
     xOffset: number;
     yOffset: number;
@@ -14,11 +14,10 @@ interface TerritoryProps {
 /**
  * A Territory on the map
  */
-export default function Territory({drawPath, name, _troopCount=0, callback, xOffset, yOffset}: TerritoryProps) {
+export default function Territory({drawPath, name, troopCount=0, callback, xOffset, yOffset}: TerritoryProps) {
     const ref = useRef<SVGPathElement>(null);
     const [centerX, setCenterX] = useState(0);
-    const [centerY, setCenterY] = useState(0)
-    const [troopCount, setTroopCount] = useState(_troopCount);
+    const [centerY, setCenterY] = useState(0);
 
     useEffect(() => {
         if (ref.current) {

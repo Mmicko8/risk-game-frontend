@@ -5,8 +5,30 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import Button from '@mui/material/Button';
+import {useContext} from "react";
+import AccessContext from "../../context/AccessContext";
+
+function UserManagementButtons() {
+    const navigate = useNavigate();
+
+    const {username, removeUsername, removeAccessToken} = useContext(AccessContext);
+    if (!username)
+        return <>
+            <Button color="inherit" onClick={() => navigate("/register")}>Register</Button>
+            <Button color="inherit" onClick={() => navigate("/sign_in")}>Sign in</Button>
+        </>
+    else {
+        return <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+            <Typography variant="body2">{username}</Typography>
+            <Button style={{marginLeft: "16px", color: "white"}} onClick={() => {removeUsername(); removeAccessToken()}}>
+                <Typography variant="body2">logout</Typography>
+            </Button>
+        </div>
+    }
+}
+
 
 type HeaderProps = {
     onOpenDrawer: () => void;
@@ -22,19 +44,12 @@ export default function NavBar({onOpenDrawer}: HeaderProps) {
                     <IconButton onClick={onOpenDrawer}>
                         <MenuIcon/>
                     </IconButton>
-                    <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
+                    <Typography variant="h6" sx={{flexGrow: 1}}>
                         <Link style={{textDecoration: "none", color: "white"}} to={"/"}>
                             Risky Business
                         </Link>
                     </Typography>
-                    <Link style={{textDecoration: 'none'}} to={`/register`}>
-                        <Button
-                            color="inherit">Register</Button>
-                    </Link>
-                    <Link style={{textDecoration: 'none'}} to={`/sign_in`}>
-                        <Button
-                            color="inherit">Sign in</Button>
-                    </Link>
+                    <UserManagementButtons/>
                 </Toolbar>
             </AppBar>
         </Box>
