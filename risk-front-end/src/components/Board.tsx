@@ -1,29 +1,31 @@
 
+import {getTerritoryData} from "../services/territoryService";
 import Territory from "./map/Territory";
-import {getTerritoriesDrawData} from "../services/territoryService";
+import {TerritoryModel} from "../model/TerritoryModel";
 
 interface BoardProps {
     selectCountry: (e: string, country: string) => void;
+    territories: TerritoryModel[];
 }
 
-const NAME = 0;
-const TERRITORY_INFO = 1;
-
-export default function Board({selectCountry}: BoardProps) {
+export default function Board({selectCountry, territories}: BoardProps) {
     return (
         <div style={{display: "flex", justifyContent: "center"}}>
             <svg xmlns="http://www.w3.org/2000/svg"
                  width={'70%'} height={'70%'}
                  viewBox={`0 0 ${1024} ${792}`}>
                 <g id="map" fill="none" strokeWidth="1.5">
-                    {Object.entries(getTerritoriesDrawData()).map((props) => (
-                        <g key={props[NAME]} stroke={props[TERRITORY_INFO].strokeColor}
-                           fill={props[TERRITORY_INFO].fillColor} visibility="visible">
-                            <Territory drawPath={props[TERRITORY_INFO].drawPath} name={props[NAME]} troopCount={10}
-                                       callback={selectCountry} xOffset={props[TERRITORY_INFO].xOffset}
-                                       yOffset={props[TERRITORY_INFO].yOffset}/>
+                    {territories.map((t) => {
+                        let drawData = getTerritoryData(t.name);
+
+                        return <g key={t.name} stroke={drawData.strokeColor}
+                           fill={drawData.fillColor} visibility="visible">
+                            <Territory drawPath={drawData.drawPath} name={t.name}
+                                       troopCount={t.troops}
+                                       callback={selectCountry} xOffset={drawData.xOffset}
+                                       yOffset={drawData.yOffset}/>
                         </g>
-                    ))}
+                    })}
                 </g>
             </svg>
         </div>

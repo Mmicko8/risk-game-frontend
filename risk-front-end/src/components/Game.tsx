@@ -3,6 +3,7 @@ import {useQuery} from "react-query";
 import {getGameState} from "../services/gameService";
 import Loading from "./Loading";
 import {Alert} from "@mui/material";
+import {getAllTerritoriesFromGameState} from "../services/territoryService";
 
 export default function Game() {
     const selectCountry = (e: any, country: string) => {
@@ -21,7 +22,7 @@ export default function Game() {
 
     return (
         <div style={{backgroundColor:"lightblue"}}>
-            <Board selectCountry={selectCountry}/>
+            <Board selectCountry={selectCountry} territories={getAllTerritoriesFromGameState(game)}/>
         </div>
     );
 }
