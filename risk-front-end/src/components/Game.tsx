@@ -11,7 +11,6 @@ import ReinforceDialog from "./ReinforceDialog";
 import axios from "axios";
 import {TerritoryModel} from "../model/TerritoryModel";
 
-
 export default function Game() {
     const queryClient = useQueryClient();
     const gameId = 1; // todo
