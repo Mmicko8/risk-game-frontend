@@ -45,7 +45,6 @@ export default function SignIn() {
             setAccessToken(accessToken);
             setUsername(data.username);
         }
-        console.log(accessToken);
         reset();
     };
 
