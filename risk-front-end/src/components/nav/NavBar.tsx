@@ -1,5 +1,4 @@
 import * as React from 'react';
-import {useContext} from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -7,7 +6,6 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import {Link} from "react-router-dom";
-import UserContext, {IUserContext} from "../../context/UserContext";
 import Button from '@mui/material/Button';
 
 type HeaderProps = {
@@ -16,11 +14,7 @@ type HeaderProps = {
 /**
  * App bar voor de applicatie
  */
-export default function StoreAppBar({onOpenDrawer}: HeaderProps) {
-    //hooks
-    const {player, togglePlayer} = useContext<IUserContext>(UserContext);
-
-    //appbar tonen op het scherm
+export default function NavBar({onOpenDrawer}: HeaderProps) {
     return (
         <Box sx={{flexGrow: 1}}>
             <AppBar position="static">

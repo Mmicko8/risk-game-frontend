@@ -2,8 +2,8 @@ import {createContext} from "react";
 import {Player} from "../model/Player";
 
 export interface IUserContext {
-    player: Player;
-    togglePlayer: () => void;
+    player: Player | null;
+    setPlayer: (player: Player) => void;
 }
 
 /**
@@ -11,7 +11,6 @@ export interface IUserContext {
  */
 export default createContext<IUserContext>(
     {
-        player: ({name: "admin", email: "test@gmail.com"} as Player),
-        togglePlayer: () => {
-        },
+        player: null,
+        setPlayer: () => {},
     });

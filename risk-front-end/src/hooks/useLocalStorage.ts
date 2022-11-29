@@ -1,19 +1,21 @@
 import localForage from "localforage";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
-export default function useLocalStorage(key: string) {
-    const [value, setValue] = useState<any>(false);
+export default function useLocalStorage<T>(
+    key: string,
+    defaultValue: T | null = null
+): [T | null, (v: T) => void, () => void] {
+    const [value, setValue] = useState<T | null>(defaultValue);
 
     useEffect(() => {
         const getValue = async () => {
-            const storageValue = await localForage.getItem(key);
-            console.log("Current value from storage: ", storageValue);
+            const storageValue = await localForage.getItem<T>(key);
             setValue(storageValue);
         };
         getValue();
     }, [key]);
 
-    const setter = (newValue: any) => {
+    const setter = (newValue: T) => {
         if (newValue !== value) {
             localForage.setItem(key, newValue);
             setValue(newValue);

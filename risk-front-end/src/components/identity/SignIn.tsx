@@ -14,6 +14,8 @@ import {Link} from "react-router-dom";
 import {logIn} from "../../services/LoginService";
 import {useForm, Controller} from "react-hook-form";
 import {SignInCredentials} from "../../model/SignInCredentials";
+import {useContext} from "react";
+import UserContext from "../../context/UserContext";
 
 function Copyright(props: any) {
     return (
@@ -35,9 +37,12 @@ export default function SignIn() {
         }
     })
 
+    const {setPlayer} = useContext(UserContext);
+
     const _onSubmit = (data: SignInCredentials) => {
         console.log(data.username, data.password);
-        logIn(data.username, data.password)
+        logIn(data.username, data.password);
+        setPlayer({username: data.username, password: data.password});
         reset();
     };
 
