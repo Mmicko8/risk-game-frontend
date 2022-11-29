@@ -10,6 +10,8 @@ import AccessContext from "../context/AccessContext";
 import ReinforceDialog from "./ReinforceDialog";
 import axios from "axios";
 import {TerritoryModel} from "../model/TerritoryModel";
+import PlayerFrame from "./PlayerFrame";
+import Grid from "@mui/material/Grid";
 
 export default function Game() {
     const queryClient = useQueryClient();
@@ -50,9 +52,16 @@ export default function Game() {
     return (
         <>
             <div style={{backgroundColor: "lightblue"}}>
-                <GameStateContextProvider game={game}>
-                    <Board selectTerritory={selectTerritory} territories={getAllTerritoriesFromGameState(game)}/>
-                </GameStateContextProvider>
+                <Grid container>
+                    <Grid item xs={10}>
+                        <GameStateContextProvider game={game}>
+                            <Board selectTerritory={selectTerritory} territories={getAllTerritoriesFromGameState(game)}/>
+                        </GameStateContextProvider>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <PlayerFrame/>
+                    </Grid>
+                </Grid>
             </div>
             {/*TODO fix maxTroops*/}
             <ReinforceDialog isOpen={isReinforceDialogOpen} onClose={() => setReinforceDialogOpen(false)}
