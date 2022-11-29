@@ -37,11 +37,14 @@ export default function SignIn() {
         }
     })
 
-    const {setAccessToken} = useContext(AccessContext);
+    const {setAccessToken, setUsername} = useContext(AccessContext);
 
     const _onSubmit = async (data: SignInCredentials) => {
         const accessToken = await logIn(data.username, data.password);
-        if (accessToken) setAccessToken(accessToken);
+        if (accessToken) {
+            setAccessToken(accessToken);
+            setUsername(data.username);
+        }
         console.log(accessToken);
         reset();
     };
