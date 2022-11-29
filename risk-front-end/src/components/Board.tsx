@@ -12,8 +12,8 @@ export default function Board({selectCountry, territories}: BoardProps) {
     return (
         <div style={{display: "flex", justifyContent: "center"}}>
             <svg xmlns="http://www.w3.org/2000/svg"
-                 width={'70%'} height={'70%'}
-                 viewBox={`0 0 ${1024} ${792}`}>
+                 width={'80%'} height={'70%'}
+                 viewBox={`0 0 ${1024} ${660}`}>
                 <g id="map" fill="none" strokeWidth="1.5">
                     {territories.map((t) => {
                         let drawData = getTerritoryData(t.name);

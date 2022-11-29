@@ -4,6 +4,8 @@ import {getGameState} from "../services/gameService";
 import Loading from "./Loading";
 import {Alert} from "@mui/material";
 import {getAllTerritoriesFromGameState} from "../services/territoryService";
+import PlayerFrame from "./PlayerFrame";
+import Grid from "@mui/material/Grid";
 
 export default function Game() {
     const selectCountry = (e: any, country: string) => {
@@ -21,8 +23,15 @@ export default function Game() {
     }
 
     return (
-        <div style={{backgroundColor:"lightblue"}}>
-            <Board selectCountry={selectCountry} territories={getAllTerritoriesFromGameState(game)}/>
+        <div style={{backgroundColor:"white"}}>
+            <Grid container>
+                <Grid item xs={10}>
+                    <Board selectCountry={selectCountry} territories={getAllTerritoriesFromGameState(game)}/>
+                </Grid>
+                <Grid item xs={2}>
+                    <PlayerFrame/>
+                </Grid>
+            </Grid>
         </div>
     );
 }
