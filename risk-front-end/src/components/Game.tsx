@@ -7,15 +7,13 @@ export default function Game() {
         console.log(e, country);
     }
     return (
-        <div style={{backgroundColor:"white"}}>
-            <Grid container>
-                <Grid item xs={10}>
-                    <Board selectCountry={selectCountry}/>
-                </Grid>
-                <Grid item xs={2}>
-                    <PlayerFrame/>
-                </Grid>
+        <Grid container>
+            <Grid item xs={10}>
+                <Board selectCountry={selectCountry}/>
             </Grid>
-        </div>
+            <Grid item xs={2}>
+                <PlayerFrame/>
+            </Grid>
+        </Grid>
     );
 }
