@@ -25,8 +25,8 @@ export default function RegisterConfirmation() {
                 <Avatar sx={{m: 1, bgcolor: 'success.main'}}>
                     <DoneIcon/>
                 </Avatar>
-                <Typography component="p" sx={{fontSize:"large"}}>
-                    Registration successful! Email confirmation has been sent to your inbox, confirm and then sign in to access your account
+                <Typography component="p" sx={{fontSize:"large", textAlign:"center"}}>
+                    <strong>Registration successful!</strong> <br/> Email confirmation has been sent to your inbox, confirm and then sign in to access your account
                 </Typography>
                 <Button
                     variant="contained"
