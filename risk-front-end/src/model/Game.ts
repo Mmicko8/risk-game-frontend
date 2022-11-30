@@ -7,4 +7,5 @@ export interface Game {
     playersInGame: PlayerInGame[];
     turn: number;
     currentPlayer: number;
+    phase: string;
 }
