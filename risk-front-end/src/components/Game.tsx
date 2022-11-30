@@ -3,11 +3,13 @@ import {useQuery} from "react-query";
 import {getGameState, Phases} from "../services/gameService";
 import Loading from "./Loading";
 import {Alert} from "@mui/material";
-import {getAllTerritoriesFromGameState, getOwnerOfTerritory} from "../services/territoryService";
+import {getAllTerritoriesFromGameState, getOwnerOfTerritory, getTerritoryData} from "../services/territoryService";
 import GameStateContextProvider from "../context/GameStateContextProvider";
 import {useContext, useState} from "react";
 import AccessContext from "../context/AccessContext";
 import ReinforceDialog from "./ReinforceDialog";
+import axios from "axios";
+import {TerritoryModel} from "../model/TerritoryModel";
 
 
 export default function Game() {
@@ -15,11 +17,17 @@ export default function Game() {
     const {isLoading, isError, data: game} = useQuery(["board", gameId], () => getGameState(gameId));
     const [isReinforceDialogOpen, setReinforceDialogOpen] = useState(false);
     const {username} = useContext(AccessContext);
+    const [selectedTerritory, setSelectedTerritory] = useState<TerritoryModel | null>(null);
 
     if (isLoading) return <Loading/>;
 
     if (isError || !game) {
         return <Alert severity="error">Game state could not be loaded</Alert>;
+    }
+
+    const reinforceTerritory = (troops: number) => {
+        setReinforceDialogOpen(false);
+        axios.put(`/api/territory/${selectedTerritory?.territoryId}/placeTroops/${troops}`);
     }
 
     const selectTerritory = (e: any, territoryName: string) => {
@@ -33,6 +41,7 @@ export default function Game() {
         if (game.phase === Phases.REINFORCEMENT) {
             console.log("reinforce");
             setReinforceDialogOpen(true);
+            setSelectedTerritory(getTerritoryData(getAllTerritoriesFromGameState(game), territoryName));
         }
     }
     console.log(game);
@@ -44,8 +53,9 @@ export default function Game() {
                     <Board selectTerritory={selectTerritory} territories={getAllTerritoriesFromGameState(game)}/>
                 </GameStateContextProvider>
             </div>
+            {/*TODO fix maxTroops*/}
             <ReinforceDialog isOpen={isReinforceDialogOpen} onClose={() => setReinforceDialogOpen(false)}
-                             onSubmit={() => console.log("submitted reinforce")}/>
+                             onSubmit={reinforceTerritory} maxTroops={20}/>
         </>
     );
 }

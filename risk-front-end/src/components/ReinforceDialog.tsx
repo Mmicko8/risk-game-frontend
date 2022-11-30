@@ -8,88 +8,78 @@ import {ChangeEvent, useState} from 'react';
 import {
     Dialog,
     DialogActions,
-    DialogContent,
-    DialogTitle
+    DialogContent
 } from "@mui/material";
+import Button from "@mui/material/Button";
 
 
 interface ReinforceDialogProps {
     isOpen: boolean;
     onClose: () => void;
-    onSubmit: () => void;
+    onSubmit: (troops: number) => void;
+    maxTroops: number;
 }
 
-export default function ReinforceDialog({isOpen, onClose, onSubmit}: ReinforceDialogProps) {
-
-    // const {
-    //     control,
-    //     handleSubmit,
-    //     reset,
-    //     formState: {errors},
-    // } = useForm({
-    //     defaultValues: {
-    //         name: "",
-    //         description: "",
-    //         image: "",
-    //         price: 0,
-    //         inPromotion: false,
-    //         stock: 0,
-    //         stockMinimum: 0,
-    //         departmentId: ""
-    //     }
-    // });
+export default function ReinforceDialog({isOpen, onClose, onSubmit, maxTroops}: ReinforceDialogProps) {
 
     const Input = styled(MuiInput)`
       width: 42px;
     `;
 
-    const [value, setValue] = useState(1);
+    const [troops, setTroops] = useState(1);
 
     const handleSliderChange = (event: Event, newValue: number | number[]) => {
         if (typeof newValue === "number") {
-            setValue(newValue)
+            setTroops(newValue)
         }
         else {
-            setValue(1);
+            setTroops(1);
         }
     };
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setValue(event.target.value === '' ? 1 : Number(event.target.value));
+        setTroops(event.target.value === '' ? 1 : Number(event.target.value));
     };
 
     const handleBlur = () => {
-        if (value < 0) {
-            setValue(0);
-        } else if (value > 100) {
-            setValue(100);
+        if (troops < 1) {
+            setTroops(1);
+        } else if (troops > maxTroops) {
+            setTroops(maxTroops);
         }
     };
 
+    // TODO fix not being able to manually type in higher than max
+
     return (
-        <Dialog open={isOpen} onClose={onClose}>
-            <Box sx={{width: 250}}>
-                <Typography id="input-slider" gutterBottom>Troops</Typography>
-                <Grid container spacing={2} alignItems="center">
-                    <Grid item xs>
-                        <Slider value={value} onChange={handleSliderChange} aria-labelledby="input-slider"/>
+        <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="xs">
+            <DialogContent>
+                <Box sx={{paddingY: "1rem", paddingX: "4rem"}}>
+                    <Typography id="input-slider" gutterBottom>Troops</Typography>
+                    <Grid container spacing={2} alignItems="center">
+                        <Grid item xs>
+                            <Slider value={troops} min={1} max={maxTroops} onChange={handleSliderChange} aria-labelledby="input-slider"/>
+                        </Grid>
+                        <Grid item>
+                            <Input
+                                value={troops}
+                                size="small"
+                                onChange={handleInputChange}
+                                onBlur={handleBlur}
+                                inputProps={{
+                                    step: 1,
+                                    min: 1,
+                                    max: maxTroops,
+                                    type: 'number',
+                                    'aria-labelledby': 'input-slider',
+                                }}
+                            />
+                        </Grid>
                     </Grid>
-                    <Grid item>
-                        <Input
-                            value={value}
-                            size="small"
-                            onChange={handleInputChange}
-                            onBlur={handleBlur}
-                            inputProps={{
-                                step: 10,
-                                min: 0,
-                                max: 100,
-                                type: 'number',
-                                'aria-labelledby': 'input-slider',
-                            }}
-                        />
-                    </Grid>
-                </Grid>
-            </Box>
+                </Box>
+            </DialogContent>
+            <DialogActions>
+                <Button variant="contained" fullWidth onClick={() => onSubmit(troops)}>Reinforce</Button>
+            </DialogActions>
         </Dialog>);
 }
