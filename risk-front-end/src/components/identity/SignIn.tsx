@@ -11,7 +11,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import {Link} from "react-router-dom";
-import {logIn} from "../../services/LoginService";
+import {logIn} from "../../services/IdentityService";
 import {useForm, Controller} from "react-hook-form";
 import {SignInCredentials} from "../../model/SignInCredentials";
 import {useContext} from "react";
@@ -40,7 +40,6 @@ export default function SignIn() {
     const {setPlayer} = useContext(UserContext);
 
     const _onSubmit = (data: SignInCredentials) => {
-        console.log(data.username, data.password);
         logIn(data.username, data.password);
         setPlayer({username: data.username, password: data.password});
         reset();

@@ -11,6 +11,7 @@ import Container from '@mui/material/Container';
 import {Link} from "react-router-dom";
 import {useForm, Controller} from "react-hook-form";
 import {SignUpCredentials} from "../../model/SignUpCredentials";
+import {register} from "../../services/IdentityService";
 
 function Copyright(props: any) {
     return (
@@ -20,16 +21,14 @@ function Copyright(props: any) {
     );
 }
 
-const REQUIRED_FIELD_MESSAGE = 'This field is required'
-
 export default function SignUp() {
     const {
         control,
         handleSubmit,
         reset,
+        formState: {errors}
     } = useForm({
         defaultValues: {
-            name: '',
             username: '',
             email: '',
             password: '',
@@ -37,6 +36,7 @@ export default function SignUp() {
     })
 
     const _onSubmit = (data: SignUpCredentials) => {
+        register(data.username, data.email, data.password);
         reset()
     };
 
@@ -58,38 +58,63 @@ export default function SignUp() {
                     Sign up
                 </Typography>
                 <Box component="form" onSubmit={handleSubmit(_onSubmit)} sx={{mt: 3}}>
-                    <Controller
-                        name="name"
-                        control={control}
-                        rules={{required: REQUIRED_FIELD_MESSAGE}}
-                        render={({field}) => (
-                            <TextField
-                                {...field}
-                                required
-                                fullWidth
-                                id="username"
-                                label="Username"
-                                autoComplete="username"
+                    <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                            <Controller
+                                name="username"
+                                control={control}
+                                render={({field}) => (
+                                    <TextField
+                                        {...field}
+                                        required
+                                        fullWidth
+                                        id="username"
+                                        label="Username"
+                                        autoComplete="username"
+                                    />
+                                )}
                             />
-                        )}
-                    />
-                    <TextField
-                        required
-                        fullWidth
-                        id="email"
-                        label="Email Address"
-                        name="email"
-                        autoComplete="email"
-                    />
-                    <TextField
-                        required
-                        fullWidth
-                        name="password"
-                        label="Password"
-                        type="password"
-                        id="password"
-                        autoComplete="new-password"
-                    />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Controller
+                                name="email"
+                                control={control}
+                                rules={{pattern: {
+                                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                        message: "Invalid email address"
+                                    }}}
+                                render={({field}) => (
+                                    <TextField
+                                        error={!!errors.email}
+                                        helperText={errors.email?.message}
+                                        {...field}
+                                        required
+                                        fullWidth
+                                        id="email"
+                                        label="Email Address"
+                                        autoComplete="email"
+                                    />
+                                )}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Controller
+                                name="password"
+                                control={control}
+                                render={({field}) => (
+                                    <TextField
+                                        {...field}
+                                        required
+                                        fullWidth
+                                        label="Password"
+                                        type="password"
+                                        id="password"
+                                        autoComplete="new-password"
+                                    />
+                                )}
+                            />
+                        </Grid>
+                    </Grid>
                     <Button
                         type="submit"
                         fullWidth
