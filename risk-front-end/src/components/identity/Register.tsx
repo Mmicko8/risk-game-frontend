@@ -8,7 +8,7 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useForm, Controller} from "react-hook-form";
 import {SignUpCredentials} from "../../model/SignUpCredentials";
 import {register} from "../../services/identityService";
@@ -22,6 +22,8 @@ function Copyright(props: any) {
 }
 
 export default function SignUp() {
+    const navigate = useNavigate()
+
     const {
         control,
         handleSubmit,
@@ -37,6 +39,7 @@ export default function SignUp() {
 
     const _onSubmit = (data: SignUpCredentials) => {
         register(data.username, data.email, data.password);
+        navigate('/registration_confirmation');
         reset()
     };
 
@@ -101,6 +104,7 @@ export default function SignUp() {
                             <Controller
                                 name="password"
                                 control={control}
+                                rules={{minLength: {value: 4, message:"Password must contain at least 4 characters"}}}
                                 render={({field}) => (
                                     <TextField
                                         {...field}
