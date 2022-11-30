@@ -11,6 +11,7 @@ import Game from "./components/Game";
 import {QueryClient, QueryClientProvider} from "react-query";
 import AccessTokenContextProvider from "./context/AccessContextProvider";
 import localForage from "localforage";
+import RegisterConfirmation from "./components/identity/RegisterConfirmation";
 // import localforage from "localforage";
 
 
@@ -49,6 +50,7 @@ function App() {
                         <Route path="/sign_in" element={<SignIn/>}/>
                         <Route path="/register" element={<Register/>}/>
                         <Route path="/game" element={<Game/>}/>
+                        <Route path="/registration_confirmation" element={<RegisterConfirmation/>}/>
                     </Routes>
                 </BrowserRouter>
             </AccessTokenContextProvider>
