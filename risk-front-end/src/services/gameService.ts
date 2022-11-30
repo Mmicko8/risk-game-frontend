@@ -1,8 +1,8 @@
 import axios from "axios";
-import {Game} from "../model/Game";
+import {GameModel} from "../model/GameModel";
 
 export async function getGameState(gameId: number) {
-    const response = await axios.get<Game>(`/api/game/${gameId}`);
+    const response = await axios.get<GameModel>(`/api/game/${gameId}`);
     return response.data;
 }
 

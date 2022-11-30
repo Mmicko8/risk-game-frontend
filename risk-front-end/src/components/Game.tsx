@@ -3,7 +3,7 @@ import {useQuery} from "react-query";
 import {getGameState, Phases} from "../services/gameService";
 import Loading from "./Loading";
 import {Alert} from "@mui/material";
-import {getAllTerritoriesFromGameState} from "../services/territoryService";
+import {getAllTerritoriesFromGameState, getOwnerOfTerritory} from "../services/territoryService";
 import GameStateContextProvider from "../context/GameStateContextProvider";
 import {useContext, useState} from "react";
 import AccessContext from "../context/AccessContext";
@@ -22,10 +22,13 @@ export default function Game() {
         return <Alert severity="error">Game state could not be loaded</Alert>;
     }
 
-    const selectCountry = (e: any, country: string) => {
-        console.log(e, country);
+    const selectTerritory = (e: any, territoryName: string) => {
+        console.log(e, territoryName);
         const currentPlayerInGame = game.playersInGame[game.currentPlayer];
         if (currentPlayerInGame.player.userName !== username) return;
+
+        const ownerId = getOwnerOfTerritory(game, territoryName);
+        if (!ownerId || currentPlayerInGame.playerInGameId !== ownerId) return;
 
         if (game.phase === Phases.REINFORCEMENT) {
             console.log("reinforce");
@@ -38,7 +41,7 @@ export default function Game() {
         <>
             <div style={{backgroundColor: "lightblue"}}>
                 <GameStateContextProvider game={game}>
-                    <Board selectCountry={selectCountry} territories={getAllTerritoriesFromGameState(game)}/>
+                    <Board selectTerritory={selectTerritory} territories={getAllTerritoriesFromGameState(game)}/>
                 </GameStateContextProvider>
             </div>
             <ReinforceDialog isOpen={isReinforceDialogOpen} onClose={() => setReinforceDialogOpen(false)}

@@ -1,10 +1,10 @@
 import {ReactElement} from "react";
-import {Game} from "../model/Game";
+import {GameModel} from "../model/GameModel";
 import GameStateContext from "./GameStateContext";
 
 interface GameStateContextProviderProps {
     children: ReactElement | ReactElement[];
-    game: Game;
+    game: GameModel;
 }
 
 export default function GameStateContextProvider({game, children}: GameStateContextProviderProps) {

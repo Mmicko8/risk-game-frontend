@@ -1,9 +1,9 @@
 import {createContext} from "react";
-import {Game} from "../model/Game";
+import {GameModel} from "../model/GameModel";
 
 
 export interface IGameStateContext {
-    game: Game;
+    game: GameModel;
 }
 
-export default createContext<IGameStateContext> ({game: {} as Game});
+export default createContext<IGameStateContext> ({game: {} as GameModel});
