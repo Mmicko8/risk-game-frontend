@@ -4,6 +4,7 @@ import {getGameState} from "../services/gameService";
 import Loading from "./Loading";
 import {Alert} from "@mui/material";
 import {getAllTerritoriesFromGameState} from "../services/territoryService";
+import GameStateContextProvider from "../context/GameStateContextProvider";
 
 export default function Game() {
     const selectCountry = (e: any, country: string) => {
@@ -19,10 +20,13 @@ export default function Game() {
     if (isError || !game) {
         return <Alert severity="error">Game state could not be loaded</Alert>;
     }
+    console.log(game);
 
     return (
-        <div style={{backgroundColor:"lightblue"}}>
-            <Board selectCountry={selectCountry} territories={getAllTerritoriesFromGameState(game)}/>
+        <div style={{backgroundColor: "lightblue"}}>
+            <GameStateContextProvider game={game}>
+                <Board selectCountry={selectCountry} territories={getAllTerritoriesFromGameState(game)}/>
+            </GameStateContextProvider>
         </div>
     );
 }
