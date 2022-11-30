@@ -11,7 +11,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import {Link} from "react-router-dom";
-import {logIn} from "../../services/loginService";
+import {logIn} from "../../services/IdentityService";
 import {useForm, Controller} from "react-hook-form";
 import {SignInCredentials} from "../../model/SignInCredentials";
 import {useContext} from "react";
