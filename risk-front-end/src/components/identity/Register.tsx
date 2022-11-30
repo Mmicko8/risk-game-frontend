@@ -11,7 +11,7 @@ import Container from '@mui/material/Container';
 import {Link} from "react-router-dom";
 import {useForm, Controller} from "react-hook-form";
 import {SignUpCredentials} from "../../model/SignUpCredentials";
-import {register} from "../../services/IdentityService";
+import {register} from "../../services/identityService";
 
 function Copyright(props: any) {
     return (
