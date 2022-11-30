@@ -10,8 +10,9 @@ import AccessContext from "../context/AccessContext";
 import ReinforceDialog from "./ReinforceDialog";
 import axios from "axios";
 import {TerritoryModel} from "../model/TerritoryModel";
-import PlayerFrame from "./PlayerFrame";
+import PlayerFrame from "./Player/PlayerFrame";
 import Grid from "@mui/material/Grid";
+import CurrentPlayer from "./Player/CurrentPlayer";
 
 export default function Game() {
     const queryClient = useQueryClient();
@@ -60,6 +61,9 @@ export default function Game() {
                     </Grid>
                     <Grid item xs={2}>
                         <PlayerFrame/>
+                    </Grid>
+                    <Grid item xs={12} display="flex" justifyContent="center">
+                        <CurrentPlayer/>
                     </Grid>
                 </Grid>
             </div>
