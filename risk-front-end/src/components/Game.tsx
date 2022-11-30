@@ -23,13 +23,13 @@ export default function Game() {
     }
 
     return (
-            <Grid container>
-                <Grid item xs={10}>
-                    <Board selectCountry={selectCountry} territories={getAllTerritoriesFromGameState(game)}/>
-                </Grid>
-                <Grid item xs={2}>
-                    <PlayerFrame/>
-                </Grid>
+        <Grid container>
+            <Grid item xs={10}>
+                <Board selectCountry={selectCountry} territories={getAllTerritoriesFromGameState(game)}/>
             </Grid>
+            <Grid item xs={2}>
+                <PlayerFrame/>
+            </Grid>
+        </Grid>
     );
 }
