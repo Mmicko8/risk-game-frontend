@@ -1,5 +1,5 @@
 import Board from "./Board";
-import {useQuery} from "react-query";
+import {useQuery, useQueryClient} from "react-query";
 import {getGameState, Phases} from "../services/gameService";
 import Loading from "./Loading";
 import {Alert} from "@mui/material";
@@ -13,8 +13,9 @@ import {TerritoryModel} from "../model/TerritoryModel";
 
 
 export default function Game() {
+    const queryClient = useQueryClient();
     const gameId = 1; // todo
-    const {isLoading, isError, data: game} = useQuery(["board", gameId], () => getGameState(gameId));
+    const {isLoading, isError, data: game} = useQuery(["game", gameId], () => getGameState(gameId));
     const [isReinforceDialogOpen, setReinforceDialogOpen] = useState(false);
     const {username} = useContext(AccessContext);
     const [selectedTerritory, setSelectedTerritory] = useState<TerritoryModel | null>(null);
@@ -25,9 +26,10 @@ export default function Game() {
         return <Alert severity="error">Game state could not be loaded</Alert>;
     }
 
-    const reinforceTerritory = (troops: number) => {
+    const reinforceTerritory = async (troops: number) => {
         setReinforceDialogOpen(false);
-        axios.put(`/api/territory/${selectedTerritory?.territoryId}/placeTroops/${troops}`);
+        await axios.put(`/api/territory/${selectedTerritory?.territoryId}/placeTroops/${troops}`);
+        await queryClient.invalidateQueries(["game", gameId]);
     }
 
     const selectTerritory = (e: any, territoryName: string) => {
