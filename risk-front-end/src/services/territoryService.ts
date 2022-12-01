@@ -27,3 +27,16 @@ export function getTerritoryData(territories: TerritoryModel[], territoryName: s
     }
     return null;
 }
+
+export function getAllAttackableTerritoryNamesFromGameState(game: GameModel, territory: TerritoryModel) {
+    let territories = getAllTerritoriesFromGameState(game);
+    let friendlyTerritoryNames = territories.filter(value => {return value.ownerId === territory.ownerId;})
+        .map((t) => {return t.name})
+    let attackableNeighborNameList: string[] = [];
+    territory.neighbors.forEach((n) => {
+        if (!friendlyTerritoryNames.includes(n.name)) {
+            attackableNeighborNameList.push(n.name)
+        }
+    })
+    return attackableNeighborNameList;
+}
