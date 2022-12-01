@@ -41,7 +41,8 @@ export default function CurrentPlayer({nextPhase, nextTurn, currentPhase, curren
                  height: "15vh", border: 1, borderRadius: 3, backgroundColor: "rgba(98,98,98,0.61)",
                  display: "flex", justifyContent: "space-around", alignItems: "center"
              }}>
-            <Avatar src="testAvatar.jpg" sx={{height: "5vw", width: "5vw", marginLeft: "0.5vw"}}></Avatar>
+            <Avatar src="testAvatar.jpg" sx={{height: "5vw", width: "5vw", marginLeft: "0.5vw",
+                border: `5px solid ${currentPlayer.color}`}}/>
             <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "space-around" ,height:"100%"}}>
                 <Typography>{currentPlayer.player.username}</Typography>
                 <Stepper activeStep={currentPhase} alternativeLabel>

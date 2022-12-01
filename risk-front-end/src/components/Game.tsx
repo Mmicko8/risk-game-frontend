@@ -69,7 +69,10 @@ export default function Game() {
                     </GameStateContextProvider>
                 </Grid>
                 <Grid item xs={2}>
-                    <PlayerFrame/>
+                    {game.playersInGame.map((playerInGame) => {
+                        return <PlayerFrame playerInGame={playerInGame}
+                                            currentPlayerName={game.playersInGame[game.currentPlayer].player.username}/>
+                    })}
                 </Grid>
                 <Grid item xs={12} display="flex" justifyContent="center">
                     <CurrentPlayer nextPhase={nextPhase} nextTurn={nextTurn} currentPhase={getPhaseNumber(game.phase)}
