@@ -1,4 +1,4 @@
 export type Player = {
-    userName: string,
+    username: string,
     email: string
 }

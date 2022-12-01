@@ -11,7 +11,6 @@ import ReinforceDialog from "./ReinforceDialog";
 import axios from "axios";
 import {TerritoryModel} from "../model/TerritoryModel";
 
-
 export default function Game() {
     const queryClient = useQueryClient();
     const gameId = 1; // todo
@@ -35,7 +34,7 @@ export default function Game() {
     const selectTerritory = (e: any, territoryName: string) => {
         console.log(e, territoryName);
         const currentPlayerInGame = game.playersInGame[game.currentPlayer];
-        if (currentPlayerInGame.player.userName !== username) return;
+        if (currentPlayerInGame.player.username !== username) return;
 
         const ownerId = getOwnerOfTerritory(game, territoryName);
         if (!ownerId || currentPlayerInGame.playerInGameId !== ownerId) return;

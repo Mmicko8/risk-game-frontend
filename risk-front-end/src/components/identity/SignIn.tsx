@@ -10,12 +10,12 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import {Link} from "react-router-dom";
-import {logIn} from "../../services/loginService";
+import {Link, useNavigate} from "react-router-dom";
 import {useForm, Controller} from "react-hook-form";
 import {SignInCredentials} from "../../model/SignInCredentials";
 import {useContext} from "react";
 import AccessContext from "../../context/AccessContext";
+import axios from "axios";
 
 function Copyright(props: any) {
     return (
@@ -30,6 +30,8 @@ export default function SignIn() {
         control,
         handleSubmit,
         reset,
+        setError,
+        formState: {errors}
     } = useForm({
         defaultValues: {
             username: '',
@@ -38,13 +40,21 @@ export default function SignIn() {
     })
 
     const {setAccessToken, setUsername} = useContext(AccessContext);
+    const navigate = useNavigate()
 
     const _onSubmit = async (data: SignInCredentials) => {
-        const accessToken = await logIn(data.username, data.password);
-        if (accessToken) {
-            setAccessToken(accessToken);
-            setUsername(data.username);
-        }
+        axios.post("/api/player/login", {username: data.username, password: data.password})
+            .then((response) => {
+                setAccessToken(response?.headers?.authorization!);
+                setUsername(data.username);
+                navigate('/');
+            })
+            .catch(() => {
+                setError('password', {
+                    type: "server",
+                    message: "The username or password was incorrect"
+                })
+            })
         reset();
     };
 
@@ -73,7 +83,6 @@ export default function SignIn() {
                                 <TextField
                                     {...field}
                                     margin="normal"
-                                    required
                                     fullWidth
                                     id="username"
                                     label="Username"
@@ -89,7 +98,6 @@ export default function SignIn() {
                                 <TextField
                                     {...field}
                                     margin="normal"
-                                    required
                                     fullWidth
                                     label="Password"
                                     type="password"
@@ -98,6 +106,7 @@ export default function SignIn() {
                                 />
                             )}
                         />
+                        <div style={{color:"red"}}>{errors.password?.message}</div>
                         <FormControlLabel
                             control={<Checkbox value="remember" color="primary"/>}
                             label="Remember me"
