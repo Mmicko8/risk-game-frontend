@@ -5,4 +5,5 @@ export interface PlayerInGame {
     playerInGameId: number;
     color: string;
     player: Player
+    remainingTroopsToReinforce: number;
 }

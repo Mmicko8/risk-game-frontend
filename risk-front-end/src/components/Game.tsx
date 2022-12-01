@@ -2,10 +2,10 @@ import Board from "./Board";
 import {useQuery, useQueryClient} from "react-query";
 import {getGameState, getPhaseNumber, Phases} from "../services/gameService";
 import Loading from "./Loading";
-import {Alert} from "@mui/material";
+import {Alert, Snackbar} from "@mui/material";
 import {getAllTerritoriesFromGameState, getOwnerOfTerritory, getTerritoryData} from "../services/territoryService";
 import GameStateContextProvider from "../context/GameStateContextProvider";
-import {useContext, useState} from "react";
+import {SyntheticEvent, useContext, useState} from "react";
 import AccessContext from "../context/AccessContext";
 import ReinforceDialog from "./ReinforceDialog";
 import axios from "axios";
@@ -21,6 +21,15 @@ export default function Game() {
     const [isReinforceDialogOpen, setReinforceDialogOpen] = useState(false);
     const {username} = useContext(AccessContext);
     const [selectedTerritory, setSelectedTerritory] = useState<TerritoryModel | null>(null);
+    const [isOpenSnackBar, setOpenSnackBar] = useState(false);
+
+    const handleCloseSnackbar = (event?: SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpenSnackBar(false);
+    };
 
     if (isLoading) return <Loading/>;
 
@@ -44,6 +53,10 @@ export default function Game() {
 
         if (game.phase === Phases.REINFORCEMENT) {
             console.log("reinforce");
+            if (currentPlayerInGame.remainingTroopsToReinforce < 1) {
+                setOpenSnackBar(true);
+                return;
+            }
             setReinforceDialogOpen(true);
             setSelectedTerritory(getTerritoryData(getAllTerritoriesFromGameState(game), territoryName));
         }
@@ -70,7 +83,7 @@ export default function Game() {
                 </Grid>
                 <Grid item xs={2}>
                     {game.playersInGame.map((playerInGame) => {
-                        return <PlayerFrame playerInGame={playerInGame}
+                        return <PlayerFrame playerInGame={playerInGame} key={playerInGame.playerInGameId}
                                             currentPlayerName={game.playersInGame[game.currentPlayer].player.username}/>
                     })}
                 </Grid>
@@ -79,9 +92,13 @@ export default function Game() {
                                    currentPlayer={game.playersInGame[game.currentPlayer]}/>
                 </Grid>
             </Grid>
-            {/*TODO fix maxTroops*/}
             <ReinforceDialog isOpen={isReinforceDialogOpen} onClose={() => setReinforceDialogOpen(false)}
-                             onSubmit={reinforceTerritory} maxTroops={20}/>
+                             onSubmit={reinforceTerritory} maxTroops={game.playersInGame[game.currentPlayer].remainingTroopsToReinforce}/>
+            <Snackbar open={isOpenSnackBar} autoHideDuration={4000} onClose={handleCloseSnackbar}>
+                <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
+                    No more troops remaining!
+                </Alert>
+            </Snackbar>
         </>
     );
 }

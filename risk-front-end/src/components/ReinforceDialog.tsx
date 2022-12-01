@@ -79,7 +79,7 @@ export default function ReinforceDialog({isOpen, onClose, onSubmit, maxTroops}: 
                 </Box>
             </DialogContent>
             <DialogActions>
-                <Button variant="contained" fullWidth onClick={() => onSubmit(troops)}>Reinforce</Button>
+                <Button variant="contained" fullWidth onClick={() => {onSubmit(troops); setTroops(1)}}>Reinforce</Button>
             </DialogActions>
         </Dialog>);
 }
