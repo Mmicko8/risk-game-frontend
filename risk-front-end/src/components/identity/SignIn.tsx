@@ -43,7 +43,7 @@ export default function SignIn() {
     const navigate = useNavigate()
 
     const _onSubmit = async (data: SignInCredentials) => {
-        axios.post("/api/player/login", {userName: data.username, password: data.password})
+        axios.post("/api/player/login", {username: data.username, password: data.password})
             .then((response) => {
                 setAccessToken(response?.headers?.authorization!);
                 setUsername(data.username);
