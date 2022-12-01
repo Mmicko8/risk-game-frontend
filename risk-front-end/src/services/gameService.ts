@@ -11,3 +11,9 @@ export const Phases = {
     ATTACK: "ATTACK",
     FORTIFY: "FORTIFY"
 };
+
+export function getPhaseNumber(phase: string) {
+    if (phase === Phases.REINFORCEMENT) return 0;
+    if (phase === Phases.ATTACK) return 1;
+    else return 2;
+}
