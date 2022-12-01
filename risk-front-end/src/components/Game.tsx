@@ -6,29 +6,32 @@ import {Alert, Snackbar} from "@mui/material";
 import {
     getAllAttackableTerritoryNamesFromGameState,
     getAllTerritoriesFromGameState,
-    getOwnerOfTerritory,
     getTerritoryData
 } from "../services/territoryService";
 import GameStateContextProvider from "../context/GameStateContextProvider";
 import {SyntheticEvent, useContext, useState} from "react";
 import AccessContext from "../context/AccessContext";
-import ReinforceDialog from "./ReinforceDialog";
+import TroopSelector from "./TroopSelector";
 import axios from "axios";
 import {TerritoryModel} from "../model/TerritoryModel";
 import PlayerFrame from "./Player/PlayerFrame";
 import Grid from "@mui/material/Grid";
 import CurrentPlayer from "./Player/CurrentPlayer";
+import {getMaxTroopsFromTroopCount} from "../services/attackService";
 
 export default function Game() {
+    // we know this component is too big, no time to refactor it before sprint 1
     const queryClient = useQueryClient();
     const gameId = 1; // todo
     const {isLoading, isError, data: game} = useQuery(["game", gameId], () => getGameState(gameId));
-    const [isReinforceDialogOpen, setReinforceDialogOpen] = useState(false);
+    const [isTroopSelectorOpen, setTroopSelectorOpen] = useState(false);
     const {username} = useContext(AccessContext);
     const [selectedOwnedTerritory, setSelectedOwnedTerritory] = useState<TerritoryModel | null>(null);
     const [territoryToAttack, setTerritoryToAttack] = useState<TerritoryModel | null>(null);
     const [isOpenSnackBar, setOpenSnackBar] = useState(false);
     const [snackBarMessage, setSnackBarMessage] = useState("");
+    const [troopSelectorButtonText, setTroopSelectorButtonText] = useState("");
+    const [troopSelectorMaxTroops, setTroopSelectorMaxTroops] = useState(0);
     const [attackableTerritoryNames, setAttackableTerritoryNames] = useState<string[] | null>(null)
 
     const handleCloseSnackbar = (event?: SyntheticEvent | Event, reason?: string) => {
@@ -45,7 +48,7 @@ export default function Game() {
     }
 
     const reinforceTerritory = async (troops: number) => {
-        setReinforceDialogOpen(false);
+        setTroopSelectorOpen(false);
         await axios.put(`/api/territory/${selectedOwnedTerritory?.territoryId}/placeTroops/${troops}`);
         await queryClient.invalidateQueries(["game", gameId]);
         setSelectedOwnedTerritory(null);
@@ -57,20 +60,23 @@ export default function Game() {
         if (currentPlayerInGame.player.username !== username) return; // check if player has turn
 
         const territoryData = getTerritoryData(getAllTerritoriesFromGameState(game), territoryName);
+        const ownerId = territoryData!.ownerId;
 
         if (game.phase === Phases.REINFORCEMENT) {
+            if (ownerId !== currentPlayerInGame.playerInGameId) return;
+
             if (currentPlayerInGame.remainingTroopsToReinforce < 1) {
                 setSnackBarMessage("No more troops remaining!")
                 setOpenSnackBar(true);
                 return;
             }
-            setReinforceDialogOpen(true);
+            setTroopSelectorMaxTroops(game.playersInGame[game.currentPlayer].remainingTroopsToReinforce);
+            setTroopSelectorButtonText("Reinforce");
+            setTroopSelectorOpen(true);
             setSelectedOwnedTerritory(territoryData);
         }
 
         if (game.phase === Phases.ATTACK) {
-            const ownerId = getOwnerOfTerritory(game, territoryName);
-
             // check if selected territory is your own territory, to attack from
             if (ownerId === currentPlayerInGame.playerInGameId) {
                 if (territoryData!.troops < 2) {
@@ -90,8 +96,9 @@ export default function Game() {
             // check if selected territory to attack is attackable neighbor
             if (attackableTerritories.includes(territoryData!.name)) {
                 setTerritoryToAttack(territoryData);
-                setSnackBarMessage("attacking territory: " + territoryData?.name);
-                setOpenSnackBar(true);
+                setTroopSelectorMaxTroops(getMaxTroopsFromTroopCount(selectedOwnedTerritory!.troops));
+                setTroopSelectorButtonText("Attack");
+                setTroopSelectorOpen(true);
             }
         }
     }
@@ -127,8 +134,10 @@ export default function Game() {
                                    currentPlayer={game.playersInGame[game.currentPlayer]}/>
                 </Grid>
             </Grid>
-            <ReinforceDialog isOpen={isReinforceDialogOpen} onClose={() => setReinforceDialogOpen(false)}
-                             onSubmit={reinforceTerritory} maxTroops={game.playersInGame[game.currentPlayer].remainingTroopsToReinforce}/>
+            <TroopSelector isOpen={isTroopSelectorOpen} onClose={() => setTroopSelectorOpen(false)}
+                           onSubmit={reinforceTerritory}
+                           maxTroops={troopSelectorMaxTroops}
+                           confirmButtonText={troopSelectorButtonText}/>
             <Snackbar open={isOpenSnackBar} autoHideDuration={4000} onClose={handleCloseSnackbar}>
                 <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
                     {snackBarMessage}

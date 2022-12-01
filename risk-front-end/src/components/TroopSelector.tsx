@@ -18,9 +18,10 @@ interface ReinforceDialogProps {
     onClose: () => void;
     onSubmit: (troops: number) => void;
     maxTroops: number;
+    confirmButtonText: string;
 }
 
-export default function ReinforceDialog({isOpen, onClose, onSubmit, maxTroops}: ReinforceDialogProps) {
+export default function TroopSelector({isOpen, onClose, onSubmit, maxTroops, confirmButtonText}: ReinforceDialogProps) {
 
     const Input = styled(MuiInput)`
       width: 42px;
@@ -48,8 +49,6 @@ export default function ReinforceDialog({isOpen, onClose, onSubmit, maxTroops}: 
             setTroops(maxTroops);
         }
     };
-
-    // TODO fix not being able to manually type in higher than max
 
     return (
         <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="xs">
@@ -79,7 +78,9 @@ export default function ReinforceDialog({isOpen, onClose, onSubmit, maxTroops}: 
                 </Box>
             </DialogContent>
             <DialogActions>
-                <Button variant="contained" fullWidth onClick={() => {onSubmit(troops); setTroops(1)}}>Reinforce</Button>
+                <Button variant="contained" fullWidth onClick={() => {onSubmit(troops); setTroops(1)}}>
+                    {confirmButtonText}
+                </Button>
             </DialogActions>
         </Dialog>);
 }
