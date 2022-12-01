@@ -3,7 +3,12 @@ import {useQuery, useQueryClient} from "react-query";
 import {getGameState, getPhaseNumber, Phases} from "../services/gameService";
 import Loading from "./Loading";
 import {Alert, Snackbar} from "@mui/material";
-import {getAllTerritoriesFromGameState, getOwnerOfTerritory, getTerritoryData} from "../services/territoryService";
+import {
+    getAllAttackableTerritoryNamesFromGameState,
+    getAllTerritoriesFromGameState,
+    getOwnerOfTerritory,
+    getTerritoryData
+} from "../services/territoryService";
 import GameStateContextProvider from "../context/GameStateContextProvider";
 import {SyntheticEvent, useContext, useState} from "react";
 import AccessContext from "../context/AccessContext";
@@ -22,12 +27,12 @@ export default function Game() {
     const {username} = useContext(AccessContext);
     const [selectedTerritory, setSelectedTerritory] = useState<TerritoryModel | null>(null);
     const [isOpenSnackBar, setOpenSnackBar] = useState(false);
+    const [attackableTerritoryNames, setAttackableTerritoryNames] = useState<string[] | null>(null)
 
     const handleCloseSnackbar = (event?: SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') {
             return;
         }
-
         setOpenSnackBar(false);
     };
 
@@ -51,14 +56,20 @@ export default function Game() {
         const ownerId = getOwnerOfTerritory(game, territoryName);
         if (!ownerId || currentPlayerInGame.playerInGameId !== ownerId) return;
 
+        const territoryData = getTerritoryData(getAllTerritoriesFromGameState(game), territoryName);
+
         if (game.phase === Phases.REINFORCEMENT) {
-            console.log("reinforce");
             if (currentPlayerInGame.remainingTroopsToReinforce < 1) {
                 setOpenSnackBar(true);
                 return;
             }
             setReinforceDialogOpen(true);
-            setSelectedTerritory(getTerritoryData(getAllTerritoriesFromGameState(game), territoryName));
+            setSelectedTerritory(territoryData);
+        }
+
+        if (game.phase === Phases.ATTACK) {
+            const attackableNeighborNameList = getAllAttackableTerritoryNamesFromGameState(game, territoryData!);
+            setAttackableTerritoryNames(attackableNeighborNameList)
         }
     }
 
@@ -78,7 +89,8 @@ export default function Game() {
             <Grid container display="flex" alignItems="center" justifyItems="center">
                 <Grid item xs={10}>
                     <GameStateContextProvider game={game}>
-                        <Board selectTerritory={selectTerritory} territories={getAllTerritoriesFromGameState(game)}/>
+                        <Board selectTerritory={selectTerritory} territories={getAllTerritoriesFromGameState(game)}
+                        attackableTerritoryNames={attackableTerritoryNames}/>
                     </GameStateContextProvider>
                 </Grid>
                 <Grid item xs={2}>

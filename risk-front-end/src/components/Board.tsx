@@ -9,6 +9,7 @@ import {GameModel} from "../model/GameModel";
 interface BoardProps {
     selectTerritory: (e: string, territoryName: string) => void;
     territories: TerritoryModel[];
+    attackableTerritoryNames: string[] | null;
 }
 
 function getTerritoryColor(game: GameModel, territoryOwnerId: number) {
@@ -19,8 +20,18 @@ function getTerritoryColor(game: GameModel, territoryOwnerId: number) {
     }
 }
 
-export default function Board({selectTerritory, territories}: BoardProps) {
-    const DARK_GREY = "#545454";
+export default function Board({selectTerritory, territories, attackableTerritoryNames}: BoardProps) {
+    const strokeColor = (territoryName: string) => {
+        if (attackableTerritoryNames && attackableTerritoryNames.includes(territoryName)) {
+            return '#ff0000';
+        }
+        return "#545454";
+    }
+    const strokeWidth = (territoryName: string) => {
+        if (attackableTerritoryNames && attackableTerritoryNames.includes(territoryName)) {
+            return "2.5";
+        }
+    }
     const {game} = useContext(GameStateContext);
 
     return (
@@ -32,7 +43,7 @@ export default function Board({selectTerritory, territories}: BoardProps) {
                     {territories.map((t) => {
                         let drawData = getTerritoryDrawData(t.name);
 
-                        return <g key={t.name} stroke={DARK_GREY}
+                        return <g key={t.name} stroke={strokeColor(t.name)} strokeWidth={strokeWidth(t.name)}
                            fill={getTerritoryColor(game, t.ownerId)} visibility="visible">
                             <Territory drawPath={drawData.drawPath} name={t.name}
                                        troopCount={t.troops}
