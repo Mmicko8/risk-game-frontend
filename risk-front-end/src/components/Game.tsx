@@ -25,7 +25,8 @@ export default function Game() {
     const {isLoading, isError, data: game} = useQuery(["game", gameId], () => getGameState(gameId));
     const [isReinforceDialogOpen, setReinforceDialogOpen] = useState(false);
     const {username} = useContext(AccessContext);
-    const [selectedTerritory, setSelectedTerritory] = useState<TerritoryModel | null>(null);
+    const [selectedOwnedTerritory, setSelectedOwnedTerritory] = useState<TerritoryModel | null>(null);
+    const [territoryToAttack, setTerritoryToAttack] = useState<TerritoryModel | null>(null);
     const [isOpenSnackBar, setOpenSnackBar] = useState(false);
     const [snackBarMessage, setSnackBarMessage] = useState("");
     const [attackableTerritoryNames, setAttackableTerritoryNames] = useState<string[] | null>(null)
@@ -45,17 +46,15 @@ export default function Game() {
 
     const reinforceTerritory = async (troops: number) => {
         setReinforceDialogOpen(false);
-        await axios.put(`/api/territory/${selectedTerritory?.territoryId}/placeTroops/${troops}`);
+        await axios.put(`/api/territory/${selectedOwnedTerritory?.territoryId}/placeTroops/${troops}`);
         await queryClient.invalidateQueries(["game", gameId]);
+        setSelectedOwnedTerritory(null);
     }
 
     const selectTerritory = (e: any, territoryName: string) => {
         console.log(e, territoryName);
         const currentPlayerInGame = game.playersInGame[game.currentPlayer];
-        if (currentPlayerInGame.player.username !== username) return;
-
-        const ownerId = getOwnerOfTerritory(game, territoryName);
-        if (!ownerId || currentPlayerInGame.playerInGameId !== ownerId) return;
+        if (currentPlayerInGame.player.username !== username) return; // check if player has turn
 
         const territoryData = getTerritoryData(getAllTerritoriesFromGameState(game), territoryName);
 
@@ -66,17 +65,34 @@ export default function Game() {
                 return;
             }
             setReinforceDialogOpen(true);
-            setSelectedTerritory(territoryData);
+            setSelectedOwnedTerritory(territoryData);
         }
 
         if (game.phase === Phases.ATTACK) {
-            if (territoryData!.troops < 2) {
-                setSnackBarMessage("Territory must at least have 2 troops to attack!");
-                setOpenSnackBar(true);
+            const ownerId = getOwnerOfTerritory(game, territoryName);
+
+            // check if selected territory is your own territory, to attack from
+            if (ownerId === currentPlayerInGame.playerInGameId) {
+                if (territoryData!.troops < 2) {
+                    setSnackBarMessage("Territory must at least have 2 troops to attack!");
+                    setOpenSnackBar(true);
+                    setAttackableTerritoryNames(null);
+                    return;
+                }
+                setSelectedOwnedTerritory(territoryData);
+                const attackableNeighborNameList = getAllAttackableTerritoryNamesFromGameState(game, territoryData!);
+                setAttackableTerritoryNames(attackableNeighborNameList);
                 return;
             }
-            const attackableNeighborNameList = getAllAttackableTerritoryNamesFromGameState(game, territoryData!);
-            setAttackableTerritoryNames(attackableNeighborNameList)
+
+            // if selected territory is not your own territory it will select it for attack
+            const attackableTerritories = getAllAttackableTerritoryNamesFromGameState(game, selectedOwnedTerritory!);
+            // check if selected territory to attack is attackable neighbor
+            if (attackableTerritories.includes(territoryData!.name)) {
+                setTerritoryToAttack(territoryData);
+                setSnackBarMessage("attacking territory: " + territoryData?.name);
+                setOpenSnackBar(true);
+            }
         }
     }
 
