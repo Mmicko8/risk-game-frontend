@@ -21,20 +21,25 @@ export default function CurrentPlayer() {
         setActiveStep((prevActiveStep) => prevActiveStep + 1)
     }
 
-    return(
+    return (
         <Box display="flex" alignContent="center" justifyContent="center" position="relative"
-         sx={{height:"15vh", width: "25vw", mt:"1rem", mr:"1rem", border: 1, borderRadius: 3, backgroundColor: "rgba(98,98,98,0.61)"}}>
-            <Stepper sx={{position:"absolute", top:"35%"}} activeStep={activeStep} alternativeLabel>
+             sx={{
+                 height: "15vh", border: 1, borderRadius: 3, backgroundColor: "rgba(98,98,98,0.61)",
+                 display: "flex", justifyContent: "space-around", alignItems: "center"
+             }}>
+            <Avatar src="testAvatar.jpg" sx={{height: "5vw", width: "5vw", marginLeft: "0.5vw"}}></Avatar>
+            <Stepper activeStep={activeStep} alternativeLabel>
                 {steps.map((label) => (
                     <Step key={label}>
                         <StepLabel>{label}</StepLabel>
                     </Step>
                 ))}
             </Stepper>
-            <Fab color="success" sx={{position: "absolute", top: "30%", right:"2%"}} onClick={handleNext}>
-                {activeStep === steps.length - 1 ? <KeyboardDoubleArrowRightIcon/> : <KeyboardArrowRightIcon/>}
-            </Fab>
-            <Avatar sx={{position:"absolute", margin:"0.25rem", left:"0%", width: "7vw", height: "7vw" }} src="testAvatar.jpg"></Avatar>
+            <div style={{height: "5.5vw", width: "5.5vw", display: "flex", justifyContent: "center", alignItems: "center"}}>
+                <Fab color="success" onClick={handleNext} style={{height: "4vw", width: "4vw"}}>
+                    {activeStep === steps.length - 1 ? <KeyboardDoubleArrowRightIcon sx={{fontSize: "3vw"}}/> : <KeyboardArrowRightIcon sx={{fontSize: "3vw"}}/>}
+                </Fab>
+            </div>
         </Box>
     )
 }
