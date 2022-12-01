@@ -2,11 +2,16 @@ import Box from "@mui/material/Box";
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
-import {useState} from "react";
 import Fab from '@mui/material/Fab';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import Avatar from "@mui/material/Avatar";
+
+interface CurrentPlayerProps {
+    nextPhase: () => void;
+    nextTurn: () => void;
+    currentPhase: number;
+}
 
 const steps = [
     'Reinforce',
@@ -14,11 +19,10 @@ const steps = [
     'Fortify',
 ];
 
-export default function CurrentPlayer() {
-    const [activeStep, setActiveStep] = useState(0);
-
+export default function CurrentPlayer({nextPhase, nextTurn, currentPhase}: CurrentPlayerProps) {
     const handleNext = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep + 1)
+        if (steps[currentPhase] === 'Fortify') nextTurn()
+        else nextPhase()
     }
 
     return (
@@ -28,7 +32,7 @@ export default function CurrentPlayer() {
                  display: "flex", justifyContent: "space-around", alignItems: "center"
              }}>
             <Avatar src="testAvatar.jpg" sx={{height: "5vw", width: "5vw", marginLeft: "0.5vw"}}></Avatar>
-            <Stepper activeStep={activeStep} alternativeLabel>
+            <Stepper activeStep={currentPhase} alternativeLabel>
                 {steps.map((label) => (
                     <Step key={label}>
                         <StepLabel>{label}</StepLabel>
@@ -37,7 +41,7 @@ export default function CurrentPlayer() {
             </Stepper>
             <div style={{height: "5.5vw", width: "5.5vw", display: "flex", justifyContent: "center", alignItems: "center"}}>
                 <Fab color="success" onClick={handleNext} style={{height: "4vw", width: "4vw"}}>
-                    {activeStep === steps.length - 1 ? <KeyboardDoubleArrowRightIcon sx={{fontSize: "3vw"}}/> : <KeyboardArrowRightIcon sx={{fontSize: "3vw"}}/>}
+                    {currentPhase === steps.length - 1 ? <KeyboardDoubleArrowRightIcon sx={{fontSize: "3vw"}}/> : <KeyboardArrowRightIcon sx={{fontSize: "3vw"}}/>}
                 </Fab>
             </div>
         </Box>
