@@ -6,11 +6,14 @@ import Fab from '@mui/material/Fab';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import Avatar from "@mui/material/Avatar";
+import {useContext} from "react";
+import AccessContext from "../../context/AccessContext";
 
 interface CurrentPlayerProps {
     nextPhase: () => void;
     nextTurn: () => void;
     currentPhase: number;
+    currentPlayerInGameName: string
 }
 
 const steps = [
@@ -19,11 +22,17 @@ const steps = [
     'Fortify',
 ];
 
-export default function CurrentPlayer({nextPhase, nextTurn, currentPhase}: CurrentPlayerProps) {
+export default function CurrentPlayer({nextPhase, nextTurn, currentPhase, currentPlayerInGameName}: CurrentPlayerProps) {
+    const {username} = useContext(AccessContext);
     const handleNext = () => {
         if (steps[currentPhase] === 'Fortify') nextTurn()
         else nextPhase()
     }
+
+    const disableButton = () => {
+        return username !== currentPlayerInGameName || !username;
+    }
+    console.log(currentPlayerInGameName, username)
 
     return (
         <Box display="flex" alignContent="center" justifyContent="center" position="relative"
@@ -40,7 +49,8 @@ export default function CurrentPlayer({nextPhase, nextTurn, currentPhase}: Curre
                 ))}
             </Stepper>
             <div style={{height: "5.5vw", width: "5.5vw", display: "flex", justifyContent: "center", alignItems: "center"}}>
-                <Fab color="success" onClick={handleNext} style={{height: "4vw", width: "4vw"}}>
+                <Fab color="success" onClick={handleNext} disabled={disableButton()}
+                     style={{height: "4vw", width: "4vw"}}>
                     {currentPhase === steps.length - 1 ? <KeyboardDoubleArrowRightIcon sx={{fontSize: "3vw"}}/> : <KeyboardArrowRightIcon sx={{fontSize: "3vw"}}/>}
                 </Fab>
             </div>

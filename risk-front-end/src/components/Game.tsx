@@ -72,7 +72,8 @@ export default function Game() {
                     <PlayerFrame/>
                 </Grid>
                 <Grid item xs={12} display="flex" justifyContent="center">
-                    <CurrentPlayer nextPhase={nextPhase} nextTurn={nextTurn} currentPhase={getPhaseNumber(game.phase)}/>
+                    <CurrentPlayer nextPhase={nextPhase} nextTurn={nextTurn} currentPhase={getPhaseNumber(game.phase)}
+                        currentPlayerInGameName={game.playersInGame[game.currentPlayer].player.username}/>
                 </Grid>
             </Grid>
             {/*TODO fix maxTroops*/}
