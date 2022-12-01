@@ -27,6 +27,7 @@ export default function Game() {
     const {username} = useContext(AccessContext);
     const [selectedTerritory, setSelectedTerritory] = useState<TerritoryModel | null>(null);
     const [isOpenSnackBar, setOpenSnackBar] = useState(false);
+    const [snackBarMessage, setSnackBarMessage] = useState("");
     const [attackableTerritoryNames, setAttackableTerritoryNames] = useState<string[] | null>(null)
 
     const handleCloseSnackbar = (event?: SyntheticEvent | Event, reason?: string) => {
@@ -60,6 +61,7 @@ export default function Game() {
 
         if (game.phase === Phases.REINFORCEMENT) {
             if (currentPlayerInGame.remainingTroopsToReinforce < 1) {
+                setSnackBarMessage("No more troops remaining!")
                 setOpenSnackBar(true);
                 return;
             }
@@ -68,6 +70,11 @@ export default function Game() {
         }
 
         if (game.phase === Phases.ATTACK) {
+            if (territoryData!.troops < 2) {
+                setSnackBarMessage("Territory must at least have 2 troops to attack!");
+                setOpenSnackBar(true);
+                return;
+            }
             const attackableNeighborNameList = getAllAttackableTerritoryNamesFromGameState(game, territoryData!);
             setAttackableTerritoryNames(attackableNeighborNameList)
         }
@@ -108,7 +115,7 @@ export default function Game() {
                              onSubmit={reinforceTerritory} maxTroops={game.playersInGame[game.currentPlayer].remainingTroopsToReinforce}/>
             <Snackbar open={isOpenSnackBar} autoHideDuration={4000} onClose={handleCloseSnackbar}>
                 <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
-                    No more troops remaining!
+                    {snackBarMessage}
                 </Alert>
             </Snackbar>
         </>
