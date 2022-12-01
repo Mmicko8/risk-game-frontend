@@ -16,7 +16,7 @@ import Button from "@mui/material/Button";
 interface ReinforceDialogProps {
     isOpen: boolean;
     onClose: () => void;
-    onSubmit: (troops: number) => void;
+    onSubmit: (troops: number, action: string) => void;
     maxTroops: number;
     confirmButtonText: string;
 }
@@ -78,7 +78,7 @@ export default function TroopSelector({isOpen, onClose, onSubmit, maxTroops, con
                 </Box>
             </DialogContent>
             <DialogActions>
-                <Button variant="contained" fullWidth onClick={() => {onSubmit(troops); setTroops(1)}}>
+                <Button variant="contained" fullWidth onClick={() => {onSubmit(troops, confirmButtonText); setTroops(1)}}>
                     {confirmButtonText}
                 </Button>
             </DialogActions>

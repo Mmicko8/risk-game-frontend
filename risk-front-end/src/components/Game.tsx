@@ -47,11 +47,20 @@ export default function Game() {
         return <Alert severity="error">Game state could not be loaded</Alert>;
     }
 
-    const reinforceTerritory = async (troops: number) => {
+    const troopSelectorFunction = async (troops: number, action: string) => {
         setTroopSelectorOpen(false);
-        await axios.put(`/api/territory/${selectedOwnedTerritory?.territoryId}/placeTroops/${troops}`);
-        await queryClient.invalidateQueries(["game", gameId]);
+        if (action === "Reinforce") {
+            await axios.put(`/api/territory/${selectedOwnedTerritory?.territoryId}/placeTroops/${troops}`);
+            await queryClient.invalidateQueries(["game", gameId]);
+        }
+        if (action === "Attack") {
+            await axios.put('/api/game/attack', {gameId, attackerTerritoryName: selectedOwnedTerritory!.name,
+                defenderTerritoryName: territoryToAttack!.name, amountOfAttackers: troops, amountOfDefenders: 1})
+            await queryClient.invalidateQueries(["game", gameId]);
+        }
         setSelectedOwnedTerritory(null);
+        setTerritoryToAttack(null);
+        setAttackableTerritoryNames(null);
     }
 
     const selectTerritory = (e: any, territoryName: string) => {
@@ -135,7 +144,7 @@ export default function Game() {
                 </Grid>
             </Grid>
             <TroopSelector isOpen={isTroopSelectorOpen} onClose={() => setTroopSelectorOpen(false)}
-                           onSubmit={reinforceTerritory}
+                           onSubmit={troopSelectorFunction}
                            maxTroops={troopSelectorMaxTroops}
                            confirmButtonText={troopSelectorButtonText}/>
             <Snackbar open={isOpenSnackBar} autoHideDuration={4000} onClose={handleCloseSnackbar}>
