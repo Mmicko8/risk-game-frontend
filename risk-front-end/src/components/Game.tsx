@@ -54,12 +54,21 @@ export default function Game() {
             await queryClient.invalidateQueries(["game", gameId]);
         }
         if (action === "Attack") {
-            await axios.put('/api/game/attack', {gameId, attackerTerritoryName: selectedOwnedTerritory!.name,
-                defenderTerritoryName: territoryToAttack!.name, amountOfAttackers: troops, amountOfDefenders: 1})
+            const response = await axios.put('/api/game/attack', {gameId, attackerTerritoryName: selectedOwnedTerritory!.name,
+                defenderTerritoryName: territoryToAttack!.name, amountOfAttackers: troops, amountOfDefenders: 1});
+            await queryClient.invalidateQueries(["game", gameId]);
+            if (territoryToAttack!.troops - response.data.defenderDices.length <= 0 && response.data.amountOfSurvivingTroopsDefender === 0) {
+                setTroopSelectorButtonText("Fortify");
+                setTroopSelectorMaxTroops(getTerritoryData(getAllTerritoriesFromGameState(game),
+                    selectedOwnedTerritory!.name)!.troops -1)
+                setTroopSelectorOpen(true);
+            }
+        }
+        if (action === "Fortify") {
+            await axios.put('/api/game/fortify', {gameId, territoryFrom: selectedOwnedTerritory!.name,
+                territoryTo: territoryToAttack!.name, troops})
             await queryClient.invalidateQueries(["game", gameId]);
         }
-        setSelectedOwnedTerritory(null);
-        setTerritoryToAttack(null);
         setAttackableTerritoryNames(null);
     }
 
