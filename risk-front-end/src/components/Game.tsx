@@ -57,6 +57,8 @@ export default function Game() {
             const response = await axios.put('/api/game/attack', {gameId, attackerTerritoryName: selectedOwnedTerritory!.name,
                 defenderTerritoryName: territoryToAttack!.name, amountOfAttackers: troops, amountOfDefenders: 1});
             await queryClient.invalidateQueries(["game", gameId]);
+            console.log(response.data)
+            //TODO: fix selectedOwnedTerritory to maybe be null after a successful attack
             if (territoryToAttack!.troops - response.data.defenderDices.length <= 0 && response.data.amountOfSurvivingTroopsDefender === 0) {
                 setTroopSelectorButtonText("Fortify");
                 setTroopSelectorMaxTroops(getTerritoryData(getAllTerritoriesFromGameState(game),
