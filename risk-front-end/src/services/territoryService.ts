@@ -7,9 +7,9 @@ export function getTerritoryDrawData(name: string) {
 }
 
 export function getAllTerritoriesFromGameState(game: GameModel) {
-    let territories = game.continentList[0].territoryList;
-    for (let i = 1; i < game.continentList.length; i++) {
-        territories = territories.concat(game.continentList[i].territoryList);
+    let territories = game.continents[0].territories;
+    for (let i = 1; i < game.continents.length; i++) {
+        territories = territories.concat(game.continents[i].territories);
     }
     return territories;
 }

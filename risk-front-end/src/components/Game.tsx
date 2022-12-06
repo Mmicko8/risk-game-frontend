@@ -76,7 +76,7 @@ export default function Game() {
 
     const selectTerritory = (e: any, territoryName: string) => {
         console.log(e, territoryName);
-        const currentPlayerInGame = game.playersInGame[game.currentPlayer];
+        const currentPlayerInGame = game.playersInGame[game.currentPlayerIndex];
         if (currentPlayerInGame.player.username !== username) return; // check if player has turn
 
         const territoryData = getTerritoryData(getAllTerritoriesFromGameState(game), territoryName);
@@ -90,7 +90,7 @@ export default function Game() {
                 setOpenSnackBar(true);
                 return;
             }
-            setTroopSelectorMaxTroops(game.playersInGame[game.currentPlayer].remainingTroopsToReinforce);
+            setTroopSelectorMaxTroops(game.playersInGame[game.currentPlayerIndex].remainingTroopsToReinforce);
             setTroopSelectorButtonText("Reinforce");
             setTroopSelectorOpen(true);
             setSelectedOwnedTerritory(territoryData);
@@ -146,12 +146,12 @@ export default function Game() {
                 <Grid item xs={2}>
                     {game.playersInGame.map((playerInGame) => {
                         return <PlayerFrame playerInGame={playerInGame} key={playerInGame.playerInGameId}
-                                            currentPlayerName={game.playersInGame[game.currentPlayer].player.username}/>
+                                            currentPlayerName={game.playersInGame[game.currentPlayerIndex].player.username}/>
                     })}
                 </Grid>
                 <Grid item xs={12} display="flex" justifyContent="center">
                     <CurrentPlayer nextPhase={nextPhase} nextTurn={nextTurn} currentPhase={getPhaseNumber(game.phase)}
-                                   currentPlayer={game.playersInGame[game.currentPlayer]}/>
+                                   currentPlayer={game.playersInGame[game.currentPlayerIndex]}/>
                 </Grid>
             </Grid>
             <TroopSelector isOpen={isTroopSelectorOpen} onClose={() => setTroopSelectorOpen(false)}

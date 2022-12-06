@@ -3,9 +3,9 @@ import {Continent} from "./Continent";
 
 export interface GameModel {
     gameId: number;
-    continentList: Continent[];
+    continents: Continent[];
     playersInGame: PlayerInGame[];
     turn: number;
-    currentPlayer: number;
+    currentPlayerIndex: number;
     phase: string;
 }
