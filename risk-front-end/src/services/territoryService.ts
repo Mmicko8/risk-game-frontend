@@ -1,6 +1,7 @@
 import {territoriesDrawData} from "../data/territoryDrawData";
 import {GameModel} from "../model/GameModel";
 import {TerritoryModel} from "../model/TerritoryModel";
+import axios from "axios";
 
 export function getTerritoryDrawData(name: string) {
     return territoriesDrawData[name];
@@ -28,15 +29,7 @@ export function getTerritoryData(territories: TerritoryModel[], territoryName: s
     return null;
 }
 
-export function getAllAttackableTerritoryNamesFromGameState(game: GameModel, territory: TerritoryModel) {
-    let territories = getAllTerritoriesFromGameState(game);
-    let friendlyTerritoryNames = territories.filter(value => {return value.ownerId === territory.ownerId;})
-        .map((t) => {return t.name})
-    let attackableNeighborNameList: string[] = [];
-    territory.neighbors.forEach((n) => {
-        if (!friendlyTerritoryNames.includes(n.name)) {
-            attackableNeighborNameList.push(n.name)
-        }
-    })
-    return attackableNeighborNameList;
+export async function getTerritoriesWithNeighbors(gameId: number) {
+    const response = await axios.get<TerritoryModel[]>(`/api/territory/game/${gameId}/neighbors`);
+    return response.data;
 }
