@@ -4,7 +4,6 @@ import {getGameState, getPhaseNumber, Phases} from "../services/gameService";
 import Loading from "./Loading";
 import {Alert, Snackbar} from "@mui/material";
 import {
-    getAllAttackableTerritoryNamesFromGameState,
     getAllTerritoriesFromGameState,
     getTerritoryData
 } from "../services/territoryService";
@@ -17,7 +16,10 @@ import {TerritoryModel} from "../model/TerritoryModel";
 import PlayerFrame from "./Player/PlayerFrame";
 import Grid from "@mui/material/Grid";
 import CurrentPlayer from "./Player/CurrentPlayer";
-import {getMaxTroopsFromTroopCount} from "../services/attackService";
+// todo rename to generic thing, cuz fortify uses it too
+import {getAllAttackableTerritoryNamesFromGameState, getMaxTroopsFromTroopCount} from "../services/attackService";
+import {getAllFortifiableTerritories} from "../services/fortifyService";
+
 
 export default function Game() {
     // we know this component is too big, no time to refactor it before sprint 1
@@ -32,7 +34,7 @@ export default function Game() {
     const [snackBarMessage, setSnackBarMessage] = useState("");
     const [troopSelectorButtonText, setTroopSelectorButtonText] = useState("");
     const [troopSelectorMaxTroops, setTroopSelectorMaxTroops] = useState(0);
-    const [attackableTerritoryNames, setAttackableTerritoryNames] = useState<string[] | null>(null)
+    const [attackableTerritoryNames, setAttackableTerritoryNames] = useState<string[] | null>(null);
 
     const handleCloseSnackbar = (event?: SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') {
@@ -74,7 +76,7 @@ export default function Game() {
         setAttackableTerritoryNames(null);
     }
 
-    const selectTerritory = (e: any, territoryName: string) => {
+    const selectTerritory = async (e: any, territoryName: string) => {
         console.log(e, territoryName);
         const currentPlayerInGame = game.playersInGame[game.currentPlayerIndex];
         if (currentPlayerInGame.player.username !== username) return; // check if player has turn
@@ -96,7 +98,7 @@ export default function Game() {
             setSelectedOwnedTerritory(territoryData);
         }
 
-        if (game.phase === Phases.ATTACK) {
+        else if (game.phase === Phases.ATTACK) {
             // check if selected territory is your own territory, to attack from
             if (ownerId === currentPlayerInGame.playerInGameId) {
                 if (territoryData!.troops < 2) {
@@ -106,13 +108,13 @@ export default function Game() {
                     return;
                 }
                 setSelectedOwnedTerritory(territoryData);
-                const attackableNeighborNameList = getAllAttackableTerritoryNamesFromGameState(game, territoryData!);
+                const attackableNeighborNameList = await getAllAttackableTerritoryNamesFromGameState(game, territoryData!);
                 setAttackableTerritoryNames(attackableNeighborNameList);
                 return;
             }
 
             // if selected territory is not your own territory it will select it for attack
-            const attackableTerritories = getAllAttackableTerritoryNamesFromGameState(game, selectedOwnedTerritory!);
+            const attackableTerritories = await getAllAttackableTerritoryNamesFromGameState(game, selectedOwnedTerritory!);
             // check if selected territory to attack is attackable neighbor
             if (attackableTerritories.includes(territoryData!.name)) {
                 setTerritoryToAttack(territoryData);
@@ -120,6 +122,20 @@ export default function Game() {
                 setTroopSelectorButtonText("Attack");
                 setTroopSelectorOpen(true);
             }
+        }
+
+        else if (game.phase === Phases.FORTIFICATION) {
+            if (territoryData!.troops < 2) {
+                setSnackBarMessage("Territory must at least have 2 troops to fortify!");
+                setOpenSnackBar(true);
+                setAttackableTerritoryNames(null);
+                return;
+            }
+
+            setSelectedOwnedTerritory(territoryData);
+            const fortifiableNeighborNameList = getAllFortifiableTerritories(territoryData!, game);
+            console.log(fortifiableNeighborNameList);
+            setAttackableTerritoryNames(await fortifiableNeighborNameList);
         }
     }
 

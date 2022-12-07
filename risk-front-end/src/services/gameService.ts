@@ -9,7 +9,7 @@ export async function getGameState(gameId: number) {
 export const Phases = {
     REINFORCEMENT: "REINFORCEMENT",
     ATTACK: "ATTACK",
-    FORTIFY: "FORTIFY"
+    FORTIFICATION: "FORTIFICATION"
 };
 
 export function getPhaseNumber(phase: string) {

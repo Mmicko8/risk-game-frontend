@@ -1,5 +1,4 @@
 import {TerritoryModel} from "../model/TerritoryModel";
-// import {getConnectedTerritories} from "./fortifyService";
 
 let allTerritories: TerritoryModel[] = [
     {
@@ -305,13 +304,13 @@ test('testDataCheck', () => {
 })
 
 
-test('getConnectedTerritories', () => {
-    const startTerritory = {
-        "territoryId": 2, "name": "Yakutsk", "ownerId": 2, "troops": 1,
-        "neighbors": [{"name": "Irkutsk"}, {"name": "Kamchatka"}, {"name": "Siberia"}]
-    };
+test('getFortifiableTerritories', () => {
+    // const startTerritory = {
+    //     "territoryId": 2, "name": "Yakutsk", "ownerId": 2, "troops": 1,
+    //     "neighbors": [{"name": "Irkutsk"}, {"name": "Kamchatka"}, {"name": "Siberia"}]
+    // };
 
-    // const result = getConnectedTerritories(startTerritory, [startTerritory], allTerritories);
+    // const result = getFortifiableTerritories(startTerritory, [startTerritory], allTerritories);
     expect(10).toBe(10);
     // console.log(result);
     // expect(result.length).toBe(4);

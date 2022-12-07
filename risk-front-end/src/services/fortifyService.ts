@@ -5,17 +5,18 @@ import {getTerritoriesWithNeighbors, getTerritoryData} from "./territoryService"
 
 
 
-export async function getAllConnectedTerritories(startTerritory: TerritoryModel, game: GameModel) {
+export async function getAllFortifiableTerritories(startTerritory: TerritoryModel, game: GameModel) {
     const territories = await getTerritoriesWithNeighbors(game.gameId);
-    let connectedTerritories = getConnectedTerritories(startTerritory, [startTerritory], territories);
-    connectedTerritories = connectedTerritories.filter(value => value.territoryId === startTerritory.territoryId);
+    startTerritory.neighbors = getTerritoryData(territories, startTerritory.name)!.neighbors;
+    let connectedTerritories = getFortifiableTerritories(startTerritory, [startTerritory.name], territories);
+    connectedTerritories = connectedTerritories.filter(value => value !== startTerritory.name);
     return connectedTerritories;
 }
 
-export function getConnectedTerritories(startTerritory: TerritoryModel,
-                                        connectedTerritories: TerritoryModel[],
-                                        allTerritories: TerritoryModel[])
-    : TerritoryModel[] {
+export function getFortifiableTerritories(startTerritory: TerritoryModel,
+                                          connectedTerritoryNames: string[],
+                                          allTerritories: TerritoryModel[])
+    : string[] {
     let territory: TerritoryModel | null;
     const newConnectedTerritories: TerritoryModel[] = [];
 
@@ -23,14 +24,15 @@ export function getConnectedTerritories(startTerritory: TerritoryModel,
         territory = getTerritoryData(allTerritories, n.name);
         if (!territory) throw Error("startTerritory not in allTerritories list");
 
-        if (territory.ownerId === startTerritory.ownerId && !connectedTerritories.includes(territory))
+        if (territory.ownerId === startTerritory.ownerId && !connectedTerritoryNames.includes(territory.name))
             newConnectedTerritories.push(territory);
     }
 
-    connectedTerritories = connectedTerritories.concat(newConnectedTerritories)
+    const newConnectedTerritoryNames = newConnectedTerritories.map(t => t.name);
+    connectedTerritoryNames = connectedTerritoryNames.concat(newConnectedTerritoryNames)
     for (const newConnectedTerritory of newConnectedTerritories) {
-        const result = getConnectedTerritories(newConnectedTerritory, connectedTerritories, allTerritories);
-        connectedTerritories = unionArrays(connectedTerritories, result);
+        const result = getFortifiableTerritories(newConnectedTerritory, connectedTerritoryNames, allTerritories);
+        connectedTerritoryNames = unionArrays(connectedTerritoryNames, result);
     }
-    return connectedTerritories;
+    return connectedTerritoryNames;
 }
