@@ -35,6 +35,7 @@ export default function Game() {
     const [troopSelectorButtonText, setTroopSelectorButtonText] = useState("");
     const [troopSelectorMaxTroops, setTroopSelectorMaxTroops] = useState(0);
     const [attackableTerritoryNames, setAttackableTerritoryNames] = useState<string[] | null>(null);
+    const [fortifiableTerritoryNames, setFortifiableTerritoryNames] = useState<string[] | null>(null);
 
     const handleCloseSnackbar = (event?: SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') {
@@ -48,6 +49,8 @@ export default function Game() {
     if (isError || !game) {
         return <Alert severity="error">Game state could not be loaded</Alert>;
     }
+
+    //TODO: check useReducer
 
     const troopSelectorFunction = async (troops: number, action: string) => {
         setTroopSelectorOpen(false);
@@ -128,14 +131,14 @@ export default function Game() {
             if (territoryData!.troops < 2) {
                 setSnackBarMessage("Territory must at least have 2 troops to fortify!");
                 setOpenSnackBar(true);
-                setAttackableTerritoryNames(null);
+                setFortifiableTerritoryNames(null);
                 return;
             }
 
             setSelectedOwnedTerritory(territoryData);
             const fortifiableNeighborNameList = getAllFortifiableTerritories(territoryData!, game);
             console.log(fortifiableNeighborNameList);
-            setAttackableTerritoryNames(await fortifiableNeighborNameList);
+            setFortifiableTerritoryNames(await fortifiableNeighborNameList);
         }
     }
 
@@ -156,7 +159,7 @@ export default function Game() {
                 <Grid item xs={10}>
                     <GameStateContextProvider game={game}>
                         <Board selectTerritory={selectTerritory} territories={getAllTerritoriesFromGameState(game)}
-                        attackableTerritoryNames={attackableTerritoryNames}/>
+                        attackableTerritoryNames={attackableTerritoryNames} fortifiableTerritoryNames={fortifiableTerritoryNames}/>
                     </GameStateContextProvider>
                 </Grid>
                 <Grid item xs={2}>
