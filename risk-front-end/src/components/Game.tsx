@@ -29,7 +29,7 @@ export default function Game() {
     const [isTroopSelectorOpen, setTroopSelectorOpen] = useState(false);
     const {username} = useContext(AccessContext);
     const [selectedOwnedTerritory, setSelectedOwnedTerritory] = useState<TerritoryModel | null>(null);
-    const [territoryToAttack, setTerritoryToAttack] = useState<TerritoryModel | null>(null);
+    const [territoryToAttackOrFortify, setTerritoryToAttackOrFortify] = useState<TerritoryModel | null>(null);
     const [isOpenSnackBar, setOpenSnackBar] = useState(false);
     const [snackBarMessage, setSnackBarMessage] = useState("");
     const [troopSelectorButtonText, setTroopSelectorButtonText] = useState("");
@@ -60,11 +60,11 @@ export default function Game() {
         }
         if (action === "Attack") {
             const response = await axios.put('/api/game/attack', {gameId, attackerTerritoryName: selectedOwnedTerritory!.name,
-                defenderTerritoryName: territoryToAttack!.name, amountOfAttackers: troops, amountOfDefenders: 1});
+                defenderTerritoryName: territoryToAttackOrFortify!.name, amountOfAttackers: troops, amountOfDefenders: 1});
             await queryClient.invalidateQueries(["game", gameId]);
             console.log(response.data)
             //TODO: fix selectedOwnedTerritory to maybe be null after a successful attack
-            if (territoryToAttack!.troops - response.data.defenderDices.length <= 0 && response.data.amountOfSurvivingTroopsDefender === 0) {
+            if (territoryToAttackOrFortify!.troops - response.data.defenderDices.length <= 0 && response.data.amountOfSurvivingTroopsDefender === 0) {
                 setTroopSelectorButtonText("Fortify");
                 setTroopSelectorMaxTroops(getTerritoryData(getAllTerritoriesFromGameState(game),
                     selectedOwnedTerritory!.name)!.troops -1)
@@ -72,11 +72,16 @@ export default function Game() {
             }
         }
         if (action === "Fortify") {
+            console.log(selectedOwnedTerritory)
+            console.log("im here")
             await axios.put('/api/game/fortify', {gameId, territoryFrom: selectedOwnedTerritory!.name,
-                territoryTo: territoryToAttack!.name, troops})
+                territoryTo: territoryToAttackOrFortify!.name, troops})
             await queryClient.invalidateQueries(["game", gameId]);
         }
+        setSelectedOwnedTerritory(null);
+        // setTerritoryToAttackOrFortify(null);
         setAttackableTerritoryNames(null);
+        setFortifiableTerritoryNames(null);
     }
 
     const selectTerritory = async (e: any, territoryName: string) => {
@@ -120,7 +125,7 @@ export default function Game() {
             const attackableTerritories = await getAllAttackableTerritoryNamesFromGameState(game, selectedOwnedTerritory!);
             // check if selected territory to attack is attackable neighbor
             if (attackableTerritories.includes(territoryData!.name)) {
-                setTerritoryToAttack(territoryData);
+                setTerritoryToAttackOrFortify(territoryData);
                 setTroopSelectorMaxTroops(getMaxTroopsFromTroopCount(selectedOwnedTerritory!.troops));
                 setTroopSelectorButtonText("Attack");
                 setTroopSelectorOpen(true);
@@ -128,17 +133,32 @@ export default function Game() {
         }
 
         else if (game.phase === Phases.FORTIFICATION) {
-            if (territoryData!.troops < 2) {
-                setSnackBarMessage("Territory must at least have 2 troops to fortify!");
-                setOpenSnackBar(true);
-                setFortifiableTerritoryNames(null);
+            if (ownerId !== currentPlayerInGame.playerInGameId) {
                 return;
             }
 
-            setSelectedOwnedTerritory(territoryData);
-            const fortifiableNeighborNameList = getAllFortifiableTerritories(territoryData!, game);
-            console.log(fortifiableNeighborNameList);
-            setFortifiableTerritoryNames(await fortifiableNeighborNameList);
+            if (!selectedOwnedTerritory) {
+                if (territoryData!.troops < 2) {
+                    setSnackBarMessage("Territory must at least have 2 troops to fortify!");
+                    setOpenSnackBar(true);
+                    setFortifiableTerritoryNames(null);
+                    return;
+                }
+                setSelectedOwnedTerritory(territoryData);
+                const fortifiableNeighborNameList = await getAllFortifiableTerritories(territoryData!, game);
+                console.log(fortifiableNeighborNameList);
+                setFortifiableTerritoryNames(fortifiableNeighborNameList);
+                return;
+            }
+
+            const fortifiableNeighborNameList = await getAllFortifiableTerritories(selectedOwnedTerritory!, game);
+            // check if selected territory to attack is attackable neighbor
+            if (fortifiableNeighborNameList.includes(territoryData!.name)) {
+                setTerritoryToAttackOrFortify(territoryData);
+                setTroopSelectorMaxTroops(getMaxTroopsFromTroopCount(selectedOwnedTerritory!.troops));
+                setTroopSelectorButtonText("Fortify");
+                setTroopSelectorOpen(true);
+            }
         }
     }
 
