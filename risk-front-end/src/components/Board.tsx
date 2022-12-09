@@ -10,6 +10,7 @@ interface BoardProps {
     selectTerritory: (e: string, territoryName: string) => void;
     territories: TerritoryModel[];
     attackableTerritoryNames: string[] | null;
+    fortifiableTerritoryNames: string[] | null;
 }
 
 function getTerritoryColor(game: GameModel, territoryOwnerId: number) {
@@ -20,15 +21,21 @@ function getTerritoryColor(game: GameModel, territoryOwnerId: number) {
     }
 }
 
-export default function Board({selectTerritory, territories, attackableTerritoryNames}: BoardProps) {
+export default function Board({selectTerritory, territories, attackableTerritoryNames, fortifiableTerritoryNames}: BoardProps) {
     const strokeColor = (territoryName: string) => {
         if (attackableTerritoryNames && attackableTerritoryNames.includes(territoryName)) {
             return '#ff0000';
+        }
+        if (fortifiableTerritoryNames && fortifiableTerritoryNames.includes(territoryName)) {
+            return '#20bd00';
         }
         return "#545454";
     }
     const strokeWidth = (territoryName: string) => {
         if (attackableTerritoryNames && attackableTerritoryNames.includes(territoryName)) {
+            return "2.5";
+        }
+        if (fortifiableTerritoryNames && fortifiableTerritoryNames.includes(territoryName)) {
             return "2.5";
         }
     }

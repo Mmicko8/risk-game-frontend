@@ -4,7 +4,6 @@ import {getGameState, getPhaseNumber, Phases} from "../services/gameService";
 import Loading from "./Loading";
 import {Alert, Snackbar} from "@mui/material";
 import {
-    getAllAttackableTerritoryNamesFromGameState,
     getAllTerritoriesFromGameState,
     getTerritoryData
 } from "../services/territoryService";
@@ -17,7 +16,10 @@ import {TerritoryModel} from "../model/TerritoryModel";
 import PlayerFrame from "./Player/PlayerFrame";
 import Grid from "@mui/material/Grid";
 import CurrentPlayer from "./Player/CurrentPlayer";
-import {getMaxTroopsFromTroopCount} from "../services/attackService";
+// todo rename to generic thing, cuz fortify uses it too
+import {getAllAttackableTerritoryNamesFromGameState, getMaxTroopsFromTroopCount} from "../services/attackService";
+import {getAllFortifiableTerritories} from "../services/fortifyService";
+
 
 export default function Game() {
     // we know this component is too big, no time to refactor it before sprint 1
@@ -27,12 +29,13 @@ export default function Game() {
     const [isTroopSelectorOpen, setTroopSelectorOpen] = useState(false);
     const {username} = useContext(AccessContext);
     const [selectedOwnedTerritory, setSelectedOwnedTerritory] = useState<TerritoryModel | null>(null);
-    const [territoryToAttack, setTerritoryToAttack] = useState<TerritoryModel | null>(null);
+    const [territoryToAttackOrFortify, setTerritoryToAttackOrFortify] = useState<TerritoryModel | null>(null);
     const [isOpenSnackBar, setOpenSnackBar] = useState(false);
     const [snackBarMessage, setSnackBarMessage] = useState("");
     const [troopSelectorButtonText, setTroopSelectorButtonText] = useState("");
     const [troopSelectorMaxTroops, setTroopSelectorMaxTroops] = useState(0);
-    const [attackableTerritoryNames, setAttackableTerritoryNames] = useState<string[] | null>(null)
+    const [attackableTerritoryNames, setAttackableTerritoryNames] = useState<string[] | null>(null);
+    const [fortifiableTerritoryNames, setFortifiableTerritoryNames] = useState<string[] | null>(null);
 
     const handleCloseSnackbar = (event?: SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') {
@@ -47,6 +50,14 @@ export default function Game() {
         return <Alert severity="error">Game state could not be loaded</Alert>;
     }
 
+    const resetTerritoryStates = () => {
+        setSelectedOwnedTerritory(null);
+        setTerritoryToAttackOrFortify(null);
+        setFortifiableTerritoryNames(null);
+        setAttackableTerritoryNames(null);
+    }
+    //TODO: check useReducer
+
     const troopSelectorFunction = async (troops: number, action: string) => {
         setTroopSelectorOpen(false);
         if (action === "Reinforce") {
@@ -55,28 +66,32 @@ export default function Game() {
         }
         if (action === "Attack") {
             const response = await axios.put('/api/game/attack', {gameId, attackerTerritoryName: selectedOwnedTerritory!.name,
-                defenderTerritoryName: territoryToAttack!.name, amountOfAttackers: troops, amountOfDefenders: 1});
+                defenderTerritoryName: territoryToAttackOrFortify!.name, amountOfAttackers: troops, amountOfDefenders: 1});
             await queryClient.invalidateQueries(["game", gameId]);
             console.log(response.data)
             //TODO: fix selectedOwnedTerritory to maybe be null after a successful attack
-            if (territoryToAttack!.troops - response.data.defenderDices.length <= 0 && response.data.amountOfSurvivingTroopsDefender === 0) {
+            if (territoryToAttackOrFortify!.troops - response.data.defenderDices.length <= 0 && response.data.amountOfSurvivingTroopsDefender === 0) {
                 setTroopSelectorButtonText("Fortify");
                 setTroopSelectorMaxTroops(getTerritoryData(getAllTerritoriesFromGameState(game),
                     selectedOwnedTerritory!.name)!.troops -1)
                 setTroopSelectorOpen(true);
+            } else {
+                resetTerritoryStates();
             }
         }
         if (action === "Fortify") {
+            console.log(selectedOwnedTerritory)
+            console.log("im here")
             await axios.put('/api/game/fortify', {gameId, territoryFrom: selectedOwnedTerritory!.name,
-                territoryTo: territoryToAttack!.name, troops})
+                territoryTo: territoryToAttackOrFortify!.name, troops})
             await queryClient.invalidateQueries(["game", gameId]);
+            resetTerritoryStates();
         }
-        setAttackableTerritoryNames(null);
     }
 
-    const selectTerritory = (e: any, territoryName: string) => {
+    const selectTerritory = async (e: any, territoryName: string) => {
         console.log(e, territoryName);
-        const currentPlayerInGame = game.playersInGame[game.currentPlayer];
+        const currentPlayerInGame = game.playersInGame[game.currentPlayerIndex];
         if (currentPlayerInGame.player.username !== username) return; // check if player has turn
 
         const territoryData = getTerritoryData(getAllTerritoriesFromGameState(game), territoryName);
@@ -90,13 +105,13 @@ export default function Game() {
                 setOpenSnackBar(true);
                 return;
             }
-            setTroopSelectorMaxTroops(game.playersInGame[game.currentPlayer].remainingTroopsToReinforce);
+            setTroopSelectorMaxTroops(game.playersInGame[game.currentPlayerIndex].remainingTroopsToReinforce);
             setTroopSelectorButtonText("Reinforce");
             setTroopSelectorOpen(true);
             setSelectedOwnedTerritory(territoryData);
         }
 
-        if (game.phase === Phases.ATTACK) {
+        else if (game.phase === Phases.ATTACK) {
             // check if selected territory is your own territory, to attack from
             if (ownerId === currentPlayerInGame.playerInGameId) {
                 if (territoryData!.troops < 2) {
@@ -106,18 +121,47 @@ export default function Game() {
                     return;
                 }
                 setSelectedOwnedTerritory(territoryData);
-                const attackableNeighborNameList = getAllAttackableTerritoryNamesFromGameState(game, territoryData!);
+                const attackableNeighborNameList = await getAllAttackableTerritoryNamesFromGameState(game, territoryData!);
                 setAttackableTerritoryNames(attackableNeighborNameList);
                 return;
             }
 
             // if selected territory is not your own territory it will select it for attack
-            const attackableTerritories = getAllAttackableTerritoryNamesFromGameState(game, selectedOwnedTerritory!);
+            const attackableTerritories = await getAllAttackableTerritoryNamesFromGameState(game, selectedOwnedTerritory!);
             // check if selected territory to attack is attackable neighbor
             if (attackableTerritories.includes(territoryData!.name)) {
-                setTerritoryToAttack(territoryData);
+                setTerritoryToAttackOrFortify(territoryData);
                 setTroopSelectorMaxTroops(getMaxTroopsFromTroopCount(selectedOwnedTerritory!.troops));
                 setTroopSelectorButtonText("Attack");
+                setTroopSelectorOpen(true);
+            }
+        }
+
+        else if (game.phase === Phases.FORTIFICATION) {
+            if (ownerId !== currentPlayerInGame.playerInGameId) {
+                return;
+            }
+
+            if (!selectedOwnedTerritory) {
+                if (territoryData!.troops < 2) {
+                    setSnackBarMessage("Territory must at least have 2 troops to fortify!");
+                    setOpenSnackBar(true);
+                    setFortifiableTerritoryNames(null);
+                    return;
+                }
+                setSelectedOwnedTerritory(territoryData);
+                const fortifiableNeighborNameList = await getAllFortifiableTerritories(territoryData!, game);
+                console.log(fortifiableNeighborNameList);
+                setFortifiableTerritoryNames(fortifiableNeighborNameList);
+                return;
+            }
+
+            const fortifiableNeighborNameList = await getAllFortifiableTerritories(selectedOwnedTerritory!, game);
+            // check if selected territory to attack is fortifiable neighbor
+            if (fortifiableNeighborNameList.includes(territoryData!.name)) {
+                setTerritoryToAttackOrFortify(territoryData);
+                setTroopSelectorMaxTroops(selectedOwnedTerritory!.troops - 1);
+                setTroopSelectorButtonText("Fortify");
                 setTroopSelectorOpen(true);
             }
         }
@@ -126,11 +170,13 @@ export default function Game() {
     const nextPhase = async () => {
         await axios.put(`/api/game/${gameId}/nextPhase`)
         await queryClient.invalidateQueries(["game", gameId]);
+        resetTerritoryStates();
     }
 
     const nextTurn = async () => {
         await axios.put(`/api/game/${gameId}/nextTurn`)
         await queryClient.invalidateQueries(["game", gameId]);
+        resetTerritoryStates();
     }
     console.log(game);
 
@@ -140,18 +186,18 @@ export default function Game() {
                 <Grid item xs={10}>
                     <GameStateContextProvider game={game}>
                         <Board selectTerritory={selectTerritory} territories={getAllTerritoriesFromGameState(game)}
-                        attackableTerritoryNames={attackableTerritoryNames}/>
+                        attackableTerritoryNames={attackableTerritoryNames} fortifiableTerritoryNames={fortifiableTerritoryNames}/>
                     </GameStateContextProvider>
                 </Grid>
                 <Grid item xs={2}>
                     {game.playersInGame.map((playerInGame) => {
                         return <PlayerFrame playerInGame={playerInGame} key={playerInGame.playerInGameId}
-                                            currentPlayerName={game.playersInGame[game.currentPlayer].player.username}/>
+                                            currentPlayerName={game.playersInGame[game.currentPlayerIndex].player.username}/>
                     })}
                 </Grid>
                 <Grid item xs={12} display="flex" justifyContent="center">
                     <CurrentPlayer nextPhase={nextPhase} nextTurn={nextTurn} currentPhase={getPhaseNumber(game.phase)}
-                                   currentPlayer={game.playersInGame[game.currentPlayer]}/>
+                                   currentPlayer={game.playersInGame[game.currentPlayerIndex]}/>
                 </Grid>
             </Grid>
             <TroopSelector isOpen={isTroopSelectorOpen} onClose={() => setTroopSelectorOpen(false)}

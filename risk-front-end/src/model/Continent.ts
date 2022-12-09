@@ -2,7 +2,7 @@ import {TerritoryModel} from "./TerritoryModel";
 
 export interface Continent {
     continentId: number;
-    territoryList: TerritoryModel[];
+    territories: TerritoryModel[];
     bonusTroops: number;
     name: string;
 }
