@@ -4,6 +4,9 @@ variables:
 
 build-push-docker-image-job:
   image: docker:latest
+  only:
+    refs:
+        - main
   services:
     - docker:dind
   script:
