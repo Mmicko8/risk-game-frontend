@@ -18,7 +18,7 @@ export function Navigation({isOpen, onClose}: NavigationProps) {
             <Drawer open={isOpen} onClose={onClose}>
                 <List sx={{width: 200}}>
                     {[
-                        {label: "Lobby", link: "/", icon: <BoardsIcon/>},
+                        {label: "Home", link: "/", icon: <BoardsIcon/>},
                         {label: "Game", link: "/game", icon: <BoardsIcon/>},
                     ].map((menuItem) => (
                         <ListItem disableGutters key={menuItem.link}>
