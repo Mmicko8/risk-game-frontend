@@ -50,6 +50,12 @@ export default function Game() {
         return <Alert severity="error">Game state could not be loaded</Alert>;
     }
 
+    const resetTerritoryStates = () => {
+        setSelectedOwnedTerritory(null);
+        setTerritoryToAttackOrFortify(null);
+        setFortifiableTerritoryNames(null);
+        setAttackableTerritoryNames(null);
+    }
     //TODO: check useReducer
 
     const troopSelectorFunction = async (troops: number, action: string) => {
@@ -69,6 +75,8 @@ export default function Game() {
                 setTroopSelectorMaxTroops(getTerritoryData(getAllTerritoriesFromGameState(game),
                     selectedOwnedTerritory!.name)!.troops -1)
                 setTroopSelectorOpen(true);
+            } else {
+                resetTerritoryStates();
             }
         }
         if (action === "Fortify") {
@@ -77,11 +85,8 @@ export default function Game() {
             await axios.put('/api/game/fortify', {gameId, territoryFrom: selectedOwnedTerritory!.name,
                 territoryTo: territoryToAttackOrFortify!.name, troops})
             await queryClient.invalidateQueries(["game", gameId]);
+            resetTerritoryStates();
         }
-        setSelectedOwnedTerritory(null);
-        // setTerritoryToAttackOrFortify(null);
-        setAttackableTerritoryNames(null);
-        setFortifiableTerritoryNames(null);
     }
 
     const selectTerritory = async (e: any, territoryName: string) => {
@@ -152,10 +157,10 @@ export default function Game() {
             }
 
             const fortifiableNeighborNameList = await getAllFortifiableTerritories(selectedOwnedTerritory!, game);
-            // check if selected territory to attack is attackable neighbor
+            // check if selected territory to attack is fortifiable neighbor
             if (fortifiableNeighborNameList.includes(territoryData!.name)) {
                 setTerritoryToAttackOrFortify(territoryData);
-                setTroopSelectorMaxTroops(getMaxTroopsFromTroopCount(selectedOwnedTerritory!.troops));
+                setTroopSelectorMaxTroops(selectedOwnedTerritory!.troops - 1);
                 setTroopSelectorButtonText("Fortify");
                 setTroopSelectorOpen(true);
             }
@@ -165,11 +170,13 @@ export default function Game() {
     const nextPhase = async () => {
         await axios.put(`/api/game/${gameId}/nextPhase`)
         await queryClient.invalidateQueries(["game", gameId]);
+        resetTerritoryStates();
     }
 
     const nextTurn = async () => {
         await axios.put(`/api/game/${gameId}/nextTurn`)
         await queryClient.invalidateQueries(["game", gameId]);
+        resetTerritoryStates();
     }
     console.log(game);
 
