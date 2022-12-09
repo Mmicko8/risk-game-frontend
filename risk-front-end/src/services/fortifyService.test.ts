@@ -1,4 +1,5 @@
 import {TerritoryModel} from "../model/TerritoryModel";
+import {getFortifiableTerritories} from "./fortifyService";
 
 let allTerritories: TerritoryModel[] = [
     {
@@ -305,15 +306,17 @@ test('testDataCheck', () => {
 
 
 test('getFortifiableTerritories', () => {
-    // const startTerritory = {
-    //     "territoryId": 2, "name": "Yakutsk", "ownerId": 2, "troops": 1,
-    //     "neighbors": [{"name": "Irkutsk"}, {"name": "Kamchatka"}, {"name": "Siberia"}]
-    // };
+    const startTerritory = {
+        "territoryId": 2, "name": "Yakutsk", "ownerId": 2, "troops": 1,
+        "neighbors": [{"name": "Irkutsk"}, {"name": "Kamchatka"}, {"name": "Siberia"}]
+    };
 
-    // const result = getFortifiableTerritories(startTerritory, [startTerritory], allTerritories);
-    expect(10).toBe(10);
-    // console.log(result);
-    // expect(result.length).toBe(4);
+    const result = getFortifiableTerritories(startTerritory, [startTerritory.name], allTerritories);
+    expect(result.length).toBe(4);
+    expect(result.includes("Kamchatka")).toBe(true);
+    expect(result.includes("Alberta")).toBe(true);
+    expect(result.includes("Alaska")).toBe(true);
+    expect(result.includes("Yakutsk")).toBe(true);
 })
 
 
