@@ -10,7 +10,7 @@ import {
 import GameStateContextProvider from "../context/GameStateContextProvider";
 import {SyntheticEvent, useContext, useReducer} from "react";
 import AccessContext from "../context/AccessContext";
-import TroopSelector from "./TroopSelector";
+import TroopSelector from "./dialogs/TroopSelector";
 import axios from "axios";
 import PlayerFrame from "./Player/PlayerFrame";
 import Grid from "@mui/material/Grid";

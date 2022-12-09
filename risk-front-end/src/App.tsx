@@ -2,7 +2,7 @@ import './App.css';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import React, {useState} from 'react';
 import axios from "axios";
-import Lobby from "./components/Lobby";
+import Home from "./components/Home";
 import NavBar from "./components/nav/NavBar";
 import {Navigation} from "./components/nav/Navigation";
 import SignIn from "./components/identity/SignIn";
@@ -46,7 +46,7 @@ function App() {
                     <NavBar onOpenDrawer={handleDrawerToggle}/>
                     <Navigation isOpen={drawerOpen} onClose={() => setDrawerOpen(false)}/>
                     <Routes>
-                        <Route path="/" element={<Lobby/>}/>
+                        <Route path="/" element={<Home/>}/>
                         <Route path="/sign_in" element={<SignIn/>}/>
                         <Route path="/register" element={<Register/>}/>
                         <Route path="/game" element={<Game/>}/>
