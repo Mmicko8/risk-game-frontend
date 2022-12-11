@@ -22,7 +22,6 @@ import {getAllFortifiableTerritories} from "../services/fortifyService";
 
 
 export default function Game() {
-    // we know this component is too big, no time to refactor it before sprint 1
     const queryClient = useQueryClient();
     const gameId = 1; // todo
     const {isLoading, isError, data: game} = useQuery(["game", gameId], () => getGameState(gameId));
@@ -183,27 +182,32 @@ export default function Game() {
     return (
         <>
             <Grid container display="flex" alignItems="center" justifyItems="center">
+                {/*Renders the game board*/}
                 <Grid item xs={10}>
                     <GameStateContextProvider game={game}>
                         <Board selectTerritory={selectTerritory} territories={getAllTerritoriesFromGameState(game)}
                         attackableTerritoryNames={attackableTerritoryNames} fortifiableTerritoryNames={fortifiableTerritoryNames}/>
                     </GameStateContextProvider>
                 </Grid>
+                {/*Shows info about all the players in the game (e.g. their color)*/}
                 <Grid item xs={2}>
                     {game.playersInGame.map((playerInGame) => {
                         return <PlayerFrame playerInGame={playerInGame} key={playerInGame.playerInGameId}
                                             currentPlayerName={game.playersInGame[game.currentPlayerIndex].player.username}/>
                     })}
                 </Grid>
+                {/*Shows information about the current player (e.g. the phase he is in)*/}
                 <Grid item xs={12} display="flex" justifyContent="center">
                     <CurrentPlayer nextPhase={nextPhase} nextTurn={nextTurn} currentPhase={getPhaseNumber(game.phase)}
                                    currentPlayer={game.playersInGame[game.currentPlayerIndex]}/>
                 </Grid>
             </Grid>
+            {/*Dialog component for selecting amount of troops for attack, fortify, etc.*/}
             <TroopSelector isOpen={isTroopSelectorOpen} onClose={() => setTroopSelectorOpen(false)}
                            onSubmit={troopSelectorFunction}
                            maxTroops={troopSelectorMaxTroops}
                            confirmButtonText={troopSelectorButtonText}/>
+            {/*Temporary message for displaying user errors (ex: when user tries to attack from territory with only 1 troop)*/}
             <Snackbar open={isOpenSnackBar} autoHideDuration={4000} onClose={handleCloseSnackbar}>
                 <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
                     {snackBarMessage}
