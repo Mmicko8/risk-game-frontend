@@ -6,14 +6,14 @@ export async function getGameState(gameId: number) {
     return response.data;
 }
 
-export const Phases = {
-    REINFORCEMENT: "REINFORCEMENT",
-    ATTACK: "ATTACK",
-    FORTIFICATION: "FORTIFICATION"
-};
+export enum Phase {
+    REINFORCEMENT= "REINFORCEMENT",
+    ATTACK = "ATTACK",
+    FORTIFICATION = "FORTIFICATION"
+}
 
 export function getPhaseNumber(phase: string) {
-    if (phase === Phases.REINFORCEMENT) return 0;
-    if (phase === Phases.ATTACK) return 1;
+    if (phase === Phase.REINFORCEMENT) return 0;
+    if (phase === Phase.ATTACK) return 1;
     else return 2;
 }

@@ -36,3 +36,12 @@ export function getFortifiableTerritories(startTerritory: TerritoryModel,
     }
     return connectedTerritoryNames;
 }
+
+export function getFortifiableTerritoryNames(territoriesWithNeighbors: TerritoryModel[], startTerritory: TerritoryModel) {
+    const startTerritoryWithNeighbors = getTerritoryData(territoriesWithNeighbors, startTerritory.name);
+    if (!startTerritoryWithNeighbors) throw Error("startTerritory cannot be found in given territories list");
+
+    let fortifiableTerritories = getFortifiableTerritories(startTerritory, [startTerritory.name], territoriesWithNeighbors);
+    // remove startTerritory from result
+    return fortifiableTerritories.filter(value => value !== startTerritory.name);
+}

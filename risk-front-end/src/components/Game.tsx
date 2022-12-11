@@ -1,14 +1,15 @@
 import Board from "./Board";
 import {useQuery, useQueryClient} from "react-query";
-import {getGameState, getPhaseNumber, Phases} from "../services/gameService";
+import {getGameState, getPhaseNumber, Phase} from "../services/gameService";
 import Loading from "./Loading";
 import {Alert, Snackbar} from "@mui/material";
 import {
     getAllTerritoriesFromGameState,
+    getTerritoriesWithNeighbors,
     getTerritoryData
 } from "../services/territoryService";
 import GameStateContextProvider from "../context/GameStateContextProvider";
-import {SyntheticEvent, useContext, useState} from "react";
+import {SyntheticEvent, useContext, useReducer, useState} from "react";
 import AccessContext from "../context/AccessContext";
 import TroopSelector from "./TroopSelector";
 import axios from "axios";
@@ -17,8 +18,139 @@ import PlayerFrame from "./Player/PlayerFrame";
 import Grid from "@mui/material/Grid";
 import CurrentPlayer from "./Player/CurrentPlayer";
 // todo rename to generic thing, cuz fortify uses it too
-import {getAllAttackableTerritoryNamesFromGameState, getMaxTroopsFromTroopCount} from "../services/attackService";
-import {getAllFortifiableTerritories} from "../services/fortifyService";
+import {
+    getAttackableTerritoryNames,
+    getMaxTroopsForAttack
+} from "../services/attackService";
+import {getFortifiableTerritoryNames} from "../services/fortifyService";
+import {GameModel} from "../model/GameModel";
+
+interface TroopSelectorState {
+    isOpen: boolean;
+    buttonText: string;
+    maxTroops: number;
+}
+
+// todo rename to something more logical
+interface MetaState {
+    isOpenErrorToast: boolean;
+    errorToastMessage: string;
+    selectedStartTerritory: TerritoryModel | null;
+    selectedEndTerritory: TerritoryModel | null;
+    troopState: TroopSelectorState;
+    attackableTerritoryNames: string[];
+    fortifiableTerritoryNames: string[];
+}
+
+interface GameAction {
+    type: Phase;
+    payload: {
+        game: GameModel; // BEWARE: contains territories BUT WITHOUT neighbors, use 'territories' from payload instead
+        selectedTerritoryName: string;
+        territories: TerritoryModel[]; // contains neighbors when necessary (e.g. attack or fortify, NOT for reinforce)
+    };
+}
+
+
+function reducer(state: MetaState, action: GameAction) {
+    const pl = action.payload;
+    const currentPlayer = pl.game.playersInGame[pl.game.currentPlayerIndex];
+
+    const selectedTerritory = getTerritoryData(pl.territories, pl.selectedTerritoryName);
+    if (!selectedTerritory) return state;
+
+    switch (action.type) {
+        case Phase.REINFORCEMENT:
+            // player doesn't own selected territory => cant reinforce
+            if (selectedTerritory.ownerId !== currentPlayer.playerInGameId) return state;
+
+            // check if player has enough troops to be able to reinforce
+            if (currentPlayer.remainingTroopsToReinforce < 1) return {...state,
+                errorToastMessage: "No more troops remaining!",
+                isOpenErrorToast: true
+            }
+
+            return {...state,
+                selectedStartTerritory: selectedTerritory,
+                troopState: {
+                    maxTroops: currentPlayer.remainingTroopsToReinforce,
+                    buttonText: "Reinforce",
+                    isOpen: true
+                }
+            }
+
+
+        case Phase.ATTACK:
+            // check if selected territory is your own territory, to attack from
+            if (selectedTerritory.ownerId === currentPlayer.playerInGameId) {
+                // can't attack if territory has less than 2 troops
+                if (selectedTerritory.troops < 2) return {...state,
+                    errorToastMessage: "Territory must at least have 2 troops to attack!",
+                    isOpenErrorToast: true,
+                    attackableTerritoryNames: []
+                }; // todo check if works with empty array or if NULL should be used
+
+                return {...state,
+                    selectedStartTerritory: selectedTerritory,
+                    attackableTerritoryNames: getAttackableTerritoryNames(pl.territories, selectedTerritory)
+                };
+            }
+
+            // if selected territory is not your own territory it will select it for attack, unless startTerritory is null
+            if (!state.selectedStartTerritory) return state;
+
+            // check if selected territory to attack is attackable neighbor
+            const attackableTerritoryNames = getAttackableTerritoryNames(pl.territories, state.selectedStartTerritory);
+            if (!attackableTerritoryNames.includes(selectedTerritory.name)) return state;
+
+            // todo TEST what happens when selectedStartTerritory is null (not selected)
+            return {...state,
+                selectedEndTerritory: selectedTerritory,
+                troopState: {
+                    maxTroops: getMaxTroopsForAttack(state.selectedStartTerritory.troops),
+                    buttonText: "Attack",
+                    isOpen: true
+                }
+
+            }
+
+
+        case Phase.FORTIFICATION:
+            if (selectedTerritory.ownerId !== currentPlayer.playerInGameId) return state;
+
+            if (!state.selectedStartTerritory) {
+                if (selectedTerritory.troops < 2) return {...state,
+                    errorToastMessage: "Territory must at least have 2 troops to fortify!",
+                    isOpenErrorToast: true,
+                    fortifiableTerritoryNames: []
+                };
+
+                return {...state,
+                    selectedStartTerritory: selectedTerritory,
+                    fortifiableTerritoryNames: getFortifiableTerritoryNames(pl.territories, selectedTerritory),
+                }
+            }
+
+            // if selected territory is not your own territory it will select it for fortification, unless startTerritory is null
+            if (!state.selectedStartTerritory) return state;
+
+            // check if selected territory to attack is fortifiable neighbor
+            const fortifiableTerritoryNames = getFortifiableTerritoryNames(pl.territories, state.selectedStartTerritory);
+            if (!fortifiableTerritoryNames.includes(selectedTerritory.name)) return state;
+
+            return {...state,
+                selectedEndTerritory: selectedTerritory,
+                troopState: {
+                    maxTroops: state.selectedStartTerritory.troops - 1,
+                    buttonText: "Fortify",
+                    isOpen: true
+                }
+            }
+
+
+        default: return state;
+    }
+}
 
 
 export default function Game() {
@@ -35,6 +167,20 @@ export default function Game() {
     const [troopSelectorMaxTroops, setTroopSelectorMaxTroops] = useState(0);
     const [attackableTerritoryNames, setAttackableTerritoryNames] = useState<string[] | null>(null);
     const [fortifiableTerritoryNames, setFortifiableTerritoryNames] = useState<string[] | null>(null);
+
+    const [state, dispatch] = useReducer(reducer, {
+        isOpenErrorToast: false,
+        errorToastMessage: "",
+        selectedStartTerritory: null,
+        selectedEndTerritory: null,
+        troopState: {
+            isOpen: false,
+            buttonText: "",
+            maxTroops: 0
+        },
+        attackableTerritoryNames: [],
+        fortifiableTerritoryNames: []
+    });
 
     const handleCloseSnackbar = (event?: SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') {
@@ -93,77 +239,19 @@ export default function Game() {
         const currentPlayerInGame = game.playersInGame[game.currentPlayerIndex];
         if (currentPlayerInGame.player.username !== username) return; // check if player has turn
 
-        const territoryData = getTerritoryData(getAllTerritoriesFromGameState(game), territoryName);
-        const ownerId = territoryData!.ownerId;
+        // get territories: with neighbors for Attack and Fortify | without neighbors for Reinforce
+        let territories = game.phase === Phase.REINFORCEMENT ?
+            getAllTerritoriesFromGameState(game) :
+            await getTerritoriesWithNeighbors(game.gameId);
 
-        if (game.phase === Phases.REINFORCEMENT) {
-            if (ownerId !== currentPlayerInGame.playerInGameId) return;
-
-            if (currentPlayerInGame.remainingTroopsToReinforce < 1) {
-                setSnackBarMessage("No more troops remaining!")
-                setOpenSnackBar(true);
-                return;
+        dispatch({
+            type: game.phase as Phase,
+            payload: {
+                game: game,
+                selectedTerritoryName: territoryName,
+                territories: territories
             }
-            setTroopSelectorMaxTroops(game.playersInGame[game.currentPlayerIndex].remainingTroopsToReinforce);
-            setTroopSelectorButtonText("Reinforce");
-            setTroopSelectorOpen(true);
-            setSelectedOwnedTerritory(territoryData);
-        }
-
-        else if (game.phase === Phases.ATTACK) {
-            // check if selected territory is your own territory, to attack from
-            if (ownerId === currentPlayerInGame.playerInGameId) {
-                if (territoryData!.troops < 2) {
-                    setSnackBarMessage("Territory must at least have 2 troops to attack!");
-                    setOpenSnackBar(true);
-                    setAttackableTerritoryNames(null);
-                    return;
-                }
-                setSelectedOwnedTerritory(territoryData);
-                const attackableNeighborNameList = await getAllAttackableTerritoryNamesFromGameState(game, territoryData!);
-                setAttackableTerritoryNames(attackableNeighborNameList);
-                return;
-            }
-
-            // if selected territory is not your own territory it will select it for attack
-            const attackableTerritories = await getAllAttackableTerritoryNamesFromGameState(game, selectedOwnedTerritory!);
-            // check if selected territory to attack is attackable neighbor
-            if (attackableTerritories.includes(territoryData!.name)) {
-                setTerritoryToAttackOrFortify(territoryData);
-                setTroopSelectorMaxTroops(getMaxTroopsFromTroopCount(selectedOwnedTerritory!.troops));
-                setTroopSelectorButtonText("Attack");
-                setTroopSelectorOpen(true);
-            }
-        }
-
-        else if (game.phase === Phases.FORTIFICATION) {
-            if (ownerId !== currentPlayerInGame.playerInGameId) {
-                return;
-            }
-
-            if (!selectedOwnedTerritory) {
-                if (territoryData!.troops < 2) {
-                    setSnackBarMessage("Territory must at least have 2 troops to fortify!");
-                    setOpenSnackBar(true);
-                    setFortifiableTerritoryNames(null);
-                    return;
-                }
-                setSelectedOwnedTerritory(territoryData);
-                const fortifiableNeighborNameList = await getAllFortifiableTerritories(territoryData!, game);
-                console.log(fortifiableNeighborNameList);
-                setFortifiableTerritoryNames(fortifiableNeighborNameList);
-                return;
-            }
-
-            const fortifiableNeighborNameList = await getAllFortifiableTerritories(selectedOwnedTerritory!, game);
-            // check if selected territory to attack is fortifiable neighbor
-            if (fortifiableNeighborNameList.includes(territoryData!.name)) {
-                setTerritoryToAttackOrFortify(territoryData);
-                setTroopSelectorMaxTroops(selectedOwnedTerritory!.troops - 1);
-                setTroopSelectorButtonText("Fortify");
-                setTroopSelectorOpen(true);
-            }
-        }
+        });
     }
 
     const nextPhase = async () => {
