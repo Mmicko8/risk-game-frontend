@@ -51,29 +51,39 @@ interface GameAction {
 }
 
 
-function reducer(state: MetaState, action: GameAction) {
-    if (action.type === GameActionType.CLOSE_TROOP_SELECTOR) return {...state,
-        troopState: {...state.troopState, isOpen: false}
-    };
+function metaGameStateReducerWithoutPayload(state: MetaState, action: GameAction) {
+    switch (action.type) {
+        case GameActionType.CLOSE_TROOP_SELECTOR:
+            return {...state, troopState: {...state.troopState, isOpen: false}};
 
-    if (action.type === GameActionType.RESET_TERRITORY_STATE) return {...state,
-        selectedStartTerritory: null,
-        selectedEndTerritory: null,
-        attackableTerritoryNames: [],
-        fortifiableTerritoryNames: []
-    };
+        case GameActionType.RESET_TERRITORY_STATE:
+            return {...state,
+                selectedStartTerritory: null,
+                selectedEndTerritory: null,
+                attackableTerritoryNames: [],
+                fortifiableTerritoryNames: []
+            };
 
-    if (action.type === GameActionType.CLOSE_ERROR_TOAST) return {...state,
-        isOpenErrorToast: false
-    };
+        case GameActionType.CLOSE_ERROR_TOAST:
+            return {...state, isOpenErrorToast: false};
 
-    if (action.type === GameActionType.ANNEXATION_FORTIFICATION) return {...state,
-        troopState: {
-            maxTroops: state.selectedStartTerritory!.troops -1,
-            buttonText: "Fortify",
-            isOpen: true,
-        }
+        case GameActionType.ANNEXATION_FORTIFICATION:
+            return {...state,
+                troopState: {
+                    maxTroops: state.selectedStartTerritory!.troops - 1,
+                    buttonText: "Fortify",
+                    isOpen: true,
+                }
+            };
+        default:
+            return null;
     }
+}
+
+
+function metaGameStateReducer(state: MetaState, action: GameAction) {
+    const result = metaGameStateReducerWithoutPayload(state, action);
+    if (result) return result;
 
     if (!action.payload) return state;
     const pl = action.payload;
@@ -179,8 +189,7 @@ export default function Game() {
     const gameId = 1; // todo
     const {isLoading, isError, data: game} = useQuery(["game", gameId], () => getGameState(gameId));
     const {username} = useContext(AccessContext);
-
-    const [state, dispatch] = useReducer(reducer, {
+    const [state, dispatch] = useReducer(metaGameStateReducer, {
         isOpenErrorToast: false,
         errorToastMessage: "",
         selectedStartTerritory: null,
