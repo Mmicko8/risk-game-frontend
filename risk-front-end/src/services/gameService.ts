@@ -6,14 +6,24 @@ export async function getGameState(gameId: number) {
     return response.data;
 }
 
-export enum Phase {
-    REINFORCEMENT= "REINFORCEMENT",
-    ATTACK = "ATTACK",
-    FORTIFICATION = "FORTIFICATION"
+export const Phases = {
+    REINFORCEMENT: "REINFORCEMENT",
+    ATTACK: "ATTACK",
+    FORTIFICATION: "FORTIFICATION"
+};
+
+export const GameActionType = {
+    REINFORCEMENT: Phases.REINFORCEMENT,
+    ATTACK: Phases.ATTACK,
+    FORTIFICATION: Phases.FORTIFICATION,
+    RESET_TERRITORY_STATE: "RESET TERRITORY STATE",
+    CLOSE_TROOP_SELECTOR: "CLOSE TROOP SELECTOR",
+    CLOSE_ERROR_TOAST: "OPEN ERROR TOAST",
+    ANNEXATION_FORTIFICATION: "ANNEXATION FORTIFICATION"
 }
 
 export function getPhaseNumber(phase: string) {
-    if (phase === Phase.REINFORCEMENT) return 0;
-    if (phase === Phase.ATTACK) return 1;
+    if (phase === Phases.REINFORCEMENT) return 0;
+    if (phase === Phases.ATTACK) return 1;
     else return 2;
 }
