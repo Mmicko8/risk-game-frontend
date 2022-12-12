@@ -12,8 +12,7 @@ interface TroopSelectorState {
     maxTroops: number;
 }
 
-// todo rename to something more logical
-interface MetaState {
+interface InteractionGameState {
     isOpenErrorToast: boolean;
     errorToastMessage: string;
     selectedStartTerritory: TerritoryModel | null;
@@ -35,7 +34,8 @@ interface GameActionPayload {
 }
 
 
-function metaGameStateReducerWithoutPayload(state: MetaState, action: GameAction) {
+// returns new state if action is of a payloadless type, otherwise returns null so that actions with payload can be handled by gameInteractionStateReducer
+function gameInteractionStateReducerWithoutPayload(state: InteractionGameState, action: GameAction) {
     switch (action.type) {
         case GameActionType.CLOSE_TROOP_SELECTOR:
             return {...state, troopState: {...state.troopState, isOpen: false}};
@@ -64,7 +64,7 @@ function metaGameStateReducerWithoutPayload(state: MetaState, action: GameAction
     }
 }
 
-function reinforcementReducer(state: MetaState, selectedTerritory: TerritoryModel, currentPlayer: PlayerInGame) {
+function reinforcementReducer(state: InteractionGameState, selectedTerritory: TerritoryModel, currentPlayer: PlayerInGame) {
     // player doesn't own selected territory => cant reinforce
     if (selectedTerritory.ownerId !== currentPlayer.playerInGameId) return state;
 
@@ -84,7 +84,7 @@ function reinforcementReducer(state: MetaState, selectedTerritory: TerritoryMode
     }
 }
 
-function attackReducer(state: MetaState, territories: TerritoryModel[], selectedTerritory: TerritoryModel, currentPlayer: PlayerInGame) {
+function attackReducer(state: InteractionGameState, territories: TerritoryModel[], selectedTerritory: TerritoryModel, currentPlayer: PlayerInGame) {
     // check if selected territory is your own territory, to attack from
     if (selectedTerritory.ownerId === currentPlayer.playerInGameId) {
         // can't attack if territory has less than 2 troops
@@ -118,7 +118,7 @@ function attackReducer(state: MetaState, territories: TerritoryModel[], selected
     }
 }
 
-function fortificationReducer(state: MetaState, territories: TerritoryModel[], selectedTerritory: TerritoryModel, currentPlayer: PlayerInGame) {
+function fortificationReducer(state: InteractionGameState, territories: TerritoryModel[], selectedTerritory: TerritoryModel, currentPlayer: PlayerInGame) {
     if (selectedTerritory.ownerId !== currentPlayer.playerInGameId) return state;
 
     if (!state.selectedStartTerritory) {
@@ -149,8 +149,8 @@ function fortificationReducer(state: MetaState, territories: TerritoryModel[], s
     }
 }
 
-export function metaGameStateReducer(state: MetaState, action: GameAction) {
-    const result = metaGameStateReducerWithoutPayload(state, action);
+export function GameInteractionStateReducer(state: InteractionGameState, action: GameAction) {
+    const result = gameInteractionStateReducerWithoutPayload(state, action);
     if (result) return result;
 
     if (!action.payload) return state;

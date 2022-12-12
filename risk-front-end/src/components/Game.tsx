@@ -15,7 +15,7 @@ import axios from "axios";
 import PlayerFrame from "./Player/PlayerFrame";
 import Grid from "@mui/material/Grid";
 import CurrentPlayer from "./Player/CurrentPlayer";
-import {metaGameStateReducer} from "../reducers/gameReducer";
+import {GameInteractionStateReducer} from "../reducers/gameReducer";
 
 
 export default function Game() {
@@ -23,7 +23,7 @@ export default function Game() {
     const gameId = 1; // todo
     const {isLoading, isError, data: game} = useQuery(["game", gameId], () => getGameState(gameId));
     const {username} = useContext(AccessContext);
-    const [state, dispatch] = useReducer(metaGameStateReducer, {
+    const [state, dispatch] = useReducer(GameInteractionStateReducer, {
         isOpenErrorToast: false,
         errorToastMessage: "",
         selectedStartTerritory: null,
