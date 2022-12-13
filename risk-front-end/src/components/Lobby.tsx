@@ -11,8 +11,11 @@ import * as React from "react";
 import PersonIcon from '@mui/icons-material/Person';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import Button from "@mui/material/Button";
+import {useContext} from "react";
+import AccessContext from "../context/AccessContext";
 
 export function Lobby() {
+    const {username} = useContext(AccessContext)
     const {id} = useParams<{ id: string }>()
     const {isLoading, isError, lobby} = useLobby(id!)
 
@@ -43,7 +46,7 @@ export function Lobby() {
                 <Stack direction="row" spacing={4} sx={{mt: "20px"}}>
                     <Chip icon={<PersonIcon/>} color="success" label={`Amount of players: ${lobby.maxPlayers}`}/>
                     <Chip icon={<AccessTimeIcon/>} color="success" label={`Round timer: ${lobby.timer}`}/>
-                    <Button variant="contained">Start game</Button>
+                    {lobby.host.username === username? <Button variant="contained">Start game</Button>:""}
                 </Stack>
                 <div style={{display: "flex", flexDirection: "row"}}>
                     {lobby.players.map((player: Player, index: number) => {
