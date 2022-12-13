@@ -1,19 +1,16 @@
-import {useMutation} from "react-query";
-import {CreateLobbyData} from "../model/CreateLobbyData";
-import {createLobby} from "../services/lobbyService";
+import {useQuery} from "react-query";
+import {getLobby} from "../services/lobbyService";
 
 export function useLobby(id: string) {
     const {
-        mutate: createLobbyMutate,
-        isLoading: isCreatingLobby,
-        isError: isErrorCreatingLobby,
-    } = useMutation((createLobbyData: CreateLobbyData) => createLobby(createLobbyData.username, createLobbyData.amountOfPlayers), {
-
-    })
+        isLoading,
+        isError,
+        data: lobby,
+    } = useQuery(['item', id], () => getLobby(id));
 
     return {
-        createLobbyMutate,
-        isCreatingLobby,
-        isErrorCreatingLobby
+        isLoading,
+        isError,
+        lobby
     }
 }
