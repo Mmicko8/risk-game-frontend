@@ -1,4 +1,5 @@
 import {Player} from "./Player";
+import {Card} from "./Card";
 
 
 export interface PlayerInGame {
@@ -6,4 +7,5 @@ export interface PlayerInGame {
     color: string;
     player: Player
     remainingTroopsToReinforce: number;
+    cards: Card[]
 }
