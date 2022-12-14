@@ -33,3 +33,9 @@ export function getPhaseNumber(phase: string) {
     if (phase === Phases.ATTACK) return 1;
     else return 2;
 }
+
+export function getPhaseFromNumber(phaseNr: number) {
+    if (phaseNr === 0) return Phases.REINFORCEMENT;
+    if (phaseNr === 1) return Phases.ATTACK;
+    else return Phases.FORTIFICATION;
+}

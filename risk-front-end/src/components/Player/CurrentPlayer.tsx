@@ -3,13 +3,15 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Fab from '@mui/material/Fab';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
+import SingleArrowIcon from '@mui/icons-material/KeyboardArrowRight';
+import DoubleArrowIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import Avatar from "@mui/material/Avatar";
 import {useContext} from "react";
 import AccessContext from "../../context/AccessContext";
 import {PlayerInGame} from "../../model/PlayerInGame";
 import Typography from "@mui/material/Typography";
+import {getPhaseFromNumber, Phases} from "../../services/gameService";
+import TroopIndicator from "./TroopIcon";
 
 interface CurrentPlayerProps {
     nextPhase: () => void;
@@ -27,12 +29,23 @@ const steps = [
 export default function CurrentPlayer({nextPhase, nextTurn, currentPhase, currentPlayer}: CurrentPlayerProps) {
     const {username} = useContext(AccessContext);
     const handleNext = () => {
-        if (steps[currentPhase] === 'Fortify') nextTurn()
-        else nextPhase()
+        if (steps[currentPhase] === 'Fortify') nextTurn();
+        else nextPhase();
     }
 
-    const disableButton = () => {
-        return username !== currentPlayer.player.username || !username;
+    const isUserNotCurrentPlayer = () => {
+        return !username || username !== currentPlayer.player.username;
+    }
+
+    const getFabIcon = (phaseNumber: number) => {
+        const phase = getPhaseFromNumber(phaseNumber);
+        if (phase === Phases.FORTIFICATION) return <DoubleArrowIcon sx={{fontSize: "3vw"}}/>;
+        return <SingleArrowIcon sx={{fontSize: "3vw"}}/>;
+    }
+
+    const hasUnplacedTroops = (phaseNumber: number) => {
+        const phase = getPhaseFromNumber(phaseNumber);
+        return phase === Phases.REINFORCEMENT && currentPlayer.remainingTroopsToReinforce > 0;
     }
 
     return (
@@ -54,10 +67,14 @@ export default function CurrentPlayer({nextPhase, nextTurn, currentPhase, curren
                 </Stepper>
             </div>
             <div style={{height: "5.5vw", width: "5.5vw", display: "flex", justifyContent: "center", alignItems: "center"}}>
-                <Fab color="success" onClick={handleNext} disabled={disableButton()}
-                     style={{height: "4vw", width: "4vw"}}>
-                    {currentPhase === steps.length - 1 ? <KeyboardDoubleArrowRightIcon sx={{fontSize: "3vw"}}/> : <KeyboardArrowRightIcon sx={{fontSize: "3vw"}}/>}
-                </Fab>
+                {hasUnplacedTroops(currentPhase) ?
+                    <TroopIndicator color={currentPlayer.color} troopCount={currentPlayer.remainingTroopsToReinforce}/>
+                    :
+                    <Fab color="primary" onClick={handleNext} disabled={isUserNotCurrentPlayer()}
+                         style={{height: "4vw", width: "4vw"}}>
+                        {getFabIcon(currentPhase)}
+                    </Fab>
+                }
             </div>
         </Box>
     )
