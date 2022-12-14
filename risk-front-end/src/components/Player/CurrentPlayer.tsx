@@ -11,8 +11,7 @@ import AccessContext from "../../context/AccessContext";
 import {PlayerInGame} from "../../model/PlayerInGame";
 import Typography from "@mui/material/Typography";
 import {getPhaseFromNumber, Phases} from "../../services/gameService";
-import Badge from '@mui/material/Badge';
-import TroopIcon from "./TroopIcon";
+import TroopIndicator from "./TroopIcon";
 
 interface CurrentPlayerProps {
     nextPhase: () => void;
@@ -69,11 +68,7 @@ export default function CurrentPlayer({nextPhase, nextTurn, currentPhase, curren
             </div>
             <div style={{height: "5.5vw", width: "5.5vw", display: "flex", justifyContent: "center", alignItems: "center"}}>
                 {hasUnplacedTroops(currentPhase) ?
-                    <Badge color="primary" overlap="circular" badgeContent={currentPlayer.remainingTroopsToReinforce}>
-                        <div style={{height: "4vw", width: "4vw"}}>
-                            <TroopIcon color={currentPlayer.color} troopCount={currentPlayer.remainingTroopsToReinforce}/>
-                        </div>
-                    </Badge>
+                    <TroopIndicator color={currentPlayer.color} troopCount={currentPlayer.remainingTroopsToReinforce}/>
                     :
                     <Fab color="primary" onClick={handleNext} disabled={isUserNotCurrentPlayer()}
                          style={{height: "4vw", width: "4vw"}}>
