@@ -16,11 +16,13 @@ import PlayerFrame from "./Player/PlayerFrame";
 import Grid from "@mui/material/Grid";
 import CurrentPlayer from "./Player/CurrentPlayer";
 import {GameInteractionStateReducer} from "../reducers/gameReducer";
+import {useParams} from "react-router-dom";
 
 
 export default function Game() {
     const queryClient = useQueryClient();
-    const gameId = 1; // todo
+    const {id} = useParams<{ id: string }>()
+    const gameId = parseInt(id!);
     const {isLoading, isError, data: game} = useQuery(["game", gameId], () => getGameState(gameId));
     const {username} = useContext(AccessContext);
     const [state, dispatch] = useReducer(GameInteractionStateReducer, {

@@ -6,6 +6,12 @@ export async function getGameState(gameId: number) {
     return response.data;
 }
 
+export async function getActiveGames(username: string | null) {
+    if (!username) return null;
+    const response = await axios.get(`/api/game/activeOfPlayer`);
+    return response.data;
+}
+
 export const Phases = {
     REINFORCEMENT: "REINFORCEMENT",
     ATTACK: "ATTACK",

@@ -51,7 +51,7 @@ export function Lobby() {
                 <div style={{display: "flex", flexDirection: "row"}}>
                     {lobby.players.map((player: Player, index: number) => {
                         return <Box key={index} className="playerFrameBox" sx={{borderRadius: 3, width:"15vw"}}>
-                            <Avatar sx={{width: "6vw", height: "6vw", margin:"0.5vw"}} src="../../testAvatar.jpg"/>
+                            <Avatar sx={{width: "6vw", height: "6vw", margin:"0.5vw"}} src="/testAvatar.jpg"/>
                             <Stack direction="column" spacing={2}>
                                 {lobby.host.username === player.username? <Chip icon={<StarRateIcon/>} color="primary" label="Host"/>: ""}
                                 <Typography>{player.username}</Typography>

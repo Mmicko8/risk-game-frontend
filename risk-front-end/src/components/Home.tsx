@@ -1,4 +1,4 @@
-import {Fab, Tooltip, CircularProgress, Alert, Container} from "@mui/material"
+import {Fab, Tooltip, Alert, Container} from "@mui/material"
 import AddIcon from "@mui/icons-material/Add";
 import {useContext, useState} from "react";
 import CreateLobby from "./dialogs/CreateLobby";
@@ -11,13 +11,19 @@ import Typography from "@mui/material/Typography";
 import * as React from "react";
 import {useQuery} from "react-query";
 import Loading from "./Loading";
+import {useNavigate} from "react-router-dom";
+import {getActiveGames} from "../services/gameService";
+import {Games} from "./Games";
 
 export default function Home() {
+    const navigate = useNavigate()
     const [isCreateLobbyOpen, setIsCreateLobbyOpen] = useState(false);
     const {username} = useContext(AccessContext);
-    const {isLoading, isError, lobbies} = useLobbies(20, username);
+    const {isLoading, isError, lobbies} = useLobbies(20);
     const {isLoading: loadingJoined, isError: errorJoined, data: joinedLobbies} = useQuery(['joinedLobbies', username],
-        () => getJoinedLobbies(username))
+        () => getJoinedLobbies(username));
+    const {isLoading: loadingGames, isError: errorGettingGames, data: activeGames} = useQuery(['activeGames', username],
+        () => getActiveGames(username));
 
     async function createLobby(data: CreateLobbyDataNoUsername) {
         if (username) {
@@ -26,15 +32,18 @@ export default function Home() {
                 ...data
             }
             const lobbyId = await createLobbyCall(createLobbyData);
-            console.log(lobbyId);
+            navigate(`/lobby/${lobbyId}`)
         }
     }
 
-    if (isLoading || loadingJoined) {
-        return <CircularProgress sx={{position: "fixed", top: "50%", left: "50%"}}/>
+    if (isLoading || loadingJoined || loadingGames) {
+        return <Loading/>
     }
     if (isError || errorJoined) {
         return <Alert severity="error">Error loading lobbies</Alert>
+    }
+    if (errorGettingGames) {
+        return <Alert severity="error">Error loading games</Alert>
     }
 
     return (
@@ -43,6 +52,7 @@ export default function Home() {
                 <Typography component="h1" variant="h4" fontFamily="Courier" fontWeight="bolder" sx={{mt:"20px"}}>
                     Your games
                 </Typography>
+                {!activeGames ? <Loading/> : <Games games={activeGames}/>}
                 <Typography component="h1" variant="h4" fontFamily="Courier" fontWeight="bolder" sx={{mt:"20px"}}>
                     Your lobbies
                 </Typography>

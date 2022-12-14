@@ -11,18 +11,14 @@ export async function createLobbyCall (createLobbyData: CreateLobbyData) {
     return response.data;
 }
 
-export async function getFirstNLobbies(n: number, username: string | null) {
+export async function getFirstNLobbies(n: number) {
     let lobbies;
-    if (username !== null) {
-        lobbies = await axios.get(`/api/lobby/openLobbies/${n}/${username}`);
-    } else {
-        lobbies = await axios.get(`/api/lobby/openLobbies/${n}`);
-    }
+    lobbies = await axios.get(`/api/lobby/openLobbies/${n}`);
     return lobbies.data;
 }
 
 export async function getJoinedLobbies(username: string | null) {
     if (!username) return null;
-    const response = await axios.get(`/api/lobby/joinedNotStartedLobbies/${username}`);
+    const response = await axios.get(`/api/lobby/joinedNotStartedLobbies`);
     return response.data;
 }

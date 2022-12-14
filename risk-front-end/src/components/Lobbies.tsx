@@ -8,6 +8,7 @@ import StarRateIcon from '@mui/icons-material/StarRate';
 import * as React from "react";
 import {Player} from "../model/Player";
 import Button from "@mui/material/Button";
+import {useNavigate} from "react-router-dom";
 
 interface OpenLobbiesProps {
     lobbies: Lobby[],
@@ -23,6 +24,17 @@ export const Item = styled(Paper)(({theme}) => ({
 }));
 
 export function Lobbies({lobbies, action}: OpenLobbiesProps) {
+    const navigate = useNavigate()
+
+    function buttonClick(lobbyId: number) {
+        if (action === "Go to lobby") {
+            navigate(`/lobby/${lobbyId}`)
+        }
+        if (action === "Join lobby") {
+            //implement joining functionality
+        }
+    }
+
     return (
         <Box sx={{width: '100%'}}>
             <Stack spacing={1}>
@@ -48,7 +60,7 @@ export function Lobbies({lobbies, action}: OpenLobbiesProps) {
                                     return ` ${player.username}`
                                 })}/>
                         </Stack>
-                        <Button size="small" variant="contained">{action}</Button>
+                        <Button size="small" variant="contained" onClick={() => buttonClick(lobby.lobbyId)}>{action}</Button>
                     </Item>
                 })}
             </Stack>

@@ -51,7 +51,7 @@ function App() {
                         <Route path="/sign_in" element={<SignIn/>}/>
                         <Route path="/register" element={<Register/>}/>
                         {/*TODO: Change game path to also use id*/}
-                        <Route path="/game" element={<Game/>}/>
+                        <Route path="/game/:id" element={<Game/>}/>
                         <Route path="/registration_confirmation" element={<RegisterConfirmation/>}/>
                         <Route path="/lobby/:id" element={<Lobby/>}/>
                     </Routes>
