@@ -12,6 +12,7 @@ import {QueryClient, QueryClientProvider} from "react-query";
 import AccessTokenContextProvider from "./context/AccessContextProvider";
 import localForage from "localforage";
 import RegisterConfirmation from "./components/identity/RegisterConfirmation";
+import {Lobby} from "./components/Lobby";
 // import localforage from "localforage";
 
 
@@ -49,8 +50,10 @@ function App() {
                         <Route path="/" element={<Home/>}/>
                         <Route path="/sign_in" element={<SignIn/>}/>
                         <Route path="/register" element={<Register/>}/>
+                        {/*TODO: Change game path to also use id*/}
                         <Route path="/game" element={<Game/>}/>
                         <Route path="/registration_confirmation" element={<RegisterConfirmation/>}/>
+                        <Route path="/lobby/:id" element={<Lobby/>}/>
                     </Routes>
                 </BrowserRouter>
             </AccessTokenContextProvider>

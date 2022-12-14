@@ -4,11 +4,11 @@ import {useContext, useState} from "react";
 import CreateLobby from "./dialogs/CreateLobby";
 import AccessContext from "../context/AccessContext";
 import {CreateLobbyData, CreateLobbyDataNoUsername} from "../model/CreateLobbyData";
-import {useLobby} from "../hooks/useLobby";
+import {useLobbies} from "../hooks/useLobbies";
 
 
 export default function Home() {
-    const {createLobbyMutate, isCreatingLobby, isErrorCreatingLobby} = useLobby("")
+    const {createLobbyMutate, isCreatingLobby, isErrorCreatingLobby} = useLobbies()
     const [isCreateLobbyOpen, setIsCreateLobbyOpen] = useState(false);
     const {username} = useContext(AccessContext);
 
