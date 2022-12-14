@@ -1,12 +1,12 @@
 import {PlayerInGame} from "./PlayerInGame";
 import {Continent} from "./Continent";
-import {Card} from "./Card";
+import {GameCard} from "./GameCard";
 
 export interface GameModel {
     gameId: number;
     continents: Continent[];
     playersInGame: PlayerInGame[];
-    cards: Card[];
+    gameCards: GameCard[];
     turn: number;
     currentPlayerIndex: number;
     phase: string;

@@ -17,6 +17,9 @@ import Grid from "@mui/material/Grid";
 import CurrentPlayer from "./Player/CurrentPlayer";
 import {GameInteractionStateReducer} from "../reducers/gameReducer";
 import {useParams} from "react-router-dom";
+import Fab from "@mui/material/Fab";
+import CardsIcon from '@mui/icons-material/Style';
+import CardSelector from "./dialogs/CardSelector";
 
 
 export default function Game() {
@@ -28,6 +31,7 @@ export default function Game() {
     const [state, dispatch] = useReducer(GameInteractionStateReducer, {
         isOpenErrorToast: false,
         errorToastMessage: "",
+        isOpenCardSelector: false,
         selectedStartTerritory: null,
         selectedEndTerritory: null,
         troopState: {
@@ -87,6 +91,11 @@ export default function Game() {
         }
     }
 
+    const exchangeCards = (cardNames: string[]) => {
+        axios.put('/api/game/exchangeCards', {cardNames: cardNames, gameId: gameId});
+        queryClient.invalidateQueries(["game", gameId]);
+    }
+
     const selectTerritory = async (e: any, territoryName: string) => {
         console.log(e, territoryName);
         const currentPlayerInGame = game.playersInGame[game.currentPlayerIndex];
@@ -138,16 +147,26 @@ export default function Game() {
                     })}
                 </Grid>
                 {/*Shows information about the current player (e.g. the phase he is in)*/}
-                <Grid item xs={12} display="flex" justifyContent="center">
+                <Grid item xs={12} display="flex" justifyContent="space-around" alignItems="center">
+                    <Fab color="primary" style={{height: "4vw", width: "4vw"}}
+                         onClick={() => dispatch({type: GameActionType.OPEN_CARD_SELECTOR})}>
+                        <CardsIcon style={{fontSize: "2.5vw"}}/>
+                    </Fab>
                     <CurrentPlayer nextPhase={nextPhase} nextTurn={nextTurn} currentPhase={getPhaseNumber(game.phase)}
                                    currentPlayer={game.playersInGame[game.currentPlayerIndex]}/>
+                    {/*just here to make the current player center*/}
+                    <div></div>
                 </Grid>
             </Grid>
+
             {/*Dialog component for selecting amount of troops for attack, fortify, etc.*/}
             <TroopSelector isOpen={state.troopState.isOpen} onClose={() => dispatch({type: GameActionType.CLOSE_TROOP_SELECTOR})}
                            onSubmit={troopSelectorFunction}
                            maxTroops={state.troopState.maxTroops}
                            confirmButtonText={state.troopState.buttonText}/>
+            {/*Dialog component for selecting cards to exchange*/}
+            <CardSelector isOpen={state.isOpenCardSelector} onClose={() => dispatch({type: GameActionType.CLOSE_CARD_SELECTOR})}
+                          onSubmit={exchangeCards} game={game}/>
             {/*Temporary message for displaying user errors (ex: when user tries to attack from territory with only 1 troop)*/}
             <Snackbar open={state.isOpenErrorToast} autoHideDuration={4000} onClose={handleCloseSnackbar}>
                 <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>

@@ -1,5 +1,5 @@
 import {Player} from "./Player";
-import {Card} from "./Card";
+import {PlayerCard} from "./PlayerCard";
 
 
 export interface PlayerInGame {
@@ -7,5 +7,5 @@ export interface PlayerInGame {
     color: string;
     player: Player
     remainingTroopsToReinforce: number;
-    cards: Card[]
+    playerCards: PlayerCard[]
 }

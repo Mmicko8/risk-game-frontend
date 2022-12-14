@@ -15,6 +15,7 @@ interface TroopSelectorState {
 interface InteractionGameState {
     isOpenErrorToast: boolean;
     errorToastMessage: string;
+    isOpenCardSelector: boolean;
     selectedStartTerritory: TerritoryModel | null;
     selectedEndTerritory: TerritoryModel | null;
     troopState: TroopSelectorState;
@@ -59,6 +60,13 @@ function gameInteractionStateReducerWithoutPayload(state: InteractionGameState, 
                     isOpen: true,
                 }
             };
+
+        case GameActionType.OPEN_CARD_SELECTOR:
+            return {...state, isOpenCardSelector: true};
+
+        case GameActionType.CLOSE_CARD_SELECTOR:
+            return {...state, isOpenCardSelector: false};
+
         default:
             return null;
     }
