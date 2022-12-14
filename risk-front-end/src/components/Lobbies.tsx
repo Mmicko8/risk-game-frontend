@@ -4,6 +4,7 @@ import {styled} from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import PersonIcon from "@mui/icons-material/Person";
 import GroupsIcon from '@mui/icons-material/Groups';
+import StarRateIcon from '@mui/icons-material/StarRate';
 import * as React from "react";
 import {Player} from "../model/Player";
 import Button from "@mui/material/Button";
@@ -12,7 +13,7 @@ interface OpenLobbiesProps {
     lobbies: Lobby[]
 }
 
-export function OpenLobbies({lobbies}: OpenLobbiesProps) {
+export function Lobbies({lobbies}: OpenLobbiesProps) {
     const Item = styled(Paper)(({theme}) => ({
         backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : 'rgba(143,143,143,0.63)',
         ...theme.typography.body2,
@@ -35,13 +36,15 @@ export function OpenLobbies({lobbies}: OpenLobbiesProps) {
                             />
                             <Chip icon={<PersonIcon/>} size="small" color="success"
                                   label={`Maximum amount of players: ${lobby.maxPlayers}`}/>
+                            <Chip icon={<StarRateIcon/>} size="small" color="success"
+                                  label={`Host: ${lobby.host.username}`}/>
                             <Chip
                                 icon={<GroupsIcon/>}
                                 size="small"
                                 color="success"
-                                label={lobby.players.map((player: Player, index) => {
-                                    if (index + 1 === lobby.players.length) return player.username
-                                    return `${player.username},`
+                                label={"Players: "+lobby.players.map((player: Player, index) => {
+                                    if (index + 1 === lobby.players.length) return " "+player.username
+                                    return ` ${player.username}`
                                 })}/>
                         </Stack>
                         <Button size="small" variant="contained">Join lobby</Button>
