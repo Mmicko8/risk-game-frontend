@@ -15,9 +15,8 @@ import Loading from "./Loading";
 export default function Home() {
     const [isCreateLobbyOpen, setIsCreateLobbyOpen] = useState(false);
     const {username} = useContext(AccessContext);
-    //TODO: Request help with this magic => refresh gives all lobbies, then re-renders to correct lobbies that are not joined
     const {isLoading, isError, lobbies} = useLobbies(20, username);
-    const {isLoading: loadingJoined, isError: errorJoined, data: joinedLobbies} = useQuery(['joinedLobbies'],
+    const {isLoading: loadingJoined, isError: errorJoined, data: joinedLobbies} = useQuery(['joinedLobbies', username],
         () => getJoinedLobbies(username))
 
     async function createLobby(data: CreateLobbyDataNoUsername) {
@@ -42,10 +41,13 @@ export default function Home() {
         <Container maxWidth="lg">
             {!username ? "" : <>
                 <Typography component="h1" variant="h4" fontFamily="Courier" fontWeight="bolder" sx={{mt:"20px"}}>
-                    All joined or created lobbies
+                    Your games
                 </Typography>
-                {!joinedLobbies ? <Loading/> : <Lobbies lobbies={joinedLobbies}/>}
-                <div style={{position: "absolute", right: "20px", bottom: "20px"}}>
+                <Typography component="h1" variant="h4" fontFamily="Courier" fontWeight="bolder" sx={{mt:"20px"}}>
+                    Your lobbies
+                </Typography>
+                {!joinedLobbies ? <Loading/> : <Lobbies lobbies={joinedLobbies} action={"Go to lobby"}/>}
+                <div style={{position: "fixed", right: "20px", bottom: "20px"}}>
                     <Tooltip title="Create lobby">
                         <Fab
                             size="large"
@@ -61,7 +63,7 @@ export default function Home() {
             <Typography component="h1" variant="h4" fontFamily="Courier" fontWeight="bolder" sx={{mt:"20px"}}>
                 Open lobbies
             </Typography>
-            <Lobbies lobbies={lobbies}/>
+            <Lobbies lobbies={lobbies} action={"Join lobby"}/>
             <CreateLobby isOpen={isCreateLobbyOpen} onClose={() => setIsCreateLobbyOpen(false)} onSubmit={createLobby}/>
         </Container>
     );

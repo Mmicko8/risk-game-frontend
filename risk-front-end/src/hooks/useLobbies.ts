@@ -6,7 +6,7 @@ export function useLobbies(amount: number, username: string | null) {
         isLoading,
         isError,
         data: lobbies
-    } = useQuery(['lobbies'], () => getFirstNLobbies(amount, username))
+    } = useQuery(['lobbies', username], () => getFirstNLobbies(amount, username))
 
     return {
         isLoading,

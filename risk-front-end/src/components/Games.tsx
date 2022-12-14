@@ -1,28 +1,18 @@
-import {Box, Chip, Stack, Avatar} from "@mui/material";
+import {Avatar, Box, Chip, Stack} from "@mui/material";
 import {Lobby} from "../model/Lobby";
-import {styled} from "@mui/material/styles";
-import Paper from "@mui/material/Paper";
 import PersonIcon from "@mui/icons-material/Person";
-import GroupsIcon from '@mui/icons-material/Groups';
-import StarRateIcon from '@mui/icons-material/StarRate';
-import * as React from "react";
+import StarRateIcon from "@mui/icons-material/StarRate";
+import GroupsIcon from "@mui/icons-material/Groups";
 import {Player} from "../model/Player";
 import Button from "@mui/material/Button";
+import * as React from "react";
+import {Item} from "./Lobbies"
 
-interface OpenLobbiesProps {
-    lobbies: Lobby[],
-    action: string
+interface GamesProps {
+    lobbies: Lobby[]
 }
 
-export const Item = styled(Paper)(({theme}) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : 'rgba(143,143,143,0.63)',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-}));
-
-export function Lobbies({lobbies, action}: OpenLobbiesProps) {
+export function Games({lobbies}: GamesProps) {
     return (
         <Box sx={{width: '100%'}}>
             <Stack spacing={1}>
@@ -48,7 +38,7 @@ export function Lobbies({lobbies, action}: OpenLobbiesProps) {
                                     return ` ${player.username}`
                                 })}/>
                         </Stack>
-                        <Button size="small" variant="contained">{action}</Button>
+                        <Button size="small" variant="contained">Go to game</Button>
                     </Item>
                 })}
             </Stack>
