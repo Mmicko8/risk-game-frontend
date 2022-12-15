@@ -7,7 +7,8 @@ export async function getLobby (id: string) {
 }
 
 export async function createLobbyCall (createLobbyData: CreateLobbyData) {
-    const response = await axios.post("/api/lobby/create", {username: createLobbyData.username, maxPlayers: createLobbyData.amountOfPlayers});
+    const response = await axios.post("/api/lobby/create",
+        {username: createLobbyData.username, maxPlayers: createLobbyData.amountOfPlayers, timer: createLobbyData.timer});
     return response.data;
 }
 
