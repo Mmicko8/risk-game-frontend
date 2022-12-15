@@ -45,7 +45,7 @@ export function Lobby() {
                 </Typography>
                 <Stack direction="row" spacing={4} sx={{mt: "20px"}}>
                     <Chip icon={<PersonIcon/>} color="success" label={`Amount of players: ${lobby.maxPlayers}`}/>
-                    <Chip icon={<AccessTimeIcon/>} color="success" label={`Round timer: ${lobby.timer}`}/>
+                    <Chip icon={<AccessTimeIcon/>} color="success" label={`Round timer: ${lobby.timer}s`}/>
                     {lobby.host.username === username? <Button variant="contained">Start game</Button>:""}
                 </Stack>
                 <div style={{display: "flex", flexDirection: "row"}}>
