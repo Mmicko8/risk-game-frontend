@@ -1,10 +1,8 @@
 import {Dialog, DialogActions, DialogContent} from "@mui/material";
 import Button from "@mui/material/Button";
-import {GameModel} from "../../model/GameModel";
+import {GameModel} from "../../../model/GameModel";
 import {useState} from "react";
-import Paper from "@mui/material/Paper";
-import Typography from "@mui/material/Typography";
-import './CardSelector.css'
+import Card from "./Card";
 
 interface CardSelectorProps {
     isOpen: boolean;
@@ -27,13 +25,9 @@ export default function CardSelector({isOpen, onClose, onSubmit, game}: CardSele
         <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="xl">
             <DialogContent style={{display: "flex", justifyContent: "space-between"}}>
                 {cards.map(c => (
-                    <Paper key={c.name} style={{minWidth: "135px", height: "120px", display: "flex",
-                        flexDirection: "column", alignItems: "center"}} onClick={() => toggleCard(c.name)}
-                        className={selectedCards.includes(c.name) ? "highlight" : ""}>
-                        <Typography>{c.name}</Typography>
-                        <Typography>stars: {c.stars}</Typography>
-                    </Paper>
-                ))}
+                    <Card key={c.name} card={c}
+                          onClick={() => toggleCard(c.name)}
+                          isHighlighted={selectedCards.includes(c.name)}/>))}
             </DialogContent>
             <DialogActions>
                 <Button variant="contained" fullWidth onClick={() => onSubmit(selectedCards)}>

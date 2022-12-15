@@ -1,6 +1,6 @@
-import {Card} from "./Card";
+import {CardModel} from "./CardModel";
 
 export interface GameCard {
     gameCardId: number;
-    card: Card;
+    card: CardModel;
 }

@@ -26,7 +26,7 @@ import {GameInteractionStateReducer} from "../reducers/gameReducer";
 import {useParams} from "react-router-dom";
 import Fab from "@mui/material/Fab";
 import CardsIcon from '@mui/icons-material/Style';
-import CardSelector from "./dialogs/CardSelector";
+import CardSelector from "./dialogs/CardSelector/CardSelector";
 import {attack} from "../services/attackService";
 import { fortify } from "../services/fortifyService";
 
