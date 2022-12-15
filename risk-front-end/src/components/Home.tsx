@@ -4,7 +4,7 @@ import {useContext, useState} from "react";
 import CreateLobby from "./dialogs/CreateLobby";
 import AccessContext from "../context/AccessContext";
 import {CreateLobbyData, CreateLobbyDataNoUsername} from "../model/CreateLobbyData";
-import {createLobbyCall, getJoinedLobbies} from "../services/lobbyService";
+import {createLobbyCall, getJoinedLobbies, homeActions} from "../services/lobbyService";
 import {useLobbies} from "../hooks/useLobbies";
 import {Lobbies} from "./Lobbies";
 import Typography from "@mui/material/Typography";
@@ -56,7 +56,7 @@ export default function Home() {
                 <Typography component="h1" variant="h4" fontFamily="Courier" fontWeight="bolder" sx={{mt:"20px"}}>
                     Your lobbies
                 </Typography>
-                {!joinedLobbies ? <Loading/> : <Lobbies lobbies={joinedLobbies} action={"Go to lobby"}/>}
+                {!joinedLobbies ? <Loading/> : <Lobbies lobbies={joinedLobbies} action={homeActions.GO_TO}/>}
                 <div style={{position: "fixed", right: "20px", bottom: "20px"}}>
                     <Tooltip title="Create lobby">
                         <Fab
@@ -73,7 +73,7 @@ export default function Home() {
             <Typography component="h1" variant="h4" fontFamily="Courier" fontWeight="bolder" sx={{mt:"20px"}}>
                 Open lobbies
             </Typography>
-            <Lobbies lobbies={lobbies} action={"Join lobby"}/>
+            <Lobbies lobbies={lobbies} action={homeActions.JOIN}/>
             <CreateLobby isOpen={isCreateLobbyOpen} onClose={() => setIsCreateLobbyOpen(false)} onSubmit={createLobby}/>
         </Container>
     );

@@ -9,6 +9,7 @@ import * as React from "react";
 import {Player} from "../model/Player";
 import Button from "@mui/material/Button";
 import {useNavigate} from "react-router-dom";
+import {homeActions} from "../services/lobbyService";
 
 interface OpenLobbiesProps {
     lobbies: Lobby[],
@@ -27,10 +28,10 @@ export function Lobbies({lobbies, action}: OpenLobbiesProps) {
     const navigate = useNavigate()
 
     function buttonClick(lobbyId: number) {
-        if (action === "Go to lobby") {
+        if (action === homeActions.GO_TO) {
             navigate(`/lobby/${lobbyId}`)
         }
-        if (action === "Join lobby") {
+        if (action === homeActions.JOIN) {
             //implement joining functionality
         }
     }

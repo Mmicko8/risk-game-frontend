@@ -1,6 +1,11 @@
 import axios from "axios";
 import {CreateLobbyData} from "../model/CreateLobbyData";
 
+export const homeActions = {
+    GO_TO: "Go to lobby",
+    JOIN: "Join lobby"
+}
+
 export async function getLobby (id: string) {
     const lobby = await axios.get(`/api/lobby/${id}`);
     return lobby.data;
