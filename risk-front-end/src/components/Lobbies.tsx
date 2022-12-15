@@ -9,7 +9,7 @@ import * as React from "react";
 import {Player} from "../model/Player";
 import Button from "@mui/material/Button";
 import {useNavigate} from "react-router-dom";
-import {homeActions} from "../services/lobbyService";
+import {homeActions, joinLobby} from "../services/lobbyService";
 
 interface OpenLobbiesProps {
     lobbies: Lobby[],
@@ -32,7 +32,12 @@ export function Lobbies({lobbies, action}: OpenLobbiesProps) {
             navigate(`/lobby/${lobbyId}`)
         }
         if (action === homeActions.JOIN) {
-            //implement joining functionality
+            joinLobby(lobbyId).then(() => {
+                navigate(`/lobby/${lobbyId}`);
+            }).catch(() => {
+                //Change to snackbar maybe? Or not needed?
+                console.warn("Something went wrong joining the lobby");
+            })
         }
     }
 

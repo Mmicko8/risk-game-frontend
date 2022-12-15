@@ -28,3 +28,11 @@ export async function getJoinedLobbies(username: string | null) {
     const response = await axios.get(`/api/lobby/joinedNotStartedLobbies`);
     return response.data;
 }
+
+export function joinLobby(lobbyId: number) {
+    return axios.put(`/api/lobby/joinLobby/${lobbyId}`)
+}
+
+export function startGameCall(lobbyId: number) {
+    return axios.put(`/api/game/startGame/lobby/${lobbyId}`)
+}
