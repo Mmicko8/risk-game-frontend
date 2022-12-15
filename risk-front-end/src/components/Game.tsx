@@ -76,7 +76,7 @@ export default function Game() {
             const defendingTerritory = state.selectedEndTerritory;
             if (!attackingTerritory || !defendingTerritory) throw new Error("Tried attacking but attacking or defending territory was not set");
 
-            // todo defender amount
+            // todo defender amount => niet meegeeven, backend moet maximum pakken
             const response = await attack({gameId, attackerTerritoryName: attackingTerritory.name,
                 defenderTerritoryName: defendingTerritory.name, amountOfAttackers: troops, amountOfDefenders: 1});
             await queryClient.invalidateQueries(["game", gameId]);
@@ -132,6 +132,12 @@ export default function Game() {
         await queryClient.invalidateQueries(["game", gameId]);
         dispatch({type: GameActionType.RESET_TERRITORY_STATE});
     }
+
+    const isUserInTurnAndReinforcement = () => {
+        const currentPlayer = game.playersInGame[game.currentPlayerIndex].player;
+        return game.phase === Phases.REINFORCEMENT && username === currentPlayer.username;
+    }
+
     console.log(game);
 
     return (
@@ -154,6 +160,7 @@ export default function Game() {
                 {/*Shows information about the current player (e.g. the phase he is in)*/}
                 <Grid item xs={12} display="flex" justifyContent="space-around" alignItems="center">
                     <Fab color="primary" style={{height: "4vw", width: "4vw"}}
+                         disabled={!isUserInTurnAndReinforcement()}
                          onClick={() => dispatch({type: GameActionType.OPEN_CARD_SELECTOR})}>
                         <CardsIcon style={{fontSize: "2.5vw"}}/>
                     </Fab>
