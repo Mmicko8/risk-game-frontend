@@ -41,3 +41,15 @@ export function getPhaseFromNumber(phaseNr: number) {
     if (phaseNr === 1) return Phases.ATTACK;
     else return Phases.FORTIFICATION;
 }
+
+export async function exchangeCards(gameId: number, cardNames: string[]) {
+    await axios.put('/api/game/exchangeCards', {cardNames: cardNames, gameId: gameId});
+}
+
+export async function nextPhase(gameId: number) {
+    await axios.put(`/api/game/${gameId}/nextPhase`)
+}
+
+export async function nextTurn(gameId: number) {
+    await axios.put(`/api/game/${gameId}/nextTurn`)
+}

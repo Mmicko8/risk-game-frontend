@@ -24,7 +24,7 @@ function getTerritoryColor(game: GameModel, territoryOwnerId: number) {
 export default function Board({selectTerritory, territories, attackableTerritoryNames, fortifiableTerritoryNames}: BoardProps) {
     const strokeColor = (territoryName: string) => {
         if (attackableTerritoryNames && attackableTerritoryNames.includes(territoryName)) {
-            return '#ff0000';
+            return '#ff0000'; // todo not hardcoded
         }
         if (fortifiableTerritoryNames && fortifiableTerritoryNames.includes(territoryName)) {
             return '#20bd00';
@@ -46,6 +46,7 @@ export default function Board({selectTerritory, territories, attackableTerritory
             <svg xmlns="http://www.w3.org/2000/svg"
                  width={'70%'} height={'70%'}
                  viewBox={`0 0 ${1024} ${650}`}>
+                {/*Todo not magic numbers*/}
                 <g id="map" fill="none" strokeWidth="1.5">
                     {territories.map((t) => {
                         let drawData = getTerritoryDrawData(t.name);

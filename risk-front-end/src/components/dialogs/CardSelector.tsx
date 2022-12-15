@@ -16,8 +16,6 @@ interface CardSelectorProps {
 export default function CardSelector({isOpen, onClose, onSubmit, game}: CardSelectorProps) {
     const currentPlayer = game.playersInGame[game.currentPlayerIndex];
     const cards = currentPlayer.playerCards.map(pc => pc.card);
-    // const cards = [{name: "NorthWest", stars: 1}, {name: "Alaska", stars: 2}, {name: "SouthAfrica", stars: 1},
-    //     {name: "Siam", stars: 2},{name: "SouthEurope", stars: 2},{name: "NorthEurope", stars: 1}]
     const [selectedCards, setSelectedCards] = useState<string[]>([]);
 
     const toggleCard = (cardName: string) => {

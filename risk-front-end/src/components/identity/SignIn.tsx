@@ -15,7 +15,7 @@ import {useForm, Controller} from "react-hook-form";
 import {SignInCredentials} from "../../model/SignInCredentials";
 import {useContext} from "react";
 import AccessContext from "../../context/AccessContext";
-import axios from "axios";
+import {login} from "../../services/identityService";
 
 function Copyright(props: any) {
     return (
@@ -43,7 +43,7 @@ export default function SignIn() {
     const navigate = useNavigate()
 
     const _onSubmit = async (data: SignInCredentials) => {
-        axios.post("/api/player/login", {username: data.username, password: data.password})
+        login(data.username, data.password)
             .then((response) => {
                 setAccessToken(response?.headers?.authorization!);
                 setUsername(data.username);

@@ -1,16 +1,10 @@
 import {TerritoryModel} from "../model/TerritoryModel";
-import {GameModel} from "../model/GameModel";
 import {unionArrays} from "./utilsService";
-import {getTerritoriesWithNeighbors, getTerritoryData} from "./territoryService";
+import {getTerritoryData} from "./territoryService";
+import axios from "axios";
 
-
-
-export async function getAllFortifiableTerritories(startTerritory: TerritoryModel, game: GameModel) {
-    const territories = await getTerritoriesWithNeighbors(game.gameId);
-    startTerritory.neighbors = getTerritoryData(territories, startTerritory.name)!.neighbors;
-    let connectedTerritories = getFortifiableTerritories(startTerritory, [startTerritory.name], territories);
-    connectedTerritories = connectedTerritories.filter(value => value !== startTerritory.name);
-    return connectedTerritories;
+export async function fortify(gameId: number, territoryFrom: string, territoryTo: string, troops: number) {
+    await axios.put('/api/game/fortify', {gameId, territoryFrom, territoryTo, troops});
 }
 
 export function getFortifiableTerritories(startTerritory: TerritoryModel,
