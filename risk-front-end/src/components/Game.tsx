@@ -1,22 +1,34 @@
 import Board from "./Board";
 import {useQuery, useQueryClient} from "react-query";
-import {GameActionType, getGameState, getPhaseNumber, Phases} from "../services/gameService";
+import {
+    exchangeCards,
+    GameActionType,
+    getGameState,
+    getPhaseNumber,
+    nextPhase,
+    nextTurn,
+    Phases
+} from "../services/gameService";
 import Loading from "./Loading";
 import {Alert, Snackbar} from "@mui/material";
 import {
     getAllTerritoriesFromGameState,
-    getTerritoriesWithNeighbors,
+    getTerritoriesWithNeighbors, placeTroops,
 } from "../services/territoryService";
 import GameStateContextProvider from "../context/GameStateContextProvider";
 import {SyntheticEvent, useContext, useReducer} from "react";
 import AccessContext from "../context/AccessContext";
 import TroopSelector from "./dialogs/TroopSelector";
-import axios from "axios";
 import PlayerFrame from "./Player/PlayerFrame";
 import Grid from "@mui/material/Grid";
 import CurrentPlayer from "./Player/CurrentPlayer";
 import {GameInteractionStateReducer} from "../reducers/gameReducer";
 import {useParams} from "react-router-dom";
+import Fab from "@mui/material/Fab";
+import CardsIcon from '@mui/icons-material/Style';
+import CardSelector from "./dialogs/CardSelector/CardSelector";
+import {attack} from "../services/attackService";
+import { fortify } from "../services/fortifyService";
 
 
 export default function Game() {
@@ -28,6 +40,7 @@ export default function Game() {
     const [state, dispatch] = useReducer(GameInteractionStateReducer, {
         isOpenErrorToast: false,
         errorToastMessage: "",
+        isOpenCardSelector: false,
         selectedStartTerritory: null,
         selectedEndTerritory: null,
         troopState: {
@@ -52,11 +65,10 @@ export default function Game() {
         return <Alert severity="error">Game state could not be loaded</Alert>;
     }
 
-    // todo move axios calls to service
     const troopSelectorFunction = async (troops: number, action: string) => {
         dispatch({type: GameActionType.CLOSE_TROOP_SELECTOR});
         if (action === "Reinforce") {
-            await axios.put(`/api/territory/${state.selectedStartTerritory?.territoryId}/placeTroops/${troops}`); // todo null check
+            await placeTroops(state.selectedStartTerritory!.territoryId, troops);
             await queryClient.invalidateQueries(["game", gameId]);
         }
         if (action === "Attack") {
@@ -64,8 +76,8 @@ export default function Game() {
             const defendingTerritory = state.selectedEndTerritory;
             if (!attackingTerritory || !defendingTerritory) throw new Error("Tried attacking but attacking or defending territory was not set");
 
-            // todo defender amount
-            const response = await axios.put('/api/game/attack', {gameId, attackerTerritoryName: attackingTerritory.name,
+            // todo defender amount => niet meegeeven, backend moet maximum pakken
+            const response = await attack({gameId, attackerTerritoryName: attackingTerritory.name,
                 defenderTerritoryName: defendingTerritory.name, amountOfAttackers: troops, amountOfDefenders: 1});
             await queryClient.invalidateQueries(["game", gameId]);
 
@@ -79,16 +91,18 @@ export default function Game() {
             dispatch({type: GameActionType.ANNEXATION_FORTIFICATION});
         }
         if (action === "Fortify") {
-            // todo add check if null instead of !
-            await axios.put('/api/game/fortify', {gameId, territoryFrom: state.selectedStartTerritory!.name,
-                territoryTo: state.selectedEndTerritory!.name, troops})
+            await fortify(gameId, state.selectedStartTerritory!.name, state.selectedEndTerritory!.name, troops);
             await queryClient.invalidateQueries(["game", gameId]);
             dispatch({type: GameActionType.RESET_TERRITORY_STATE});
         }
     }
 
+    const handleExchangeCards = async (cardNames: string[]) => {
+        await exchangeCards(gameId, cardNames);
+        await queryClient.invalidateQueries(["game", gameId]);
+    }
+
     const selectTerritory = async (e: any, territoryName: string) => {
-        console.log(e, territoryName);
         const currentPlayerInGame = game.playersInGame[game.currentPlayerIndex];
         if (currentPlayerInGame.player.username !== username) return; // check if player has turn
 
@@ -107,17 +121,23 @@ export default function Game() {
         });
     }
 
-    const nextPhase = async () => {
-        await axios.put(`/api/game/${gameId}/nextPhase`)
+    const handleNextPhase = async () => {
+        await nextPhase(gameId);
         await queryClient.invalidateQueries(["game", gameId]);
         dispatch({type: GameActionType.RESET_TERRITORY_STATE});
     }
 
-    const nextTurn = async () => {
-        await axios.put(`/api/game/${gameId}/nextTurn`)
+    const handleNextTurn = async () => {
+        await nextTurn(gameId);
         await queryClient.invalidateQueries(["game", gameId]);
         dispatch({type: GameActionType.RESET_TERRITORY_STATE});
     }
+
+    const isUserInTurnAndReinforcement = () => {
+        const currentPlayer = game.playersInGame[game.currentPlayerIndex].player;
+        return game.phase === Phases.REINFORCEMENT && username === currentPlayer.username;
+    }
+
     console.log(game);
 
     return (
@@ -138,16 +158,27 @@ export default function Game() {
                     })}
                 </Grid>
                 {/*Shows information about the current player (e.g. the phase he is in)*/}
-                <Grid item xs={12} display="flex" justifyContent="center">
-                    <CurrentPlayer nextPhase={nextPhase} nextTurn={nextTurn} currentPhase={getPhaseNumber(game.phase)}
+                <Grid item xs={12} display="flex" justifyContent="space-around" alignItems="center">
+                    <Fab color="primary" style={{height: "4vw", width: "4vw"}}
+                         disabled={!isUserInTurnAndReinforcement()}
+                         onClick={() => dispatch({type: GameActionType.OPEN_CARD_SELECTOR})}>
+                        <CardsIcon style={{fontSize: "2.5vw"}}/>
+                    </Fab>
+                    <CurrentPlayer nextPhase={handleNextPhase} nextTurn={handleNextTurn} currentPhase={getPhaseNumber(game.phase)}
                                    currentPlayer={game.playersInGame[game.currentPlayerIndex]}/>
+                    {/*just here to make the current player center*/}
+                    <div></div>
                 </Grid>
             </Grid>
+
             {/*Dialog component for selecting amount of troops for attack, fortify, etc.*/}
             <TroopSelector isOpen={state.troopState.isOpen} onClose={() => dispatch({type: GameActionType.CLOSE_TROOP_SELECTOR})}
                            onSubmit={troopSelectorFunction}
                            maxTroops={state.troopState.maxTroops}
                            confirmButtonText={state.troopState.buttonText}/>
+            {/*Dialog component for selecting cards to exchange*/}
+            <CardSelector isOpen={state.isOpenCardSelector} onClose={() => dispatch({type: GameActionType.CLOSE_CARD_SELECTOR})}
+                          onSubmit={handleExchangeCards} game={game}/>
             {/*Temporary message for displaying user errors (ex: when user tries to attack from territory with only 1 troop)*/}
             <Snackbar open={state.isOpenErrorToast} autoHideDuration={4000} onClose={handleCloseSnackbar}>
                 <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>

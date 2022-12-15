@@ -25,7 +25,9 @@ export const GameActionType = {
     RESET_TERRITORY_STATE: "RESET TERRITORY STATE",
     CLOSE_TROOP_SELECTOR: "CLOSE TROOP SELECTOR",
     CLOSE_ERROR_TOAST: "OPEN ERROR TOAST",
-    ANNEXATION_FORTIFICATION: "ANNEXATION FORTIFICATION"
+    ANNEXATION_FORTIFICATION: "ANNEXATION FORTIFICATION",
+    CLOSE_CARD_SELECTOR: "CLOSE CARD SELECTOR",
+    OPEN_CARD_SELECTOR: "OPEN CARD SELECTOR"
 }
 
 export function getPhaseNumber(phase: string) {
@@ -38,4 +40,16 @@ export function getPhaseFromNumber(phaseNr: number) {
     if (phaseNr === 0) return Phases.REINFORCEMENT;
     if (phaseNr === 1) return Phases.ATTACK;
     else return Phases.FORTIFICATION;
+}
+
+export async function exchangeCards(gameId: number, cardNames: string[]) {
+    await axios.put('/api/game/exchangeCards', {cardNames: cardNames, gameId: gameId});
+}
+
+export async function nextPhase(gameId: number) {
+    await axios.put(`/api/game/${gameId}/nextPhase`)
+}
+
+export async function nextTurn(gameId: number) {
+    await axios.put(`/api/game/${gameId}/nextTurn`)
 }

@@ -33,3 +33,8 @@ export async function getTerritoriesWithNeighbors(gameId: number) {
     const response = await axios.get<TerritoryModel[]>(`/api/territory/game/${gameId}/neighbors`);
     return response.data;
 }
+
+export async function placeTroops(territoryId: number, troops: number) {
+    if (!territoryId) return;
+    await axios.put(`/api/territory/${territoryId}/placeTroops/${troops}`);
+}
