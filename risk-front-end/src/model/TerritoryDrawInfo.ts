@@ -5,5 +5,6 @@ export interface TerritoryDrawInfo {
     strokeColor: string;
     xOffset: number;
     yOffset: number;
+    vbox: string;
     drawPath: string;
 }

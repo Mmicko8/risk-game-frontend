@@ -2,7 +2,7 @@ import {Dialog, DialogActions, DialogContent} from "@mui/material";
 import Button from "@mui/material/Button";
 import {GameModel} from "../../../model/GameModel";
 import {useState} from "react";
-import Card from "./Card";
+import TroopCard from "./TroopCard";
 
 interface CardSelectorProps {
     isOpen: boolean;
@@ -25,9 +25,9 @@ export default function CardSelector({isOpen, onClose, onSubmit, game}: CardSele
         <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="xl">
             <DialogContent style={{display: "flex", justifyContent: "space-between"}}>
                 {cards.map(c => (
-                    <Card key={c.name} card={c}
-                          onClick={() => toggleCard(c.name)}
-                          isHighlighted={selectedCards.includes(c.name)}/>))}
+                    <TroopCard key={c.name} card={c}
+                               onClick={() => toggleCard(c.name)}
+                               isHighlighted={selectedCards.includes(c.name)}/>))}
             </DialogContent>
             <DialogActions>
                 <Button variant="contained" fullWidth onClick={() => onSubmit(selectedCards)}>
