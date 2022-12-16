@@ -34,5 +34,5 @@ export function joinLobby(lobbyId: number) {
 }
 
 export function startGameCall(lobbyId: number) {
-    return axios.put(`/api/game/startGame/lobby/${lobbyId}`)
+    return axios.post(`/api/game/startGame/lobby/${lobbyId}`)
 }
