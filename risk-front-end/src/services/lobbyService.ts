@@ -1,13 +1,19 @@
 import axios from "axios";
 import {CreateLobbyData} from "../model/CreateLobbyData";
 
+export const homeActions = {
+    GO_TO: "Go to lobby",
+    JOIN: "Join lobby"
+}
+
 export async function getLobby (id: string) {
     const lobby = await axios.get(`/api/lobby/${id}`);
     return lobby.data;
 }
 
 export async function createLobbyCall (createLobbyData: CreateLobbyData) {
-    const response = await axios.post("/api/lobby/create", {username: createLobbyData.username, maxPlayers: createLobbyData.amountOfPlayers});
+    const response = await axios.post("/api/lobby/create",
+        {username: createLobbyData.username, maxPlayers: createLobbyData.amountOfPlayers, timer: createLobbyData.timer});
     return response.data;
 }
 
@@ -21,4 +27,12 @@ export async function getJoinedLobbies(username: string | null) {
     if (!username) return null;
     const response = await axios.get(`/api/lobby/joinedNotStartedLobbies`);
     return response.data;
+}
+
+export function joinLobby(lobbyId: number) {
+    return axios.put(`/api/lobby/joinLobby/${lobbyId}`)
+}
+
+export function startGameCall(lobbyId: number) {
+    return axios.post(`/api/game/startGame/lobby/${lobbyId}`)
 }

@@ -1,4 +1,4 @@
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useLobby} from "../hooks/useLobby";
 import {Alert, CircularProgress, Stack, Chip} from "@mui/material";
 import {Player} from "../model/Player";
@@ -13,11 +13,13 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import Button from "@mui/material/Button";
 import {useContext} from "react";
 import AccessContext from "../context/AccessContext";
+import {startGameCall} from "../services/lobbyService";
 
 export function Lobby() {
-    const {username} = useContext(AccessContext)
-    const {id} = useParams<{ id: string }>()
-    const {isLoading, isError, lobby} = useLobby(id!)
+    const navigate = useNavigate();
+    const {username} = useContext(AccessContext);
+    const {id} = useParams<{ id: string }>();
+    const {isLoading, isError, lobby} = useLobby(id!);
 
     if (isLoading) {
         return <CircularProgress sx={{position: "fixed", top: "50%", left: "50%"}}/>
@@ -29,7 +31,15 @@ export function Lobby() {
         return <Alert severity="info">Lobby is already closed</Alert>
     }
 
-    console.log(lobby.closed)
+    function startGame() {
+        startGameCall(lobby.lobbyId).then((response) => {
+            navigate(`/game/${response.data}`)
+        }).catch(() => {
+            //Other way of showing warning?
+            console.warn("Something went wrong starting the game");
+        })
+    }
+
     return (
         <Container component="main" maxWidth="md">
             <Box
@@ -45,8 +55,11 @@ export function Lobby() {
                 </Typography>
                 <Stack direction="row" spacing={4} sx={{mt: "20px"}}>
                     <Chip icon={<PersonIcon/>} color="success" label={`Amount of players: ${lobby.maxPlayers}`}/>
-                    <Chip icon={<AccessTimeIcon/>} color="success" label={`Round timer: ${lobby.timer}`}/>
-                    {lobby.host.username === username? <Button variant="contained">Start game</Button>:""}
+                    <Chip icon={<AccessTimeIcon/>} color="success" label={`Round timer: ${lobby.timer}s`}/>
+                    {lobby.host.username === username?
+                        <Button disabled={lobby.players.length < 2} variant="contained" onClick={() => startGame()}>
+                            Start game
+                        </Button>:""}
                 </Stack>
                 <div style={{display: "flex", flexDirection: "row"}}>
                     {lobby.players.map((player: Player, index: number) => {

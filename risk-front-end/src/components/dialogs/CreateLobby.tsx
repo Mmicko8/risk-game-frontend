@@ -26,7 +26,8 @@ export default function CreateLobby({isOpen, onClose, onSubmit}: CreateLobbyProp
         reset,
     } = useForm({
         defaultValues: {
-            amountOfPlayers: 5
+            amountOfPlayers: 5,
+            timer: 60
         }
     })
 
@@ -58,6 +59,26 @@ export default function CreateLobby({isOpen, onClose, onSubmit}: CreateLobbyProp
                                         <MenuItem value={3}>3</MenuItem>
                                         <MenuItem value={4}>4</MenuItem>
                                         <MenuItem value={5}>5</MenuItem>
+                                    </Select>
+                                )}
+                            />
+                        </FormControl>
+                        <FormControl fullWidth sx={{mt: "10px"}}>
+                            <InputLabel id="timer-label">Turn timer</InputLabel>
+                            <Controller
+                                name="timer"
+                                control={control}
+                                render={({field}) => (
+                                    <Select
+                                        {...field}
+                                        labelId="timer-label"
+                                        id="timer"
+                                        label="Turn timer"
+                                    >
+                                        <MenuItem value={30}>30s</MenuItem>
+                                        <MenuItem value={60}>60s</MenuItem>
+                                        <MenuItem value={90}>90s</MenuItem>
+                                        <MenuItem value={120}>120s</MenuItem>
                                     </Select>
                                 )}
                             />
