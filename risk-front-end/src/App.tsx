@@ -13,6 +13,7 @@ import AccessTokenContextProvider from "./context/AccessContextProvider";
 import localForage from "localforage";
 import RegisterConfirmation from "./components/identity/RegisterConfirmation";
 import {Lobby} from "./components/Lobby";
+import Leaderboard from "./components/Leaderboard";
 // import localforage from "localforage";
 
 
@@ -54,6 +55,7 @@ function App() {
                         <Route path="/game/:id" element={<Game/>}/>
                         <Route path="/registration_confirmation" element={<RegisterConfirmation/>}/>
                         <Route path="/lobby/:id" element={<Lobby/>}/>
+                        <Route path="/leaderboard" element={<Leaderboard/>}/>
                     </Routes>
                 </BrowserRouter>
             </AccessTokenContextProvider>
