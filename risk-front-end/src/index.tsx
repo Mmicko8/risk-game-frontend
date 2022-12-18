@@ -8,11 +8,9 @@ const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 );
 root.render(
-    <React.StrictMode>
-        <Suspense fallback={"Loading..."}>
-            <App/>
-        </Suspense>
-    </React.StrictMode>
+    <Suspense fallback={"Loading..."}>
+        <App/>
+    </Suspense>
 );
 
 // If you want to start measuring performance in your app, pass a function
