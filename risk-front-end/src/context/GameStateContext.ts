@@ -1,5 +1,5 @@
 import {createContext} from "react";
-import {GameModel} from "../model/GameModel";
+import {GameModel} from "../model/game/GameModel";
 
 
 export interface IGameStateContext {

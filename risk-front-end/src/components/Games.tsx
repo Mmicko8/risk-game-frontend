@@ -5,7 +5,7 @@ import TimelineIcon from '@mui/icons-material/Timeline';
 import Button from "@mui/material/Button";
 import * as React from "react";
 import {Item} from "./Lobbies"
-import {GameInfo} from "../model/GameInfo";
+import {GameInfo} from "../model/game/GameInfo";
 import {useNavigate} from "react-router-dom";
 import {styled, useTheme} from "@mui/material/styles";
 import Typography from "@mui/material/Typography";

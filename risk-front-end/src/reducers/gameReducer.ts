@@ -1,7 +1,7 @@
-import {TerritoryModel} from "../model/TerritoryModel";
-import {GameModel} from "../model/GameModel";
+import {TerritoryModel} from "../model/territory/TerritoryModel";
+import {GameModel} from "../model/game/GameModel";
 import {GameActionType} from "../services/gameService";
-import {PlayerInGame} from "../model/PlayerInGame";
+import {PlayerInGame} from "../model/player/PlayerInGame";
 import {getAttackableTerritoryNames, getMaxTroopsForAttack} from "../services/attackService";
 import {getFortifiableTerritoryNames} from "../services/fortifyService";
 import {getTerritoryData} from "../services/territoryService";

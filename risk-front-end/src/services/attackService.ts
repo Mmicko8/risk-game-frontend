@@ -1,4 +1,4 @@
-import {TerritoryModel} from "../model/TerritoryModel";
+import {TerritoryModel} from "../model/territory/TerritoryModel";
 import {getTerritoryData} from "./territoryService";
 import axios from "axios";
 
