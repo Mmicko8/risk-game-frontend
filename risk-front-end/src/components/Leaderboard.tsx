@@ -9,7 +9,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import {styled} from '@mui/material/styles';
 import TableCell, {tableCellClasses} from '@mui/material/TableCell';
-import {Player} from "../model/Player";
+import {Player} from "../model/player/Player";
 import { useTheme } from '@mui/material/styles';
 
 export default function Leaderboard() {
@@ -59,7 +59,7 @@ export default function Leaderboard() {
             <Table aria-label="customized table">
                 <TableHead>
                     <TableRow>
-                        {["Ranking", "Player", "Wins"].map(str => <StyledTableCell>{str}</StyledTableCell>)}
+                        {["Ranking", "Player", "Wins"].map(str => <StyledTableCell key={str}>{str}</StyledTableCell>)}
                     </TableRow>
                 </TableHead>
                 <TableBody>

@@ -6,7 +6,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import GroupsIcon from '@mui/icons-material/Groups';
 import StarRateIcon from '@mui/icons-material/StarRate';
 import * as React from "react";
-import {Player} from "../model/Player";
+import {Player} from "../model/player/Player";
 import Button from "@mui/material/Button";
 import {useNavigate} from "react-router-dom";
 import {homeActions, joinLobby} from "../services/lobbyService";

@@ -8,7 +8,7 @@ import DoubleArrowIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import Avatar from "@mui/material/Avatar";
 import {useContext} from "react";
 import AccessContext from "../../context/AccessContext";
-import {PlayerInGame} from "../../model/PlayerInGame";
+import {PlayerInGame} from "../../model/player/PlayerInGame";
 import Typography from "@mui/material/Typography";
 import {getPhaseFromNumber, Phases} from "../../services/gameService";
 import TroopIndicator from "./TroopIcon";

@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import {Link, useNavigate} from "react-router-dom";
 import {useForm, Controller} from "react-hook-form";
-import {SignInCredentials} from "../../model/SignInCredentials";
+import {SignInCredentials} from "../../model/player/SignInCredentials";
 import {useContext} from "react";
 import AccessContext from "../../context/AccessContext";
 import {login} from "../../services/identityService";

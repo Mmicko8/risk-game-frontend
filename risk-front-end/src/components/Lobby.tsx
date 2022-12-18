@@ -1,7 +1,7 @@
 import {useNavigate, useParams} from "react-router-dom";
 import {useLobby} from "../hooks/useLobby";
 import {Alert, CircularProgress, Stack, Chip} from "@mui/material";
-import {Player} from "../model/Player";
+import {Player} from "../model/player/Player";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";

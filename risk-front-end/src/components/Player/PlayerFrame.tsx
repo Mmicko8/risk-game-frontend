@@ -1,7 +1,7 @@
 import './PlayerFrame.css'
 import Box from '@mui/material/Box'
 import Avatar from "@mui/material/Avatar";
-import {PlayerInGame} from "../../model/PlayerInGame";
+import {PlayerInGame} from "../../model/player/PlayerInGame";
 import Typography from "@mui/material/Typography";
 
 interface PlayerFrameProps {
