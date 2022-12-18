@@ -10,8 +10,10 @@ import Paper from '@mui/material/Paper';
 import {styled} from '@mui/material/styles';
 import TableCell, {tableCellClasses} from '@mui/material/TableCell';
 import {Player} from "../model/Player";
+import { useTheme } from '@mui/material/styles';
 
 export default function Leaderboard() {
+    const theme = useTheme();
     const {isLoading, isError, players} = useLeaderboard();
 
     if (isLoading) {
@@ -21,14 +23,11 @@ export default function Leaderboard() {
         return <Alert severity="error">Error loading the leaderboard</Alert>
     }
     //style on table cell
-    const StyledTableCell = styled(TableCell)(({theme}) => ({
+    const StyledTableCell = styled(TableCell)(() => ({
         [`&.${tableCellClasses.head}`]: {
-            backgroundColor: theme.palette.common.black,
-            color: theme.palette.common.white,
-        },
-        [`&.${tableCellClasses.body}`]: {
-            fontSize: 14,
-        },
+            backgroundColor: theme.palette.primary.main,
+            color: theme.palette.primary.contrastText,
+        }
     }));
     //style on table row
     const StyledTableRow = styled(TableRow)(({theme}) => ({
@@ -42,13 +41,10 @@ export default function Leaderboard() {
     }));
 
     function Rows() {
-        let ranking = 1;
         return (
-            <>{players.map((row: Player) => (
+            <>{players.map((row: Player, i: number) => (
                 <StyledTableRow key={row.id}>
-                    <StyledTableCell component="th" scope="row">
-                        {ranking++}
-                    </StyledTableCell>
+                    <StyledTableCell component="th" scope="row">{i+1}</StyledTableCell>
                     <StyledTableCell>{row.username}</StyledTableCell>
                     <StyledTableCell>{row.gamesWon}</StyledTableCell>
                 </StyledTableRow>
@@ -59,13 +55,11 @@ export default function Leaderboard() {
     }
 
     return (
-        <TableContainer sx={{width: 300, margin: "auto"}} component={Paper}>
+        <TableContainer sx={{width: 300, margin: "auto", marginTop: "20px"}} component={Paper}>
             <Table aria-label="customized table">
                 <TableHead>
                     <TableRow>
-                        <StyledTableCell>Ranking</StyledTableCell>
-                        <StyledTableCell>Player</StyledTableCell>
-                        <StyledTableCell>Wins</StyledTableCell>
+                        {["Ranking", "Player", "Wins"].map(str => <StyledTableCell>{str}</StyledTableCell>)}
                     </TableRow>
                 </TableHead>
                 <TableBody>

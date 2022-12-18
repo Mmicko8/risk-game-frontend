@@ -14,7 +14,8 @@ import localForage from "localforage";
 import RegisterConfirmation from "./components/identity/RegisterConfirmation";
 import {Lobby} from "./components/Lobby";
 import Leaderboard from "./components/Leaderboard";
-// import localforage from "localforage";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { green} from '@mui/material/colors';
 
 
 axios.defaults.baseURL = "http://localhost:8080";
@@ -27,12 +28,22 @@ axios.interceptors.request.use(async config => {
         config.headers.authorization = `Bearer ${accessToken}`;
     }
     return config;
-}, error =>  {
+}, error => {
     // Do something with request error
     return Promise.reject(error);
 });
 
 const queryClient = new QueryClient();
+const theme = createTheme({
+    palette: {
+        secondary: {
+            main: green[800],
+            dark: green[900],
+            light: green[600]
+        },
+    },
+});
+
 
 function App() {
     const [drawerOpen, setDrawerOpen] = useState(false);
@@ -43,22 +54,23 @@ function App() {
 
     return (
         <QueryClientProvider client={queryClient}>
-            <AccessTokenContextProvider>
-                <BrowserRouter>
-                    <NavBar onOpenDrawer={handleDrawerToggle}/>
-                    <Navigation isOpen={drawerOpen} onClose={() => setDrawerOpen(false)}/>
-                    <Routes>
-                        <Route path="/" element={<Home/>}/>
-                        <Route path="/sign_in" element={<SignIn/>}/>
-                        <Route path="/register" element={<Register/>}/>
-                        {/*TODO: Change game path to also use id*/}
-                        <Route path="/game/:id" element={<Game/>}/>
-                        <Route path="/registration_confirmation" element={<RegisterConfirmation/>}/>
-                        <Route path="/lobby/:id" element={<Lobby/>}/>
-                        <Route path="/leaderboard" element={<Leaderboard/>}/>
-                    </Routes>
-                </BrowserRouter>
-            </AccessTokenContextProvider>
+            <ThemeProvider theme={theme}>
+                <AccessTokenContextProvider>
+                    <BrowserRouter>
+                        <NavBar onOpenDrawer={handleDrawerToggle}/>
+                        <Navigation isOpen={drawerOpen} onClose={() => setDrawerOpen(false)}/>
+                        <Routes>
+                            <Route path="/" element={<Home/>}/>
+                            <Route path="/sign_in" element={<SignIn/>}/>
+                            <Route path="/register" element={<Register/>}/>
+                            <Route path="/game/:id" element={<Game/>}/>
+                            <Route path="/registration_confirmation" element={<RegisterConfirmation/>}/>
+                            <Route path="/lobby/:id" element={<Lobby/>}/>
+                            <Route path="/leaderboard" element={<Leaderboard/>}/>
+                        </Routes>
+                    </BrowserRouter>
+                </AccessTokenContextProvider>
+            </ThemeProvider>
         </QueryClientProvider>
     );
 }
