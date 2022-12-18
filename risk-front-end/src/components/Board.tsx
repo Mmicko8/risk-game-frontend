@@ -5,6 +5,7 @@ import {TerritoryModel} from "../model/TerritoryModel";
 import {useContext} from "react";
 import GameStateContext from "../context/GameStateContext";
 import {GameModel} from "../model/GameModel";
+import {useTheme} from "@mui/material/styles";
 
 interface BoardProps {
     selectTerritory: (e: string, territoryName: string) => void;
@@ -22,22 +23,29 @@ function getTerritoryColor(game: GameModel, territoryOwnerId: number) {
 }
 
 export default function Board({selectTerritory, territories, attackableTerritoryNames, fortifiableTerritoryNames}: BoardProps) {
+    const theme = useTheme();
+    const DEFAULT_STROKE_THICKNESS = "1.5";
+    const HIGHLIGHTED_STROKE_THICKNESS = "2.5";
+    const VBOX_WIDTH = 1024;
+    const VBOX_HEIGHT = 650;
+
     const strokeColor = (territoryName: string) => {
         if (attackableTerritoryNames && attackableTerritoryNames.includes(territoryName)) {
-            return '#ff0000'; // todo not hardcoded
+            return theme.palette.error.main;
         }
         if (fortifiableTerritoryNames && fortifiableTerritoryNames.includes(territoryName)) {
-            return '#20bd00';
+            return theme.palette.success.light;
         }
-        return "#545454";
+        return theme.palette.grey.A700;
     }
     const strokeWidth = (territoryName: string) => {
         if (attackableTerritoryNames && attackableTerritoryNames.includes(territoryName)) {
-            return "2.5";
+            return HIGHLIGHTED_STROKE_THICKNESS;
         }
         if (fortifiableTerritoryNames && fortifiableTerritoryNames.includes(territoryName)) {
-            return "2.5";
+            return HIGHLIGHTED_STROKE_THICKNESS;
         }
+        return DEFAULT_STROKE_THICKNESS;
     }
     const {game} = useContext(GameStateContext);
 
@@ -45,9 +53,8 @@ export default function Board({selectTerritory, territories, attackableTerritory
         <div style={{display: "flex", justifyContent: "center"}}>
             <svg xmlns="http://www.w3.org/2000/svg"
                  width={'70%'} height={'70%'}
-                 viewBox={`0 0 ${1024} ${650}`}>
-                {/*Todo not magic numbers*/}
-                <g id="map" fill="none" strokeWidth="1.5">
+                 viewBox={`0 0 ${VBOX_WIDTH} ${VBOX_HEIGHT}`}>
+                <g id="map" fill="none">
                     {territories.map((t) => {
                         let drawData = getTerritoryDrawData(t.name);
 

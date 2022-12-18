@@ -1,4 +1,4 @@
-import {Avatar, Box, Chip, Stack} from "@mui/material";
+import {Avatar, Box, Chip, Stack, chipClasses} from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import TimelineIcon from '@mui/icons-material/Timeline';
@@ -7,6 +7,7 @@ import * as React from "react";
 import {Item} from "./Lobbies"
 import {GameInfo} from "../model/GameInfo";
 import {useNavigate} from "react-router-dom";
+import {styled, useTheme} from "@mui/material/styles";
 
 interface GamesProps {
     games: GameInfo[]
@@ -14,24 +15,35 @@ interface GamesProps {
 
 export function Games({games}: GamesProps) {
     const navigate = useNavigate();
+    const theme = useTheme();
+
+    const StyledChip = styled(Chip)(() => ({
+        [`.${chipClasses.icon}`]: {
+            color: theme.palette.secondary.contrastText
+        },
+        backgroundColor: theme.palette.secondary.main,
+        color: theme.palette.secondary.contrastText
+    }));
+
     return (
         <Box sx={{width: '100%'}}>
             <Stack spacing={1}>
                 {games.map((game: GameInfo) => {
-                    return <Item key={game.gameId} sx={{display: "flex", flexDirection: "row", justifyContent:"space-between", alignItems: "center"}}>
+                    return <Item key={game.gameId} sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center"
+                    }}>
                         <Stack direction="row" spacing={1}>
-                            <Chip
-                                avatar={<Avatar alt="RiskIcon" src="../../riskIcon.png"/>}
-                                label={`Game: ${game.gameId}`}
-                                size="small"
-                                color="success"
-                            />
-                            <Chip icon={<AutorenewIcon/>} size="small" color="success"
-                                  label={`Turn: ${game.turn}`}/>
-                            <Chip icon={<PersonIcon/>} size="small" color="success"
-                                  label={`Current player: ${game.currentPlayerIndex+1}`}/>
-                            <Chip icon={<TimelineIcon/>} size="small" color="success"
-                                  label={`Current phase: ${game.phase}`}/>
+                            <StyledChip avatar={<Avatar alt="RiskIcon" src="../../riskIcon.png"/>} size="small"
+                                        label={`Game: ${game.gameId}`}/>
+                            <StyledChip icon={<AutorenewIcon/>} size="small"
+                                        label={`Turn: ${game.turn}`}/>
+                            <StyledChip icon={<PersonIcon/>} size="small"
+                                        label={`Current player: ${game.currentPlayerIndex + 1}`}/>
+                            <StyledChip icon={<TimelineIcon/>} size="small"
+                                        label={`Current phase: ${game.phase.toLowerCase()}`}/>
                         </Stack>
                         <Button size="small" variant="contained" onClick={() => navigate(`/game/${game.gameId}`)}>
                             Go to game
