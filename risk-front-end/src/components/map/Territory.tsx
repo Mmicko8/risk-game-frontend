@@ -34,6 +34,6 @@ export default function Territory({drawPath, name, troopCount=0, callback, xOffs
     return <g className="territory" onClick={(e) => callback(e, name)}>
         <Path name={name} d={drawPath} innerRef={ref}/>
         <circle cx={centerX + xOffset + 4} cy={centerY + yOffset - 6} r={11}/>
-        <text className="country-name" x={centerX + xOffset + digitXOffset} y={centerY + yOffset}>{troopCount}</text>
+        <text x={centerX + xOffset + digitXOffset} y={centerY + yOffset}>{troopCount}</text>
     </g>
 }
