@@ -15,6 +15,7 @@ import {Lobby} from "./components/Lobby";
 import Leaderboard from "./components/Leaderboard";
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import {green} from '@mui/material/colors';
+import {Shop} from "./components/Shop";
 
 
 axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL
@@ -45,8 +46,6 @@ const theme = createTheme({
 
 
 function App() {
-    console.log("backend",process.env.REACT_APP_BACKEND_URL)
-
     return (
         <QueryClientProvider client={queryClient}>
             <ThemeProvider theme={theme}>
@@ -61,6 +60,7 @@ function App() {
                             <Route path="/registration_confirmation" element={<RegisterConfirmation/>}/>
                             <Route path="/lobby/:id" element={<Lobby/>}/>
                             <Route path="/leaderboard" element={<Leaderboard/>}/>
+                            <Route path="/shop" element={<Shop/>}/>
                         </Routes>
                     </BrowserRouter>
                 </AccessTokenContextProvider>
