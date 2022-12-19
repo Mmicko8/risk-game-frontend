@@ -61,6 +61,15 @@ function gameInteractionStateReducerWithoutPayload(state: InteractionGameState, 
                 }
             };
 
+        case GameActionType.CANCEL_ATTACK:
+            return {...state,
+                selectedStartTerritory: null,
+                selectedEndTerritory: null,
+                attackableTerritoryNames: [],
+                fortifiableTerritoryNames: [],
+                troopState: {...state.troopState, isOpen: false}
+            };
+
         case GameActionType.OPEN_CARD_SELECTOR:
             return {...state, isOpenCardSelector: true};
 
