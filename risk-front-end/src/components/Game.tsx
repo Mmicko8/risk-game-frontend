@@ -27,8 +27,9 @@ import {useParams} from "react-router-dom";
 import Fab from "@mui/material/Fab";
 import CardsIcon from '@mui/icons-material/Style';
 import CardSelector from "./dialogs/CardSelector/CardSelector";
-import {attack} from "../services/attackService";
+import {attack, attackerCanStillAttack, isTerritoryConquered} from "../services/attackService";
 import { fortify } from "../services/fortifyService";
+import {AttackResult} from "../model/AttackResult";
 
 
 export default function Game() {
@@ -66,31 +67,29 @@ export default function Game() {
     }
 
     const troopSelectorFunction = async (troops: number, action: string) => {
-        dispatch({type: GameActionType.CLOSE_TROOP_SELECTOR});
         if (action === "Reinforce") {
+            dispatch({type: GameActionType.CLOSE_TROOP_SELECTOR});
             await placeTroops(state.selectedStartTerritory!.territoryId, troops);
             await queryClient.invalidateQueries(["game", gameId]);
         }
-        if (action === "Attack") {
-            const attackingTerritory = state.selectedStartTerritory;
-            const defendingTerritory = state.selectedEndTerritory;
-            if (!attackingTerritory || !defendingTerritory) throw new Error("Tried attacking but attacking or defending territory was not set");
+        else if (action === "Attack") {
+            const attacker = state.selectedStartTerritory;
+            const defender = state.selectedEndTerritory;
+            if (!attacker || !defender) throw new Error("Tried attacking but attacking or defending territory was not set");
 
             // todo defender amount => niet meegeeven, backend moet maximum pakken
-            const response = await attack({gameId, attackerTerritoryName: attackingTerritory.name,
-                defenderTerritoryName: defendingTerritory.name, amountOfAttackers: troops, amountOfDefenders: 1});
+            const attackResult: AttackResult = await attack({gameId, attackerTerritoryName: attacker.name,
+                defenderTerritoryName: defender.name, amountOfAttackers: troops, amountOfDefenders: 1});
             await queryClient.invalidateQueries(["game", gameId]);
 
-            let isTerritoryConquered = defendingTerritory.troops - response.data.defenderDices.length <= 0 &&
-                response.data.amountOfSurvivingTroopsDefender === 0;
-            if (!isTerritoryConquered) {
-                dispatch({type: GameActionType.RESET_TERRITORY_STATE});
-                return;
-            }
+            if (isTerritoryConquered(defender, attackResult))
+                dispatch({type: GameActionType.ANNEXATION_FORTIFICATION});
+            else if (!attackerCanStillAttack(attacker, attackResult))
+                dispatch({type: GameActionType.CANCEL_ATTACK});
 
-            dispatch({type: GameActionType.ANNEXATION_FORTIFICATION});
         }
-        if (action === "Fortify") {
+        else if (action === "Fortify") {
+            dispatch({type: GameActionType.CLOSE_TROOP_SELECTOR});
             await fortify(gameId, state.selectedStartTerritory!.name, state.selectedEndTerritory!.name, troops);
             await queryClient.invalidateQueries(["game", gameId]);
             dispatch({type: GameActionType.RESET_TERRITORY_STATE});

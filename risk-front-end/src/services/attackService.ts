@@ -1,7 +1,24 @@
 import {TerritoryModel} from "../model/territory/TerritoryModel";
 import {getTerritoryData} from "./territoryService";
 import axios from "axios";
+import {AttackResult} from "../model/AttackResult";
 
+
+export function isTerritoryConquered(defender: TerritoryModel,
+                                     attackResult: AttackResult) {
+    console.log("is territory Conquered? ", defender, attackResult, defender.troops - attackResult.defenderDices.length <= 0 &&
+        attackResult.amountOfSurvivingTroopsDefender === 0);
+    return defender.troops - attackResult.defenderDices.length <= 0 &&
+    attackResult.amountOfSurvivingTroopsDefender === 0;
+}
+
+export function attackerCanStillAttack(attacker: TerritoryModel, attackResult: AttackResult) {
+    const maxCasualties = Math.min(attackResult.attackerDices.length, attackResult.defenderDices.length);
+    console.log("Attacker can still attack? ", attacker, attackResult, attacker.troops - maxCasualties > 1 ||
+        attackResult.amountOfSurvivingTroopsAttacker > 0);
+    return attacker.troops - maxCasualties > 1 ||
+        attackResult.amountOfSurvivingTroopsAttacker > 0;
+}
 
 export function getMaxTroopsForAttack(troopCount: number) {
     const MAX_ATTACK_TROOPS = 3;
@@ -35,5 +52,6 @@ interface AttackModel {
 }
 
 export async function attack (attackData: AttackModel) {
-    return await axios.put('/api/game/attack', attackData);
+    const response = await axios.put('/api/game/attack', attackData);
+    return response.data;
 }
