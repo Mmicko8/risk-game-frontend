@@ -22,6 +22,7 @@ export function Navigation({isOpen, onClose}: NavigationProps) {
                         {label: "Home", link: "/", icon: <BoardsIcon/>},
                         {label: "Game", link: "/game/1", icon: <BoardsIcon/>},
                         {label: "Leaderboard", link: "/leaderboard", icon: <BoardsIcon/>},
+                        {label: "Shop", link: "/shop", icon: <BoardsIcon/>},
                     ].map((menuItem) => (
                         <ListItem disableGutters key={menuItem.link}>
                             <ListItemButton component={Link} to={menuItem.link} onClick={onClose}>

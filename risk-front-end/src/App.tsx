@@ -16,6 +16,7 @@ import {Lobby} from "./components/Lobby";
 import Leaderboard from "./components/Leaderboard";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { green} from '@mui/material/colors';
+import {Shop} from "./components/Shop";
 
 
 axios.defaults.baseURL = "http://localhost:8080";
@@ -67,6 +68,7 @@ function App() {
                             <Route path="/registration_confirmation" element={<RegisterConfirmation/>}/>
                             <Route path="/lobby/:id" element={<Lobby/>}/>
                             <Route path="/leaderboard" element={<Leaderboard/>}/>
+                            <Route path="/shop" element={<Shop/>}/>
                         </Routes>
                     </BrowserRouter>
                 </AccessTokenContextProvider>
