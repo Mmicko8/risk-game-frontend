@@ -5,6 +5,7 @@ import axios from "axios";
 import Home from "./components/Home";
 import NavBar from "./components/nav/NavBar";
 import {Navigation} from "./components/nav/Navigation";
+import {NavigationDial} from "./components/nav/NavigationDial";
 import SignIn from "./components/identity/SignIn";
 import Register from "./components/identity/Register";
 import Game from "./components/Game";
@@ -44,8 +45,9 @@ function App() {
         <QueryClientProvider client={queryClient}>
             <AccessTokenContextProvider>
                 <BrowserRouter>
-                    <NavBar onOpenDrawer={handleDrawerToggle}/>
-                    <Navigation isOpen={drawerOpen} onClose={() => setDrawerOpen(false)}/>
+                    <NavigationDial/>
+                    {/*<NavBar onOpenDrawer={handleDrawerToggle}/>*/}
+                    {/*<Navigation isOpen={drawerOpen} onClose={() => setDrawerOpen(false)}/>*/}
                     <Routes>
                         <Route path="/" element={<Home/>}/>
                         <Route path="/sign_in" element={<SignIn/>}/>
