@@ -1,11 +1,16 @@
 ##Stage 1
-FROM node:17-alpine as builder
-WORKDIR risk-front-end
+FROM node:13.12.0-alpine as build
+WORKDIR /risk-front-end
 COPY package.json .
 COPY package-lock.json .
-RUN npm install
-RUN npm i serve
-COPY . .
-EXPOSE 3000
+RUN npm ci --silent
+RUN npm install react-scripts@3.4.1 -g --silent
+COPY . ./
 RUN npm run build
-CMD [ "npx", "serve", "build" ]
+
+# production environment
+FROM nginx:stable-alpine
+COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /risk-front-end/build /usr/share/nginx/html
+EXPOSE 3000
+CMD ["nginx", "-g", "daemon off;"]
