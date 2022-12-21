@@ -13,7 +13,7 @@ import Loading from "./Loading";
 import {Alert, Snackbar} from "@mui/material";
 import {
     getAllTerritoriesFromGameState,
-    getTerritoriesWithNeighbors, placeTroops,
+    getTerritoriesWithNeighbors, getTerritoryData, placeTroops,
 } from "../services/territoryService";
 import GameStateContextProvider from "../context/GameStateContextProvider";
 import {SyntheticEvent, useContext, useReducer} from "react";
@@ -27,9 +27,8 @@ import {useParams} from "react-router-dom";
 import Fab from "@mui/material/Fab";
 import CardsIcon from '@mui/icons-material/Style';
 import CardSelector from "./dialogs/CardSelector/CardSelector";
-import {attack, attackerCanStillAttack, isTerritoryConquered} from "../services/attackService";
+import {attack, hasTerritoryEnoughTroopsToAttack} from "../services/attackService";
 import { fortify } from "../services/fortifyService";
-import {AttackResult} from "../model/AttackResult";
 
 
 export default function Game() {
@@ -68,9 +67,9 @@ export default function Game() {
 
     const troopSelectorFunction = async (troops: number, action: string) => {
         if (action === "Reinforce") {
-            dispatch({type: GameActionType.CLOSE_TROOP_SELECTOR});
             await placeTroops(state.selectedStartTerritory!.territoryId, troops);
             await queryClient.invalidateQueries(["game", gameId]);
+            dispatch({type: GameActionType.RESET});
         }
         else if (action === "Attack") {
             const attacker = state.selectedStartTerritory;
@@ -78,21 +77,33 @@ export default function Game() {
             if (!attacker || !defender) throw new Error("Tried attacking but attacking or defending territory was not set");
 
             // todo defender amount => niet meegeeven, backend moet maximum pakken
-            const attackResult: AttackResult = await attack({gameId, attackerTerritoryName: attacker.name,
+            await attack({gameId, attackerTerritoryName: attacker.name,
                 defenderTerritoryName: defender.name, amountOfAttackers: troops, amountOfDefenders: 1});
             await queryClient.invalidateQueries(["game", gameId]);
+            const newTers = await getTerritoriesWithNeighbors(gameId);
+            const updatedAttacker = getTerritoryData(newTers, attacker.name)!;
+            const updatedDefender = getTerritoryData(newTers, defender.name)!;
 
-            if (isTerritoryConquered(defender, attackResult))
+            if (updatedDefender.ownerId === attacker.ownerId)
                 dispatch({type: GameActionType.ANNEXATION_FORTIFICATION});
-            else if (!attackerCanStillAttack(attacker, attackResult))
-                dispatch({type: GameActionType.CANCEL_ATTACK});
-
+            else if (!hasTerritoryEnoughTroopsToAttack(updatedAttacker))
+                dispatch({type: GameActionType.RESET});
+            else {
+                dispatch({
+                        type: GameActionType.CONTINUE_ATTACK,
+                        payload: {
+                            game: game,
+                            selectedTerritoryName: "",
+                            territories: newTers
+                        }
+                    }
+                );
+            }
         }
         else if (action === "Fortify") {
-            dispatch({type: GameActionType.CLOSE_TROOP_SELECTOR});
             await fortify(gameId, state.selectedStartTerritory!.name, state.selectedEndTerritory!.name, troops);
             await queryClient.invalidateQueries(["game", gameId]);
-            dispatch({type: GameActionType.RESET_TERRITORY_STATE});
+            dispatch({type: GameActionType.RESET});
         }
     }
 
@@ -123,21 +134,19 @@ export default function Game() {
     const handleNextPhase = async () => {
         await nextPhase(gameId);
         await queryClient.invalidateQueries(["game", gameId]);
-        dispatch({type: GameActionType.RESET_TERRITORY_STATE});
+        dispatch({type: GameActionType.RESET});
     }
 
     const handleNextTurn = async () => {
         await nextTurn(gameId);
         await queryClient.invalidateQueries(["game", gameId]);
-        dispatch({type: GameActionType.RESET_TERRITORY_STATE});
+        dispatch({type: GameActionType.RESET});
     }
 
     const isUserInTurnAndReinforcement = () => {
         const currentPlayer = game.playersInGame[game.currentPlayerIndex].player;
         return game.phase === Phases.REINFORCEMENT && username === currentPlayer.username;
     }
-
-    console.log(game);
 
     return (
         <>
@@ -171,7 +180,7 @@ export default function Game() {
             </Grid>
 
             {/*Dialog component for selecting amount of troops for attack, fortify, etc.*/}
-            <TroopSelector isOpen={state.troopState.isOpen} onClose={() => dispatch({type: GameActionType.CLOSE_TROOP_SELECTOR})}
+            <TroopSelector isOpen={state.troopState.isOpen} onClose={() => dispatch({type: GameActionType.RESET})}
                            onSubmit={troopSelectorFunction}
                            maxTroops={state.troopState.maxTroops}
                            confirmButtonText={state.troopState.buttonText}/>
