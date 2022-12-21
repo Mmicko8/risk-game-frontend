@@ -28,6 +28,7 @@ interface GameAction {
     payload?: GameActionPayload;
 }
 
+// todo refactor to not give GameModel since only needs currentPlayer
 interface GameActionPayload {
     game: GameModel; // BEWARE: contains territories BUT WITHOUT neighbors, use 'territories' from payload instead
     selectedTerritoryName: string;
@@ -38,17 +39,6 @@ interface GameActionPayload {
 // returns new state if action is of a payloadless type, otherwise returns null so that actions with payload can be handled by gameInteractionStateReducer
 function gameInteractionStateReducerWithoutPayload(state: InteractionGameState, action: GameAction) {
     switch (action.type) {
-        case GameActionType.CLOSE_TROOP_SELECTOR:
-            return {...state, troopState: {...state.troopState, isOpen: false}};
-
-        case GameActionType.RESET_TERRITORY_STATE:
-            return {...state,
-                selectedStartTerritory: null,
-                selectedEndTerritory: null,
-                attackableTerritoryNames: [],
-                fortifiableTerritoryNames: []
-            };
-
         case GameActionType.CLOSE_ERROR_TOAST:
             return {...state, isOpenErrorToast: false};
 
@@ -61,13 +51,20 @@ function gameInteractionStateReducerWithoutPayload(state: InteractionGameState, 
                 }
             };
 
-        case GameActionType.CANCEL_ATTACK:
+        case GameActionType.RESET:
             return {...state,
+                isOpenErrorToast: false,
+                errorToastMessage: "",
+                isOpenCardSelector: false,
                 selectedStartTerritory: null,
                 selectedEndTerritory: null,
+                troopState: {
+                    isOpen: false,
+                    buttonText: "",
+                    maxTroops: 0
+                },
                 attackableTerritoryNames: [],
-                fortifiableTerritoryNames: [],
-                troopState: {...state.troopState, isOpen: false}
+                fortifiableTerritoryNames: []
             };
 
         case GameActionType.OPEN_CARD_SELECTOR:
@@ -77,7 +74,7 @@ function gameInteractionStateReducerWithoutPayload(state: InteractionGameState, 
             return {...state, isOpenCardSelector: false};
 
         default:
-            return null;
+            return state;
     }
 }
 
@@ -166,13 +163,22 @@ function fortificationReducer(state: InteractionGameState, territories: Territor
     }
 }
 
-export function GameInteractionStateReducer(state: InteractionGameState, action: GameAction) {
-    const result = gameInteractionStateReducerWithoutPayload(state, action);
-    if (result) return result;
+function attackContinueReducer(state: InteractionGameState, territories: TerritoryModel[]) {
+    const updatedStartTerritory = getTerritoryData(territories, state.selectedStartTerritory!.name)!;
+    return {...state,
+        selectedStartTerritory: updatedStartTerritory,
+        selectedEndTerritory: getTerritoryData(territories, state.selectedEndTerritory!.name),
+        troopState: {...state.troopState, maxTroops: getMaxTroopsForAttack(updatedStartTerritory.troops)}
+    }
+}
 
-    if (!action.payload) return state;
+export function GameInteractionStateReducer(state: InteractionGameState, action: GameAction) {
+    if (!action.payload) return gameInteractionStateReducerWithoutPayload(state, action);
     const pl = action.payload;
     const currentPlayer = pl.game.playersInGame[pl.game.currentPlayerIndex];
+
+    if (action.type === GameActionType.CONTINUE_ATTACK)
+        return attackContinueReducer(state, pl.territories);
 
     const selectedTerritory = getTerritoryData(pl.territories, pl.selectedTerritoryName);
     if (!selectedTerritory) return state;

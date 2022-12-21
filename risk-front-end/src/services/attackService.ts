@@ -1,29 +1,17 @@
 import {TerritoryModel} from "../model/territory/TerritoryModel";
 import {getTerritoryData} from "./territoryService";
 import axios from "axios";
-import {AttackResult} from "../model/AttackResult";
 
-
-export function isTerritoryConquered(defender: TerritoryModel,
-                                     attackResult: AttackResult) {
-    console.log("is territory Conquered? ", defender, attackResult, defender.troops - attackResult.defenderDices.length <= 0 &&
-        attackResult.amountOfSurvivingTroopsDefender === 0);
-    return defender.troops - attackResult.defenderDices.length <= 0 &&
-    attackResult.amountOfSurvivingTroopsDefender === 0;
-}
-
-export function attackerCanStillAttack(attacker: TerritoryModel, attackResult: AttackResult) {
-    const maxCasualties = Math.min(attackResult.attackerDices.length, attackResult.defenderDices.length);
-    console.log("Attacker can still attack? ", attacker, attackResult, attacker.troops - maxCasualties > 1 ||
-        attackResult.amountOfSurvivingTroopsAttacker > 0);
-    return attacker.troops - maxCasualties > 1 ||
-        attackResult.amountOfSurvivingTroopsAttacker > 0;
-}
 
 export function getMaxTroopsForAttack(troopCount: number) {
     const MAX_ATTACK_TROOPS = 3;
     if (troopCount <= 1) throw Error("cannot attack with less than 2 troops");
     return Math.min(MAX_ATTACK_TROOPS, troopCount - 1);
+}
+
+export function hasTerritoryEnoughTroopsToAttack(territory: TerritoryModel) {
+    const MIN_TROOPS_TO_ATTACK = 2;
+    return territory.troops >= MIN_TROOPS_TO_ATTACK;
 }
 
 export function getAttackableTerritoryNames(territoriesWithNeighbors: TerritoryModel[], startTerritory: TerritoryModel) {
