@@ -1,6 +1,6 @@
 ##Stage 1
 FROM node:13.12.0-alpine as build
-WORKDIR /risk-front-end
+WORKDIR ./
 ENV PATH /risk-front-end/node_modules/.bin:$PATH
 COPY package.json ./
 COPY package-lock.json ./
