@@ -18,19 +18,6 @@ export const Phases = {
     FORTIFICATION: "FORTIFICATION"
 };
 
-// todo move to reducer
-export const GameActionType = {
-    REINFORCEMENT: Phases.REINFORCEMENT,
-    ATTACK: Phases.ATTACK,
-    FORTIFICATION: Phases.FORTIFICATION,
-    RESET: "RESET",
-    CLOSE_ERROR_TOAST: "CLOSE ERROR TOAST",
-    ANNEXATION_FORTIFICATION: "ANNEXATION FORTIFICATION",
-    CLOSE_CARD_SELECTOR: "CLOSE CARD SELECTOR",
-    OPEN_CARD_SELECTOR: "OPEN CARD SELECTOR",
-    CONTINUE_ATTACK: "CONTINUE ATTACK"
-}
-
 export function getPhaseNumber(phase: string) {
     if (phase === Phases.REINFORCEMENT) return 0;
     if (phase === Phases.ATTACK) return 1;

@@ -2,7 +2,6 @@ import Board from "./Board";
 import {useQuery, useQueryClient} from "react-query";
 import {
     exchangeCards,
-    GameActionType,
     getGameState,
     getPhaseNumber,
     nextPhase,
@@ -22,7 +21,7 @@ import TroopSelector from "./dialogs/TroopSelector";
 import PlayerFrame from "./Player/PlayerFrame";
 import Grid from "@mui/material/Grid";
 import CurrentPlayer from "./Player/CurrentPlayer";
-import {GameInteractionStateReducer} from "../reducers/gameReducer";
+import {GameActionType, GameInteractionStateReducer} from "../reducers/gameReducer";
 import {useParams} from "react-router-dom";
 import Fab from "@mui/material/Fab";
 import CardsIcon from '@mui/icons-material/Style';

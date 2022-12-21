@@ -1,10 +1,22 @@
 import {TerritoryModel} from "../model/territory/TerritoryModel";
 import {GameModel} from "../model/game/GameModel";
-import {GameActionType} from "../services/gameService";
+import {Phases} from "../services/gameService";
 import {PlayerInGame} from "../model/player/PlayerInGame";
 import {getAttackableTerritoryNames, getMaxTroopsForAttack} from "../services/attackService";
 import {getFortifiableTerritoryNames} from "../services/fortifyService";
 import {getTerritoryData} from "../services/territoryService";
+
+export const GameActionType = {
+    REINFORCEMENT: Phases.REINFORCEMENT,
+    ATTACK: Phases.ATTACK,
+    FORTIFICATION: Phases.FORTIFICATION,
+    RESET: "RESET",
+    CLOSE_ERROR_TOAST: "CLOSE ERROR TOAST",
+    ANNEXATION_FORTIFICATION: "ANNEXATION FORTIFICATION",
+    CLOSE_CARD_SELECTOR: "CLOSE CARD SELECTOR",
+    OPEN_CARD_SELECTOR: "OPEN CARD SELECTOR",
+    CONTINUE_ATTACK: "CONTINUE ATTACK"
+}
 
 interface TroopSelectorState {
     isOpen: boolean;
