@@ -1,10 +1,10 @@
 ##Stage 1
 FROM node:13.12.0-alpine as build
-WORKDIR ./
+WORKDIR /risk-front-end
 ENV PATH /risk-front-end/node_modules/.bin:$PATH
 COPY package.json ./
 COPY package-lock.json ./
-RUN npm ci --silent
+RUN cd ./risk-front-end && npm ci --silent
 RUN npm install react-scripts@3.4.1 -g --silent
 COPY . ./
 RUN npm run build
