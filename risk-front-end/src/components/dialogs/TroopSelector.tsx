@@ -50,8 +50,9 @@ export default function TroopSelector({isOpen, onClose, onSubmit, maxTroops, con
         }
     };
 
+    const sxprops =  {"& .MuiDialog-container": {alignItems: "end"}}; // aligns component on bottom of page instead of middle
     return (
-        <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="xs">
+        <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="xs" sx={sxprops} hideBackdrop>
             <DialogContent>
                 <Box sx={{paddingY: "1rem", paddingX: "4rem"}}>
                     <Typography id="input-slider" gutterBottom>Troops</Typography>
