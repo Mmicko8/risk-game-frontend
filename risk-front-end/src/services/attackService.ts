@@ -1,6 +1,7 @@
 import {TerritoryModel} from "../model/territory/TerritoryModel";
 import {getTerritoryData} from "./territoryService";
 import axios from "axios";
+import {AttackResult} from "../model/AttackResult";
 
 
 export function getMaxTroopsForAttack(troopCount: number) {
@@ -38,6 +39,26 @@ interface AttackParams {
     amountOfAttackers: number;
 }
 
+/**
+ * Sends attack request and returns the results of the dice rolls in dice notation.
+ * @param attackData data required to send attack request
+ * @return results of the dice rolls in dice notation
+ */
 export async function attack (attackData: AttackParams) {
-    return await axios.put('/api/game/attack', attackData);
+    const response = await axios.put('/api/game/attack', attackData);
+    const result: AttackResult = response.data;
+    const attackerDiceResult = convertToDiceNotation(result.attackerDices)
+    const defenderDiceResult = convertToDiceNotation(result.defenderDices)
+    return {attackerDiceNotation: attackerDiceResult, defenderDiceNotation: defenderDiceResult};
+}
+
+/**
+ * Converts dice roll result to dice notation.
+ *  example: [1,2,5] => "3d6@1,2,5"     |   3 -> dice count  ;  d6 -> six sided die  ;  1,2,5 -> result of each die
+ * @param diceRoll the result of the dice roll, each value is the result a die landed on.
+ *      [1,2,5] => 3 dice in total: first one resulted in '1', second in '2' and last one in '5'
+ * @return the string in dice notation representing the dice roll result
+ */
+function convertToDiceNotation(diceRoll: number[]) {
+    return `${diceRoll.length}d6@${diceRoll.join(",")}`
 }

@@ -16,7 +16,7 @@ import {
     getTerritoriesWithNeighbors, getTerritoryData, placeTroops,
 } from "../services/territoryService";
 import GameStateContextProvider from "../context/GameStateContextProvider";
-import {SyntheticEvent, useContext, useReducer} from "react";
+import {SyntheticEvent, useContext, useEffect, useReducer, useState} from "react";
 import AccessContext from "../context/AccessContext";
 import TroopSelector from "./dialogs/TroopSelector";
 import PlayerFrame from "./Player/PlayerFrame";
@@ -29,6 +29,7 @@ import CardsIcon from '@mui/icons-material/Style';
 import CardSelector from "./dialogs/CardSelector/CardSelector";
 import {attack, hasTerritoryEnoughTroopsToAttack} from "../services/attackService";
 import { fortify } from "../services/fortifyService";
+import DiceBox from "@3d-dice/dice-box-threejs";
 import {AttackResult} from "../model/AttackResult";
 import {Alert} from "./Alert";
 
@@ -40,6 +41,8 @@ export default function Game() {
     const {isLoading, isError, data: game} = useQuery(["game", gameId], () => getGameState(gameId),
         {refetchInterval: 2000});
     const {username} = useContext(AccessContext);
+    const [attackerDiceBox, setAttackerDiceBox] = useState<any>();
+    const [defenderDiceBox, setDefenderDiceBox] = useState<any>();
     const [state, dispatch] = useReducer(GameInteractionStateReducer, {
         isOpenErrorToast: false,
         errorToastMessage: "",
@@ -55,10 +58,33 @@ export default function Game() {
         fortifiableTerritoryNames: []
     });
 
+    useEffect(() => {
+        setTimeout(() => {
+            const attackerDB = new DiceBox("#attacker-dice-box", {
+                // todo no hardcoded colors
+                    theme_customColorset: {
+                        background: "#700808",
+                        foreground: "#ffffff"
+                    }
+                }
+            );
+            attackerDB.initialize();
+            setAttackerDiceBox(attackerDB);
+
+            const defenderDB = new DiceBox("#defender-dice-box", {
+                    theme_customColorset: {
+                        background: "#000000",
+                        foreground: "#ffffff"
+                    }
+                }
+            );
+            defenderDB.initialize();
+            setDefenderDiceBox(defenderDB);
+        }, 200);
+    }, []);
+
     const handleCloseSnackbar = (event?: SyntheticEvent | Event, reason?: string) => {
-        if (reason === 'clickaway') {
-            return;
-        }
+        if (reason === 'clickaway') return;
         dispatch({type: GameActionType.CLOSE_ERROR_TOAST});
     };
 
@@ -79,12 +105,15 @@ export default function Game() {
             const defender = state.selectedEndTerritory;
             if (!attacker || !defender) throw new Error("Tried attacking but attacking or defending territory was not set");
 
-            await attack({gameId, attackerTerritoryName: attacker.name,
+            const diceResults = await attack({gameId, attackerTerritoryName: attacker.name,
                 defenderTerritoryName: defender.name, amountOfAttackers: troops});
             await queryClient.invalidateQueries(["game", gameId]);
             const newTers = await getTerritoriesWithNeighbors(gameId);
             const updatedAttacker = getTerritoryData(newTers, attacker.name)!;
             const updatedDefender = getTerritoryData(newTers, defender.name)!;
+
+            attackerDiceBox.roll(diceResults.attackerDiceNotation);
+            defenderDiceBox.roll(diceResults.defenderDiceNotation);
 
             if (updatedDefender.ownerId === attacker.ownerId)
                 dispatch({type: GameActionType.ANNEXATION_FORTIFICATION});
@@ -152,9 +181,13 @@ export default function Game() {
 
     return (
         <>
+            <div id="attacker-dice-box"
+                 style={{position: "fixed", height: "60vh", width: "50vw", pointerEvents: "none"}}></div>
+            <div id="defender-dice-box"
+                 style={{position: "fixed", height: "60vh", left: "50vw", width: "50vw", pointerEvents: "none"}}></div>
+
             <Grid container display="flex" alignItems="center" justifyItems="center">
                 <Grid item xs={10}>
-
                     {/*Renders the game board*/}
                     <GameStateContextProvider game={game}>
                         <Board selectTerritory={selectTerritory} territories={getAllTerritoriesFromGameState(game)}
