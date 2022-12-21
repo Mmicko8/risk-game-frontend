@@ -142,12 +142,26 @@ export default function Game() {
     return (
         <>
             <Grid container display="flex" alignItems="center" justifyItems="center">
-                {/*Renders the game board*/}
                 <Grid item xs={10}>
+
+                    {/*Renders the game board*/}
                     <GameStateContextProvider game={game}>
                         <Board selectTerritory={selectTerritory} territories={getAllTerritoriesFromGameState(game)}
-                        attackableTerritoryNames={state.attackableTerritoryNames} fortifiableTerritoryNames={state.fortifiableTerritoryNames}/>
+                               attackableTerritoryNames={state.attackableTerritoryNames} fortifiableTerritoryNames={state.fortifiableTerritoryNames}/>
                     </GameStateContextProvider>
+
+                    {/*Shows information about the current player (e.g. the phase he is in)*/}
+                    <div style={{display:"flex", justifyContent:"space-around", alignItems:"center"}}>
+                        <Fab color="primary" style={{height: "4vw", width: "4vw"}}
+                             disabled={!isUserInTurnAndReinforcement()}
+                             onClick={() => dispatch({type: GameActionType.OPEN_CARD_SELECTOR})}>
+                            <CardsIcon style={{fontSize: "2.5vw"}}/>
+                        </Fab>
+                        <CurrentPlayer nextPhase={handleNextPhase} nextTurn={handleNextTurn} currentPhase={getPhaseNumber(game.phase)}
+                                       currentPlayer={game.playersInGame[game.currentPlayerIndex]}/>
+                        {/*just here to make the current player center*/}
+                        <div></div>
+                    </div>
                 </Grid>
                 {/*Shows info about all the players in the game (e.g. their color)*/}
                 <Grid item xs={2}>
@@ -155,18 +169,6 @@ export default function Game() {
                         return <PlayerFrame playerInGame={playerInGame} key={playerInGame.playerInGameId}
                                             currentPlayerName={game.playersInGame[game.currentPlayerIndex].player.username}/>
                     })}
-                </Grid>
-                {/*Shows information about the current player (e.g. the phase he is in)*/}
-                <Grid item xs={12} display="flex" justifyContent="space-around" alignItems="center">
-                    <Fab color="primary" style={{height: "4vw", width: "4vw"}}
-                         disabled={!isUserInTurnAndReinforcement()}
-                         onClick={() => dispatch({type: GameActionType.OPEN_CARD_SELECTOR})}>
-                        <CardsIcon style={{fontSize: "2.5vw"}}/>
-                    </Fab>
-                    <CurrentPlayer nextPhase={handleNextPhase} nextTurn={handleNextTurn} currentPhase={getPhaseNumber(game.phase)}
-                                   currentPlayer={game.playersInGame[game.currentPlayerIndex]}/>
-                    {/*just here to make the current player center*/}
-                    <div></div>
                 </Grid>
             </Grid>
 
