@@ -19,7 +19,7 @@ import { green} from '@mui/material/colors';
 import * as Process from "process";
 
 
-axios.defaults.baseURL = process.env.NODE_ENV === "production" ? "http://localhost/api/" : "http://localhost:8080"
+axios.defaults.baseURL = process.env.NODE_ENV === "production" ? "http://localhost/api" : "http://localhost:8080"
 // Add a request interceptor
 axios.interceptors.request.use(async config => {
     // Do something before request is sent
