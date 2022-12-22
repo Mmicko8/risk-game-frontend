@@ -26,14 +26,13 @@ export function getAttackableTerritoryNames(territoriesWithNeighbors: TerritoryM
     return attackableNeighborNameList;
 }
 
-interface AttackModel {
+interface AttackParams {
     gameId: number;
     attackerTerritoryName: string;
     defenderTerritoryName: string;
     amountOfAttackers: number;
-    amountOfDefenders: number;
 }
 
-export async function attack (attackData: AttackModel) {
+export async function attack (attackData: AttackParams) {
     return await axios.put('/api/game/attack', attackData);
 }
