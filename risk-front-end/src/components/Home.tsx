@@ -57,7 +57,7 @@ export default function Home() {
                     Your lobbies
                 </Typography>
                 {!joinedLobbies ? <Loading/> : <Lobbies lobbies={joinedLobbies} action={homeActions.GO_TO}/>}
-                <div style={{position: "fixed", right: "20px", bottom: "20px"}}>
+                <div style={{position: "fixed", right: "20px", bottom: "20px", zIndex: 1}}>
                     <Tooltip title="Create lobby">
                         <Fab
                             size="large"

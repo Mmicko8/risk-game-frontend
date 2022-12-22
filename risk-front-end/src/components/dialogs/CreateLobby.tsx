@@ -75,6 +75,7 @@ export default function CreateLobby({isOpen, onClose, onSubmit}: CreateLobbyProp
                                         id="timer"
                                         label="Turn timer"
                                     >
+                                        <MenuItem value={10}>10s</MenuItem>
                                         <MenuItem value={30}>30s</MenuItem>
                                         <MenuItem value={60}>60s</MenuItem>
                                         <MenuItem value={90}>90s</MenuItem>
