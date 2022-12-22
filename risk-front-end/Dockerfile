@@ -3,7 +3,7 @@ FROM node:17-alpine as builder
 WORKDIR /risk-front-end
 ENV PATH /risk-front-end/node_modules/.bin:$PATH
 COPY package*.json ./
-RUN npm install --silent --only=production
+RUN npm install
 COPY . .
 RUN npm run build
 
