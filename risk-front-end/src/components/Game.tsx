@@ -16,7 +16,7 @@ import {
     getTerritoriesWithNeighbors, placeTroops,
 } from "../services/territoryService";
 import GameStateContextProvider from "../context/GameStateContextProvider";
-import {SyntheticEvent, useContext, useReducer} from "react";
+import {SyntheticEvent, useContext, useReducer, useState} from "react";
 import AccessContext from "../context/AccessContext";
 import TroopSelector from "./dialogs/TroopSelector";
 import PlayerFrame from "./Player/PlayerFrame";
@@ -35,7 +35,8 @@ export default function Game() {
     const queryClient = useQueryClient();
     const {id} = useParams<{ id: string }>()
     const gameId = parseInt(id!);
-    const {isLoading, isError, data: game} = useQuery(["game", gameId], () => getGameState(gameId));
+    const {isLoading, isError, data: game} = useQuery(["game", gameId], () => getGameState(gameId),
+        {refetchInterval: 2000});
     const {username} = useContext(AccessContext);
     const [state, dispatch] = useReducer(GameInteractionStateReducer, {
         isOpenErrorToast: false,

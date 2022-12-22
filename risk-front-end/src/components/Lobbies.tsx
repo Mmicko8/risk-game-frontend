@@ -53,18 +53,13 @@ export function Lobbies({lobbies, action}: OpenLobbiesProps) {
                                 size="small"
                                 color="success"
                             />
-                            <Chip icon={<PersonIcon/>} size="small" color="success"
-                                  label={`Maximum amount of players: ${lobby.maxPlayers}`}/>
                             <Chip icon={<StarRateIcon/>} size="small" color="success"
                                   label={`Host: ${lobby.host.username}`}/>
                             <Chip
                                 icon={<GroupsIcon/>}
                                 size="small"
                                 color="success"
-                                label={"Players: "+lobby.players.map((player: Player, index) => {
-                                    if (index + 1 === lobby.players.length) return " "+player.username
-                                    return ` ${player.username}`
-                                })}/>
+                                label={`Players: ${lobby.players.length}/${lobby.maxPlayers}`}/>
                         </Stack>
                         <Button size="small" variant="contained" onClick={() => buttonClick(lobby.lobbyId)}>{action}</Button>
                     </Item>
