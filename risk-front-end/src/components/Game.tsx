@@ -180,8 +180,8 @@ export default function Game() {
         <>
             <div id="attacker-dice-box"
                  style={{position: "fixed", height: "60vh", width: "50vw", pointerEvents: "none"}}></div>
-            <div id="defender-dice-box"
-                 style={{position: "fixed", height: "60vh", left: "50vw", width: "50vw", pointerEvents: "none"}}></div>
+            <div id="defender-dice-box" style={{position: "fixed", height: "60vh", left: "50vw", width: "50vw",
+                pointerEvents: "none", zIndex: 10}}></div>
 
             <Grid container display="flex" alignItems="center" justifyItems="center">
                 {/*Renders the game board*/}
