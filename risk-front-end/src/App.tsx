@@ -14,12 +14,11 @@ import localForage from "localforage";
 import RegisterConfirmation from "./components/identity/RegisterConfirmation";
 import {Lobby} from "./components/Lobby";
 import Leaderboard from "./components/Leaderboard";
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { green} from '@mui/material/colors';
-import * as Process from "process";
+import {createTheme, ThemeProvider} from '@mui/material/styles';
+import {green} from '@mui/material/colors';
 
 
-axios.defaults.baseURL = process.env.NODE_ENV === "production" ? "http://localhost" : "http://localhost:8080"
+axios.defaults.baseURL = process.env.NODE_ENV === "production" ? process.env.REACT_APP_BACKEND_URL : "http://localhost:8080"
 // Add a request interceptor
 axios.interceptors.request.use(async config => {
     // Do something before request is sent
@@ -48,7 +47,6 @@ const theme = createTheme({
 
 function App() {
     const [drawerOpen, setDrawerOpen] = useState(false);
-
     const handleDrawerToggle = () => {
         setDrawerOpen(!drawerOpen);
     }
