@@ -76,9 +76,8 @@ export default function Game() {
             const defendingTerritory = state.selectedEndTerritory;
             if (!attackingTerritory || !defendingTerritory) throw new Error("Tried attacking but attacking or defending territory was not set");
 
-            // todo defender amount => niet meegeeven, backend moet maximum pakken
             const response = await attack({gameId, attackerTerritoryName: attackingTerritory.name,
-                defenderTerritoryName: defendingTerritory.name, amountOfAttackers: troops, amountOfDefenders: 1});
+                defenderTerritoryName: defendingTerritory.name, amountOfAttackers: troops});
             await queryClient.invalidateQueries(["game", gameId]);
 
             let isTerritoryConquered = defendingTerritory.troops - response.data.defenderDices.length <= 0 &&

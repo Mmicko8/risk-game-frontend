@@ -19,7 +19,7 @@ import { green} from '@mui/material/colors';
 import {Shop} from "./components/Shop";
 
 
-axios.defaults.baseURL = "http://localhost:8080";
+axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL
 // Add a request interceptor
 axios.interceptors.request.use(async config => {
     // Do something before request is sent
@@ -47,8 +47,8 @@ const theme = createTheme({
 
 
 function App() {
+    console.log("backend",process.env.REACT_APP_BACKEND_URL)
     const [drawerOpen, setDrawerOpen] = useState(false);
-
     const handleDrawerToggle = () => {
         setDrawerOpen(!drawerOpen);
     }
