@@ -1,5 +1,4 @@
 import SpeedDial from '@mui/material/SpeedDial';
-import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
 import HomeIcon from '@mui/icons-material/Home';
 import FingerprintIcon from '@mui/icons-material/Fingerprint';
@@ -8,6 +7,8 @@ import {useContext} from "react";
 import AccessContext from "../../context/AccessContext";
 import MenuIcon from '@mui/icons-material/Menu';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import LeaderboardIcon from '@mui/icons-material/Leaderboard';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 export function NavigationDial() {
     const {username, removeUsername, removeAccessToken} = useContext(AccessContext);
@@ -15,8 +16,10 @@ export function NavigationDial() {
 
     function getNavigationActions() {
         let actions = [
-            { icon: <HomeIcon />, name: 'Home', action: () => navigate("/") }];
+            { icon: <HomeIcon />, name: 'Home', action: () => navigate("/") },
+            { icon: <LeaderboardIcon/>, name: "Leaderboard", action: () => navigate("/leaderboard")}];
         if (username) {
+            actions.push({ icon: <ShoppingCartIcon/>, name: "Shop", action: () => navigate("/shop")})
             actions.push({ icon: <FingerprintIcon />, name:"Logout", action: () => {removeUsername(); removeAccessToken()}});
         } else {
             actions.push({ icon: <PersonAddIcon />, name:"Register", action: () => navigate("/register")})
@@ -43,5 +46,5 @@ export function NavigationDial() {
                 ))}
             </SpeedDial>
         </div>
-    )    ;
+    );
 }
