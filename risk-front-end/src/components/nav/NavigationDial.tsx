@@ -20,7 +20,8 @@ export function NavigationDial() {
             { icon: <LeaderboardIcon/>, name: "Leaderboard", action: () => navigate("/leaderboard")}];
         if (username) {
             actions.push({ icon: <ShoppingCartIcon/>, name: "Shop", action: () => navigate("/shop")})
-            actions.push({ icon: <FingerprintIcon />, name:"Logout", action: () => {removeUsername(); removeAccessToken()}});
+            actions.push({ icon: <FingerprintIcon />, name:"Logout", action: () => {removeUsername(); removeAccessToken();
+                navigate("/")}});
         } else {
             actions.push({ icon: <PersonAddIcon />, name:"Register", action: () => navigate("/register")})
             actions.push({ icon: <FingerprintIcon />, name:"Login", action: () => navigate("/sign_in")})

@@ -10,13 +10,14 @@ import {
     Phases
 } from "../services/gameService";
 import Loading from "./Loading";
-import {Alert, Snackbar} from "@mui/material";
+import {Snackbar} from "@mui/material";
+import AlertMui from "@mui/material/Alert";
 import {
     getAllTerritoriesFromGameState,
     getTerritoriesWithNeighbors, placeTroops,
 } from "../services/territoryService";
 import GameStateContextProvider from "../context/GameStateContextProvider";
-import {SyntheticEvent, useContext, useReducer, useState} from "react";
+import {SyntheticEvent, useContext, useReducer} from "react";
 import AccessContext from "../context/AccessContext";
 import TroopSelector from "./dialogs/TroopSelector";
 import PlayerFrame from "./Player/PlayerFrame";
@@ -29,6 +30,7 @@ import CardsIcon from '@mui/icons-material/Style';
 import CardSelector from "./dialogs/CardSelector/CardSelector";
 import {attack} from "../services/attackService";
 import { fortify } from "../services/fortifyService";
+import {Alert} from "./Alert";
 
 
 export default function Game() {
@@ -63,7 +65,7 @@ export default function Game() {
     if (isLoading) return <Loading/>;
 
     if (isError || !game) {
-        return <Alert severity="error">Game state could not be loaded</Alert>;
+        return <Alert message={"Game state could not be loaded"}/>;
     }
 
     const troopSelectorFunction = async (troops: number, action: string) => {
@@ -183,9 +185,9 @@ export default function Game() {
                           onSubmit={handleExchangeCards} game={game}/>
             {/*Temporary message for displaying user errors (ex: when user tries to attack from territory with only 1 troop)*/}
             <Snackbar open={state.isOpenErrorToast} autoHideDuration={4000} onClose={handleCloseSnackbar}>
-                <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
+                <AlertMui onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
                     {state.errorToastMessage}
-                </Alert>
+                </AlertMui>
             </Snackbar>
         </>
     );

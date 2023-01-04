@@ -1,6 +1,6 @@
 import {useNavigate, useParams} from "react-router-dom";
 import {useLobby} from "../hooks/useLobby";
-import {Alert, CircularProgress, Stack, Chip} from "@mui/material";
+import {CircularProgress, Stack, Chip} from "@mui/material";
 import {Player} from "../model/Player";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
@@ -14,6 +14,7 @@ import Button from "@mui/material/Button";
 import {useContext} from "react";
 import AccessContext from "../context/AccessContext";
 import {addAiToGame, startGameCall} from "../services/lobbyService";
+import {Alert} from "./Alert";
 
 export function Lobby() {
     const navigate = useNavigate();
@@ -25,10 +26,10 @@ export function Lobby() {
         return <CircularProgress sx={{position: "fixed", top: "50%", left: "50%"}}/>
     }
     if (isError) {
-        return <Alert severity="error">Error loading the lobby</Alert>
+        return <Alert message={"Error loading the lobby"}/>
     }
     if (lobby.closed) {
-        return <Alert severity="info">Lobby is already closed</Alert>
+        return <Alert severity={"info"} message={"Lobby is already closed"}/>
     }
 
     function startGame() {

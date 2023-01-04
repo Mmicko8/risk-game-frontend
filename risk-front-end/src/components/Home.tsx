@@ -1,4 +1,4 @@
-import {Fab, Tooltip, Alert, Container} from "@mui/material"
+import {Fab, Tooltip, Container} from "@mui/material"
 import AddIcon from "@mui/icons-material/Add";
 import {useContext, useState} from "react";
 import CreateLobby from "./dialogs/CreateLobby";
@@ -14,6 +14,7 @@ import Loading from "./Loading";
 import {useNavigate} from "react-router-dom";
 import {getActiveGames} from "../services/gameService";
 import {Games} from "./Games";
+import {Alert} from "./Alert";
 
 export default function Home() {
     const navigate = useNavigate()
@@ -40,10 +41,10 @@ export default function Home() {
         return <Loading/>
     }
     if (isError || errorJoined) {
-        return <Alert severity="error">Error loading lobbies</Alert>
+        return <Alert message={"Error loading lobbies"}/>
     }
     if (errorGettingGames) {
-        return <Alert severity="error">Error loading games</Alert>
+        return <Alert message={"Error loading games"}/>
     }
 
     return (

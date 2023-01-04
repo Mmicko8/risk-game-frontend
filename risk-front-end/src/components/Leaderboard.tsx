@@ -1,5 +1,5 @@
 import {useLeaderboard} from "../hooks/useLeaderboard";
-import {Alert, CircularProgress} from "@mui/material";
+import {CircularProgress} from "@mui/material";
 import * as React from "react";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -11,6 +11,7 @@ import {styled} from '@mui/material/styles';
 import TableCell, {tableCellClasses} from '@mui/material/TableCell';
 import {Player} from "../model/Player";
 import { useTheme } from '@mui/material/styles';
+import {Alert} from "./Alert";
 
 export default function Leaderboard() {
     const theme = useTheme();
@@ -20,7 +21,7 @@ export default function Leaderboard() {
         return <CircularProgress sx={{position: "fixed", top: "50%", left: "50%"}}/>
     }
     if (isError) {
-        return <Alert severity="error">Error loading the leaderboard</Alert>
+        return <Alert message={"Error loading the leaderboard"}/>
     }
     //style on table cell
     const StyledTableCell = styled(TableCell)(() => ({
