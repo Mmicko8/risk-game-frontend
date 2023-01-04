@@ -1,18 +1,15 @@
 import {Card, CardContent, Typography} from "@mui/material";
 import React from "react";
 import {ShopItemModel} from "../model/ShopItemModel";
-import useBuyShopItem from "../hooks/useBuyShopItem";
 import Button from "@mui/material/Button";
 
 interface ShopItemProps {
-    item: ShopItemModel,
+    item: ShopItemModel;
+    buyItem: (id: number) => void
 }
 
-export function ShopItem({item}: ShopItemProps) {
-    const {buyShopItemMutation} = useBuyShopItem();
-    function buyShopItem(itemId: number) {
-       buyShopItemMutation(itemId);
-    }
+export function ShopItem({item, buyItem}: ShopItemProps) {
+
     //todo: add a profile picture
     return (
         <Card sx={{width: 340, margin: 1}}>
@@ -26,7 +23,7 @@ export function ShopItem({item}: ShopItemProps) {
                 <Typography sx={{mb: 1.5}} color="text.secondary">$
                     {item.price}
                 </Typography>
-               <Button onClick={()=>buyShopItem(item.shopItemId)}>Buy item</Button>
+               <Button onClick={() => buyItem(item.shopItemId)}>Buy item</Button>
             </CardContent>
         </Card>
     )

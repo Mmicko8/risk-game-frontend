@@ -6,5 +6,5 @@ export async function getShopItems() {
     return shopItem.data;
 }
 export async function buyShopItem(shopItemId: number) {
-    return  await axios.post(`/api/shopItem/buyItem/${shopItemId}`);
+    return await axios.post(`/api/shopItem/buyItem/${shopItemId}`);
 }

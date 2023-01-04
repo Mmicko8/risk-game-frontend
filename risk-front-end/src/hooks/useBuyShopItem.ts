@@ -1,27 +1,28 @@
 import {useMutation, useQueryClient} from "react-query";
 import {buyShopItem} from "../services/shopItemService";
+import {AxiosError, AxiosResponse} from "axios";
 
 export default function useBuyShopItem() {
     const queryClient = useQueryClient();
 
     const {
         mutate,
-        isLoading: isAddingItem,
-        isError: isErrorAddingItem,
-    } = useMutation(
+        isError,
+        error
+    } = useMutation<AxiosResponse, AxiosError, number>(
         (itemId: number) => {
             return buyShopItem(itemId);
         },
         {
             onSuccess: () => {
                 queryClient.invalidateQueries(["shopItems"]);
-            },
+            }
         }
     );
 
     return {
         buyShopItemMutation: mutate,
-        isAddingItem,
-        isErrorAddingItem,
+        isBuyError: isError,
+        buyError: error
     }
 }
