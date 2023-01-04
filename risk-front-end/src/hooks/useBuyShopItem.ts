@@ -1,5 +1,4 @@
 import {useMutation, useQueryClient} from "react-query";
-import {ShopItem} from "../model/ShopItem";
 import {buyShopItem} from "../services/shopItemService";
 
 export default function useBuyShopItem() {

@@ -1,4 +1,4 @@
-export interface ShopItem {
+export interface ShopItemModel {
     shopItemId: number;
     name: string;
     itemCategory: string;
