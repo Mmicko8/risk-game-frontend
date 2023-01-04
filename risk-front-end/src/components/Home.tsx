@@ -48,28 +48,39 @@ export default function Home() {
 
     return (
         <Container maxWidth="lg">
-            {!username ? "" : <>
-                <Typography component="h1" variant="h4" fontFamily="Courier" fontWeight="bolder" sx={{mt:"20px"}}>
-                    Your games
+            {!username ?
+                <Typography component="h1" variant="h4" fontFamily="Courier" fontWeight="bolder" sx={{mt:"20px",
+                    display: "flex", justifyContent: "center"}}>
+                    Welcome soldier
                 </Typography>
-                {!activeGames ? <Loading/> : <Games games={activeGames}/>}
-                <Typography component="h1" variant="h4" fontFamily="Courier" fontWeight="bolder" sx={{mt:"20px"}}>
-                    Your lobbies
-                </Typography>
-                {!joinedLobbies ? <Loading/> : <Lobbies lobbies={joinedLobbies} action={homeActions.GO_TO}/>}
-                <div style={{position: "fixed", right: "20px", bottom: "20px", zIndex: 1}}>
-                    <Tooltip title="Create lobby">
-                        <Fab
-                            size="large"
-                            color="primary"
-                            aria-label="createLobby"
-                            onClick={() => setIsCreateLobbyOpen(true)}
-                        >
-                            <AddIcon/>
-                        </Fab>
-                    </Tooltip>
-                </div>
-            </>}
+                :
+                <>
+                    <Typography component="h1" variant="h4" fontFamily="Courier" fontWeight="bolder" sx={{mt:"20px",
+                        display: "flex", justifyContent: "center"}}>
+                        Welcome soldier {username}
+                    </Typography>
+                    <Typography component="h1" variant="h4" fontFamily="Courier" fontWeight="bolder" sx={{mt:"20px"}}>
+                        Your games
+                    </Typography>
+                    {!activeGames ? <Loading/> : <Games games={activeGames}/>}
+                    <Typography component="h1" variant="h4" fontFamily="Courier" fontWeight="bolder" sx={{mt:"20px"}}>
+                        Your lobbies
+                    </Typography>
+                    {!joinedLobbies ? <Loading/> : <Lobbies lobbies={joinedLobbies} action={homeActions.GO_TO}/>}
+                    <div style={{position: "fixed", right: "20px", bottom: "20px", zIndex: 1}}>
+                        <Tooltip title="Create lobby">
+                            <Fab
+                                size="large"
+                                color="primary"
+                                aria-label="createLobby"
+                                onClick={() => setIsCreateLobbyOpen(true)}
+                            >
+                                <AddIcon/>
+                            </Fab>
+                        </Tooltip>
+                    </div>
+                </>
+            }
             <Typography component="h1" variant="h4" fontFamily="Courier" fontWeight="bolder" sx={{mt:"20px"}}>
                 Open lobbies
             </Typography>
