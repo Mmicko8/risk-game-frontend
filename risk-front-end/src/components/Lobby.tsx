@@ -13,7 +13,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import Button from "@mui/material/Button";
 import {useContext} from "react";
 import AccessContext from "../context/AccessContext";
-import {startGameCall} from "../services/lobbyService";
+import {addAiToGame, startGameCall} from "../services/lobbyService";
 
 export function Lobby() {
     const navigate = useNavigate();
@@ -40,6 +40,10 @@ export function Lobby() {
         })
     }
 
+    function addAI() {
+        addAiToGame(lobby.lobbyId);
+    }
+
     return (
         <Container component="main" maxWidth="md">
             <Box
@@ -57,9 +61,15 @@ export function Lobby() {
                     <Chip icon={<PersonIcon/>} color="success" label={`Amount of players: ${lobby.maxPlayers}`}/>
                     <Chip icon={<AccessTimeIcon/>} color="success" label={`Round timer: ${lobby.timer}s`}/>
                     {lobby.host.username === username?
-                        <Button disabled={lobby.players.length < 2} variant="contained" onClick={() => startGame()}>
-                            Start game
-                        </Button>:""}
+                        <>
+                            <Button disabled={lobby.players.length < 2} variant="contained" onClick={() => startGame()}>
+                                Start game
+                            </Button>
+                            <Button disabled={lobby.players.length >= lobby.maxPlayers} variant="contained" onClick={() => addAI()}>
+                                Add AI
+                            </Button>
+                        </>
+                        :""}
                 </Stack>
                 <div style={{display: "flex", flexDirection: "row"}}>
                     {lobby.players.map((player: Player, index: number) => {

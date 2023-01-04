@@ -16,7 +16,7 @@ import {
     getTerritoriesWithNeighbors, placeTroops,
 } from "../services/territoryService";
 import GameStateContextProvider from "../context/GameStateContextProvider";
-import {SyntheticEvent, useContext, useReducer} from "react";
+import {SyntheticEvent, useContext, useReducer, useState} from "react";
 import AccessContext from "../context/AccessContext";
 import TroopSelector from "./dialogs/TroopSelector";
 import PlayerFrame from "./Player/PlayerFrame";
@@ -35,7 +35,8 @@ export default function Game() {
     const queryClient = useQueryClient();
     const {id} = useParams<{ id: string }>()
     const gameId = parseInt(id!);
-    const {isLoading, isError, data: game} = useQuery(["game", gameId], () => getGameState(gameId));
+    const {isLoading, isError, data: game} = useQuery(["game", gameId], () => getGameState(gameId),
+        {refetchInterval: 2000});
     const {username} = useContext(AccessContext);
     const [state, dispatch] = useReducer(GameInteractionStateReducer, {
         isOpenErrorToast: false,
@@ -142,12 +143,26 @@ export default function Game() {
     return (
         <>
             <Grid container display="flex" alignItems="center" justifyItems="center">
-                {/*Renders the game board*/}
                 <Grid item xs={10}>
+
+                    {/*Renders the game board*/}
                     <GameStateContextProvider game={game}>
                         <Board selectTerritory={selectTerritory} territories={getAllTerritoriesFromGameState(game)}
-                        attackableTerritoryNames={state.attackableTerritoryNames} fortifiableTerritoryNames={state.fortifiableTerritoryNames}/>
+                               attackableTerritoryNames={state.attackableTerritoryNames} fortifiableTerritoryNames={state.fortifiableTerritoryNames}/>
                     </GameStateContextProvider>
+
+                    {/*Shows information about the current player (e.g. the phase he is in)*/}
+                    <div style={{display:"flex", justifyContent:"space-around", alignItems:"center"}}>
+                        <Fab color="primary" style={{height: "4vw", width: "4vw"}}
+                             disabled={!isUserInTurnAndReinforcement()}
+                             onClick={() => dispatch({type: GameActionType.OPEN_CARD_SELECTOR})}>
+                            <CardsIcon style={{fontSize: "2.5vw"}}/>
+                        </Fab>
+                        <CurrentPlayer nextPhase={handleNextPhase} nextTurn={handleNextTurn} currentPhase={getPhaseNumber(game.phase)}
+                                       currentPlayer={game.playersInGame[game.currentPlayerIndex]}/>
+                        {/*just here to make the current player center*/}
+                        <div></div>
+                    </div>
                 </Grid>
                 {/*Shows info about all the players in the game (e.g. their color)*/}
                 <Grid item xs={2}>
@@ -155,18 +170,6 @@ export default function Game() {
                         return <PlayerFrame playerInGame={playerInGame} key={playerInGame.playerInGameId}
                                             currentPlayerName={game.playersInGame[game.currentPlayerIndex].player.username}/>
                     })}
-                </Grid>
-                {/*Shows information about the current player (e.g. the phase he is in)*/}
-                <Grid item xs={12} display="flex" justifyContent="space-around" alignItems="center">
-                    <Fab color="primary" style={{height: "4vw", width: "4vw"}}
-                         disabled={!isUserInTurnAndReinforcement()}
-                         onClick={() => dispatch({type: GameActionType.OPEN_CARD_SELECTOR})}>
-                        <CardsIcon style={{fontSize: "2.5vw"}}/>
-                    </Fab>
-                    <CurrentPlayer nextPhase={handleNextPhase} nextTurn={handleNextTurn} currentPhase={getPhaseNumber(game.phase)}
-                                   currentPlayer={game.playersInGame[game.currentPlayerIndex]}/>
-                    {/*just here to make the current player center*/}
-                    <div></div>
                 </Grid>
             </Grid>
 

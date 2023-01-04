@@ -1,10 +1,9 @@
 import './App.css';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import React, {useState} from 'react';
+import React from 'react';
 import axios from "axios";
 import Home from "./components/Home";
-import NavBar from "./components/nav/NavBar";
-import {Navigation} from "./components/nav/Navigation";
+import {NavigationDial} from "./components/nav/NavigationDial";
 import SignIn from "./components/identity/SignIn";
 import Register from "./components/identity/Register";
 import Game from "./components/Game";
@@ -47,18 +46,13 @@ const theme = createTheme({
 
 function App() {
     console.log("backend",process.env.REACT_APP_BACKEND_URL)
-    const [drawerOpen, setDrawerOpen] = useState(false);
-    const handleDrawerToggle = () => {
-        setDrawerOpen(!drawerOpen);
-    }
 
     return (
         <QueryClientProvider client={queryClient}>
             <ThemeProvider theme={theme}>
                 <AccessTokenContextProvider>
                     <BrowserRouter>
-                        <NavBar onOpenDrawer={handleDrawerToggle}/>
-                        <Navigation isOpen={drawerOpen} onClose={() => setDrawerOpen(false)}/>
+                        <NavigationDial/>
                         <Routes>
                             <Route path="/" element={<Home/>}/>
                             <Route path="/sign_in" element={<SignIn/>}/>
