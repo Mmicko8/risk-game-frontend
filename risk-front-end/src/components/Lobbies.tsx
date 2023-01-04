@@ -2,14 +2,13 @@ import {Box, Chip, Stack, Avatar} from "@mui/material";
 import {Lobby} from "../model/Lobby";
 import {styled} from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
-import PersonIcon from "@mui/icons-material/Person";
 import GroupsIcon from '@mui/icons-material/Groups';
 import StarRateIcon from '@mui/icons-material/StarRate';
 import * as React from "react";
-import {Player} from "../model/Player";
 import Button from "@mui/material/Button";
 import {useNavigate} from "react-router-dom";
 import {homeActions, joinLobby} from "../services/lobbyService";
+import Typography from "@mui/material/Typography";
 
 interface OpenLobbiesProps {
     lobbies: Lobby[],
@@ -41,10 +40,19 @@ export function Lobbies({lobbies, action}: OpenLobbiesProps) {
         }
     }
 
+    const noLobbiesText = () => {
+        if (action === homeActions.GO_TO) {
+            return <Typography>No joined lobbies! Join a lobby or create one to play a game!</Typography>
+        }
+        if (action === homeActions.JOIN) {
+            return <Typography>No open lobbies! Create a lobby to play a game!</Typography>
+        }
+    }
+
     return (
         <Box sx={{width: '100%'}}>
             <Stack spacing={1}>
-                {lobbies.map((lobby: Lobby) => {
+                {lobbies.length < 1 ? noLobbiesText() : lobbies.map((lobby: Lobby) => {
                     return <Item key={lobby.lobbyId} sx={{display: "flex", flexDirection: "row", justifyContent:"space-between", alignItems: "center"}}>
                         <Stack direction="row" spacing={1}>
                             <Chip
