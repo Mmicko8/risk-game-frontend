@@ -3,6 +3,7 @@ import * as React from "react";
 import {ShopItem} from "../model/ShopItem";
 import {Alert, CircularProgress, Grid} from "@mui/material";
 import {ShopItemComponent} from "./ShopItemComponent";
+import Container from "@mui/material/Container";
 
 
 export function Shop() {
@@ -15,21 +16,17 @@ export function Shop() {
         return <Alert severity="error">Error loading the shop items</Alert>
     }
     return (
-        <div>
+        <Container>
             <h1>Shop</h1>
-            <Grid container
-                  direction="row"
-                  alignItems="center"
-                  wrap="wrap"
-                  rowSpacing={2}
-                  columnSpacing={2}
-                  spacing={1}
-                  marginLeft={3}>
+            <p>Remaining loyalty points: </p>
+            {/*TODO make call to set points here*/}
+            <Grid container>
                 {shopItems.map((item: ShopItem) => (
-                    <ShopItemComponent key={item.shopItemId} item={item}></ShopItemComponent>
+                    <Grid item>
+                        <ShopItemComponent key={item.shopItemId} item={item}/>
+                    </Grid>
                 ))}
             </Grid>
-
-        </div>
+        </Container>
     )
 }
