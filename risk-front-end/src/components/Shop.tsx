@@ -1,29 +1,29 @@
 import {useShopItems} from "../hooks/useShopItems";
 import * as React from "react";
-import {ShopItem} from "../model/ShopItem";
+import {ShopItemModel} from "../model/ShopItemModel";
 import {Alert, CircularProgress, Grid} from "@mui/material";
-import {ShopItemComponent} from "./ShopItemComponent";
+import {ShopItem} from "./ShopItem";
 import Container from "@mui/material/Container";
 
 
 export function Shop() {
-    const {isLoading, isError, shopItems} = useShopItems();
+    const {isLoading, isError, errorMessage, shopItems, loyaltyPoints} = useShopItems();
 
     if (isLoading) {
         return <CircularProgress sx={{position: "fixed", top: "50%", left: "50%"}}/>
     }
     if (isError) {
-        return <Alert severity="error">Error loading the shop items</Alert>
+        return <Alert severity="error">{errorMessage}</Alert>
     }
     return (
         <Container>
             <h1>Shop</h1>
-            <p>Remaining loyalty points: </p>
-            {/*TODO make call to set points here*/}
+            {/*TODO make prettier*/}
+            <p>Remaining loyalty points: {loyaltyPoints}</p>
             <Grid container>
-                {shopItems.map((item: ShopItem) => (
+                {shopItems.map((item: ShopItemModel) => (
                     <Grid item key={item.shopItemId}>
-                        <ShopItemComponent item={item}/>
+                        <ShopItem item={item}/>
                     </Grid>
                 ))}
             </Grid>
