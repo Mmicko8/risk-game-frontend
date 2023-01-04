@@ -22,8 +22,8 @@ export function Shop() {
             {/*TODO make call to set points here*/}
             <Grid container>
                 {shopItems.map((item: ShopItem) => (
-                    <Grid item>
-                        <ShopItemComponent key={item.shopItemId} item={item}/>
+                    <Grid item key={item.shopItemId}>
+                        <ShopItemComponent item={item}/>
                     </Grid>
                 ))}
             </Grid>
