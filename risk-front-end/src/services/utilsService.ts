@@ -8,3 +8,7 @@ export function unionArrays(a: any[], b: any[]): any[] {
 
     return Object.keys(cache).map(key => cache[key]);
 }
+
+export function convertImageNameToPath(imageName:string) {
+    return `/avatar/${imageName}.png`
+}

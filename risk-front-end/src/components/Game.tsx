@@ -30,7 +30,6 @@ import CardSelector from "./dialogs/CardSelector/CardSelector";
 import {attack, hasTerritoryEnoughTroopsToAttack} from "../services/attackService";
 import { fortify } from "../services/fortifyService";
 import DiceBox from "@3d-dice/dice-box-threejs";
-import {AttackResult} from "../model/AttackResult";
 import {Alert} from "./Alert";
 
 
