@@ -2,6 +2,8 @@ import SpeedDial from '@mui/material/SpeedDial';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
 import HomeIcon from '@mui/icons-material/Home';
 import FingerprintIcon from '@mui/icons-material/Fingerprint';
+import LogoutIcon from '@mui/icons-material/Logout';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import {useNavigate} from "react-router-dom";
 import {useContext} from "react";
 import AccessContext from "../../context/AccessContext";
@@ -20,7 +22,8 @@ export function NavigationDial() {
             { icon: <LeaderboardIcon/>, name: "Leaderboard", action: () => navigate("/leaderboard")}];
         if (username) {
             actions.push({ icon: <ShoppingCartIcon/>, name: "Shop", action: () => navigate("/shop")})
-            actions.push({ icon: <FingerprintIcon />, name:"Logout", action: () => {removeUsername(); removeAccessToken();
+            actions.push({ icon: <AccountBoxIcon />, name: "Profile", action: () => navigate("/profile")})
+            actions.push({ icon: <LogoutIcon />, name: "Logout", action: () => {removeUsername(); removeAccessToken();
                 navigate("/")}});
         } else {
             actions.push({ icon: <PersonAddIcon />, name:"Register", action: () => navigate("/register")})

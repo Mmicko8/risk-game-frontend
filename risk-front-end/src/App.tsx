@@ -16,6 +16,7 @@ import Leaderboard from "./components/Leaderboard";
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import {green} from '@mui/material/colors';
 import {Shop} from "./components/Shop";
+import Profile from "./components/identity/profile/Profile";
 
 
 axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL
@@ -61,6 +62,7 @@ function App() {
                             <Route path="/lobby/:id" element={<Lobby/>}/>
                             <Route path="/leaderboard" element={<Leaderboard/>}/>
                             <Route path="/shop" element={<Shop/>}/>
+                            <Route path="/profile" element={<Profile/>}/>
                         </Routes>
                     </BrowserRouter>
                 </AccessTokenContextProvider>

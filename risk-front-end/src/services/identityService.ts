@@ -7,3 +7,11 @@ export function register (username: string, email: string, password: string) {
 export function login (username: string, password: string) {
     return axios.post("/api/player/login", {username: username, password: password})
 }
+
+export function editPlayerUsername (id: number, username: string ) {
+    return axios.put("/api/player/edit/username", {id, username})
+}
+
+export function editPlayerPicture (id: number, profilePicture: string ) {
+    return axios.put("/api/player/edit/picture", {id, profilePicture})
+}
