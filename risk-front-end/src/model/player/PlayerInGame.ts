@@ -1,5 +1,5 @@
 import {Player} from "./Player";
-import {PlayerCard} from "./PlayerCard";
+import {PlayerCard} from "../PlayerCard";
 
 
 export interface PlayerInGame {

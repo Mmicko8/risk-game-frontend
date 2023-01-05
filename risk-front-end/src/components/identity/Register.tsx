@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import {Link, useNavigate} from "react-router-dom";
 import {useForm, Controller} from "react-hook-form";
-import {SignUpCredentials} from "../../model/SignUpCredentials";
+import {SignUpCredentials} from "../../model/player/SignUpCredentials";
 import {register} from "../../services/identityService";
 
 function Copyright(props: any) {

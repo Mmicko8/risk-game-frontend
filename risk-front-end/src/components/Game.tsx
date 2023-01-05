@@ -2,7 +2,6 @@ import Board from "./Board";
 import {useQuery, useQueryClient} from "react-query";
 import {
     exchangeCards,
-    GameActionType,
     getGameState,
     getPhaseNumber,
     nextPhase,
@@ -14,22 +13,24 @@ import {Snackbar} from "@mui/material";
 import AlertMui from "@mui/material/Alert";
 import {
     getAllTerritoriesFromGameState,
-    getTerritoriesWithNeighbors, placeTroops,
+    getTerritoriesWithNeighbors, getTerritoryData, placeTroops,
 } from "../services/territoryService";
 import GameStateContextProvider from "../context/GameStateContextProvider";
-import {SyntheticEvent, useContext, useReducer} from "react";
+import {SyntheticEvent, useContext, useEffect, useReducer, useState} from "react";
 import AccessContext from "../context/AccessContext";
 import TroopSelector from "./dialogs/TroopSelector";
 import PlayerFrame from "./Player/PlayerFrame";
 import Grid from "@mui/material/Grid";
 import CurrentPlayer from "./Player/CurrentPlayer";
-import {GameInteractionStateReducer} from "../reducers/gameReducer";
+import {GameActionType, GameInteractionStateReducer} from "../reducers/gameReducer";
 import {useParams} from "react-router-dom";
 import Fab from "@mui/material/Fab";
 import CardsIcon from '@mui/icons-material/Style';
 import CardSelector from "./dialogs/CardSelector/CardSelector";
-import {attack} from "../services/attackService";
+import {attack, hasTerritoryEnoughTroopsToAttack} from "../services/attackService";
 import { fortify } from "../services/fortifyService";
+import DiceBox from "@3d-dice/dice-box-threejs";
+import {AttackResult} from "../model/AttackResult";
 import {Alert} from "./Alert";
 
 
@@ -40,6 +41,8 @@ export default function Game() {
     const {isLoading, isError, data: game} = useQuery(["game", gameId], () => getGameState(gameId),
         {refetchInterval: 2000});
     const {username} = useContext(AccessContext);
+    const [attackerDiceBox, setAttackerDiceBox] = useState<any>();
+    const [defenderDiceBox, setDefenderDiceBox] = useState<any>();
     const [state, dispatch] = useReducer(GameInteractionStateReducer, {
         isOpenErrorToast: false,
         errorToastMessage: "",
@@ -55,10 +58,33 @@ export default function Game() {
         fortifiableTerritoryNames: []
     });
 
+    useEffect(() => {
+        setTimeout(() => {
+            const attackerDB = new DiceBox("#attacker-dice-box", {
+                // todo no hardcoded colors
+                    theme_customColorset: {
+                        background: "#700808",
+                        foreground: "#ffffff"
+                    }
+                }
+            );
+            attackerDB.initialize();
+            setAttackerDiceBox(attackerDB);
+
+            const defenderDB = new DiceBox("#defender-dice-box", {
+                    theme_customColorset: {
+                        background: "#000000",
+                        foreground: "#ffffff"
+                    }
+                }
+            );
+            defenderDB.initialize();
+            setDefenderDiceBox(defenderDB);
+        }, 200);
+    }, []);
+
     const handleCloseSnackbar = (event?: SyntheticEvent | Event, reason?: string) => {
-        if (reason === 'clickaway') {
-            return;
-        }
+        if (reason === 'clickaway') return;
         dispatch({type: GameActionType.CLOSE_ERROR_TOAST});
     };
 
@@ -69,33 +95,46 @@ export default function Game() {
     }
 
     const troopSelectorFunction = async (troops: number, action: string) => {
-        dispatch({type: GameActionType.CLOSE_TROOP_SELECTOR});
         if (action === "Reinforce") {
             await placeTroops(state.selectedStartTerritory!.territoryId, troops);
             await queryClient.invalidateQueries(["game", gameId]);
+            dispatch({type: GameActionType.RESET});
         }
-        if (action === "Attack") {
-            const attackingTerritory = state.selectedStartTerritory;
-            const defendingTerritory = state.selectedEndTerritory;
-            if (!attackingTerritory || !defendingTerritory) throw new Error("Tried attacking but attacking or defending territory was not set");
+        else if (action === "Attack") {
+            const attacker = state.selectedStartTerritory;
+            const defender = state.selectedEndTerritory;
+            if (!attacker || !defender) throw new Error("Tried attacking but attacking or defending territory was not set");
 
-            const response = await attack({gameId, attackerTerritoryName: attackingTerritory.name,
-                defenderTerritoryName: defendingTerritory.name, amountOfAttackers: troops});
+            const diceResults = await attack({gameId, attackerTerritoryName: attacker.name,
+                defenderTerritoryName: defender.name, amountOfAttackers: troops});
             await queryClient.invalidateQueries(["game", gameId]);
+            const newTers = await getTerritoriesWithNeighbors(gameId);
+            const updatedAttacker = getTerritoryData(newTers, attacker.name)!;
+            const updatedDefender = getTerritoryData(newTers, defender.name)!;
 
-            let isTerritoryConquered = defendingTerritory.troops - response.data.defenderDices.length <= 0 &&
-                response.data.amountOfSurvivingTroopsDefender === 0;
-            if (!isTerritoryConquered) {
-                dispatch({type: GameActionType.RESET_TERRITORY_STATE});
-                return;
+            attackerDiceBox.roll(diceResults.attackerDiceNotation);
+            defenderDiceBox.roll(diceResults.defenderDiceNotation);
+
+            if (updatedDefender.ownerId === attacker.ownerId)
+                dispatch({type: GameActionType.ANNEXATION_FORTIFICATION});
+            else if (!hasTerritoryEnoughTroopsToAttack(updatedAttacker))
+                dispatch({type: GameActionType.RESET});
+            else {
+                dispatch({
+                        type: GameActionType.CONTINUE_ATTACK,
+                        payload: {
+                            game: game,
+                            selectedTerritoryName: "",
+                            territories: newTers
+                        }
+                    }
+                );
             }
-
-            dispatch({type: GameActionType.ANNEXATION_FORTIFICATION});
         }
-        if (action === "Fortify") {
+        else if (action === "Fortify") {
             await fortify(gameId, state.selectedStartTerritory!.name, state.selectedEndTerritory!.name, troops);
             await queryClient.invalidateQueries(["game", gameId]);
-            dispatch({type: GameActionType.RESET_TERRITORY_STATE});
+            dispatch({type: GameActionType.RESET});
         }
     }
 
@@ -126,13 +165,13 @@ export default function Game() {
     const handleNextPhase = async () => {
         await nextPhase(gameId);
         await queryClient.invalidateQueries(["game", gameId]);
-        dispatch({type: GameActionType.RESET_TERRITORY_STATE});
+        dispatch({type: GameActionType.RESET});
     }
 
     const handleNextTurn = async () => {
         await nextTurn(gameId);
         await queryClient.invalidateQueries(["game", gameId]);
-        dispatch({type: GameActionType.RESET_TERRITORY_STATE});
+        dispatch({type: GameActionType.RESET});
     }
 
     const isUserInTurnAndReinforcement = () => {
@@ -140,13 +179,15 @@ export default function Game() {
         return game.phase === Phases.REINFORCEMENT && username === currentPlayer.username;
     }
 
-    console.log(game);
-
     return (
         <>
+            <div id="attacker-dice-box"
+                 style={{position: "fixed", height: "60vh", width: "50vw", pointerEvents: "none"}}></div>
+            <div id="defender-dice-box" style={{position: "fixed", height: "60vh", left: "50vw", width: "50vw",
+                pointerEvents: "none", zIndex: 10}}></div>
+
             <Grid container display="flex" alignItems="center" justifyItems="center">
                 <Grid item xs={10}>
-
                     {/*Renders the game board*/}
                     <GameStateContextProvider game={game}>
                         <Board selectTerritory={selectTerritory} territories={getAllTerritoriesFromGameState(game)}
@@ -176,7 +217,7 @@ export default function Game() {
             </Grid>
 
             {/*Dialog component for selecting amount of troops for attack, fortify, etc.*/}
-            <TroopSelector isOpen={state.troopState.isOpen} onClose={() => dispatch({type: GameActionType.CLOSE_TROOP_SELECTOR})}
+            <TroopSelector isOpen={state.troopState.isOpen} onClose={() => dispatch({type: GameActionType.RESET})}
                            onSubmit={troopSelectorFunction}
                            maxTroops={state.troopState.maxTroops}
                            confirmButtonText={state.troopState.buttonText}/>

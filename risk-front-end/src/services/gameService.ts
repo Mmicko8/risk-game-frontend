@@ -1,5 +1,5 @@
 import axios from "axios";
-import {GameModel} from "../model/GameModel";
+import {GameModel} from "../model/game/GameModel";
 
 export async function getGameState(gameId: number) {
     const response = await axios.get<GameModel>(`/api/game/${gameId}`);
@@ -17,18 +17,6 @@ export const Phases = {
     ATTACK: "ATTACK",
     FORTIFICATION: "FORTIFICATION"
 };
-
-export const GameActionType = {
-    REINFORCEMENT: Phases.REINFORCEMENT,
-    ATTACK: Phases.ATTACK,
-    FORTIFICATION: Phases.FORTIFICATION,
-    RESET_TERRITORY_STATE: "RESET TERRITORY STATE",
-    CLOSE_TROOP_SELECTOR: "CLOSE TROOP SELECTOR",
-    CLOSE_ERROR_TOAST: "OPEN ERROR TOAST",
-    ANNEXATION_FORTIFICATION: "ANNEXATION FORTIFICATION",
-    CLOSE_CARD_SELECTOR: "CLOSE CARD SELECTOR",
-    OPEN_CARD_SELECTOR: "OPEN CARD SELECTOR"
-}
 
 export function getPhaseNumber(phase: string) {
     if (phase === Phases.REINFORCEMENT) return 0;

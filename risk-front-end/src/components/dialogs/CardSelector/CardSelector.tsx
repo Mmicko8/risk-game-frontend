@@ -1,6 +1,6 @@
 import {Dialog, DialogActions, DialogContent} from "@mui/material";
 import Button from "@mui/material/Button";
-import {GameModel} from "../../../model/GameModel";
+import {GameModel} from "../../../model/game/GameModel";
 import {useState} from "react";
 import TroopCard from "./TroopCard";
 

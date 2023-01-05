@@ -1,6 +1,6 @@
 import {territoriesDrawData} from "../data/territoryDrawData";
-import {GameModel} from "../model/GameModel";
-import {TerritoryModel} from "../model/TerritoryModel";
+import {GameModel} from "../model/game/GameModel";
+import {TerritoryModel} from "../model/territory/TerritoryModel";
 import axios from "axios";
 
 export function getTerritoryDrawData(name: string) {

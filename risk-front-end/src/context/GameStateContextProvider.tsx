@@ -1,5 +1,5 @@
 import {ReactElement} from "react";
-import {GameModel} from "../model/GameModel";
+import {GameModel} from "../model/game/GameModel";
 import GameStateContext from "./GameStateContext";
 
 interface GameStateContextProviderProps {

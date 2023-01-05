@@ -1,5 +1,5 @@
-import {PlayerInGame} from "./PlayerInGame";
-import {Continent} from "./Continent";
+import {PlayerInGame} from "../player/PlayerInGame";
+import {Continent} from "../territory/Continent";
 import {GameCard} from "./GameCard";
 
 export interface GameModel {

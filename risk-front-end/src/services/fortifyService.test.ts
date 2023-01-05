@@ -1,4 +1,4 @@
-import {TerritoryModel} from "../model/TerritoryModel";
+import {TerritoryModel} from "../model/territory/TerritoryModel";
 import {getFortifiableTerritories} from "./fortifyService";
 
 let allTerritories: TerritoryModel[] = [

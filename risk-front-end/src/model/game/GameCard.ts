@@ -1,4 +1,4 @@
-import {CardModel} from "./CardModel";
+import {CardModel} from "../CardModel";
 
 export interface GameCard {
     gameCardId: number;
