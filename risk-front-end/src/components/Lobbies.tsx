@@ -5,11 +5,12 @@ import Paper from "@mui/material/Paper";
 import GroupsIcon from '@mui/icons-material/Groups';
 import StarRateIcon from '@mui/icons-material/StarRate';
 import * as React from "react";
-import {Player} from "../model/player/Player";
 import Button from "@mui/material/Button";
 import {useNavigate} from "react-router-dom";
 import {homeActions, joinLobby} from "../services/lobbyService";
 import Typography from "@mui/material/Typography";
+import {useContext} from "react";
+import AccessContext from "../context/AccessContext";
 
 interface OpenLobbiesProps {
     lobbies: Lobby[],
@@ -26,18 +27,23 @@ export const Item = styled(Paper)(({theme}) => ({
 
 export function Lobbies({lobbies, action}: OpenLobbiesProps) {
     const navigate = useNavigate()
+    const {username} = useContext(AccessContext)
 
     function buttonClick(lobbyId: number) {
         if (action === homeActions.GO_TO) {
             navigate(`/lobby/${lobbyId}`)
         }
         if (action === homeActions.JOIN) {
-            joinLobby(lobbyId).then(() => {
-                navigate(`/lobby/${lobbyId}`);
-            }).catch(() => {
-                //Change to snackbar maybe? Or not needed?
-                console.warn("Something went wrong joining the lobby");
-            })
+            if (!username) {
+                navigate('/sign_in')
+            } else {
+                joinLobby(lobbyId).then(() => {
+                    navigate(`/lobby/${lobbyId}`);
+                }).catch(() => {
+                    //Change to snackbar maybe? Or not needed?
+                    console.warn("Something went wrong joining the lobby");
+                })
+            }
         }
     }
 
