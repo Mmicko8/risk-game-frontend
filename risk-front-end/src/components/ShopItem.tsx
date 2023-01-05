@@ -2,6 +2,7 @@ import {Card, CardContent, Typography, CardMedia} from "@mui/material";
 import React from "react";
 import {ShopItemModel} from "../model/ShopItemModel";
 import Button from "@mui/material/Button";
+import {convertImageNameToPath} from "../services/utilsService";
 
 interface ShopItemProps {
     item: ShopItemModel;
@@ -13,7 +14,7 @@ export function ShopItem({item, buyItem}: ShopItemProps) {
     function itemNameToImage(name: string) {
         name = name.replace(' ', '')
         const caplessName = name.slice(0, 1).toLowerCase() + name.slice(1)
-        return `avatar/${caplessName}.png`
+        return convertImageNameToPath(caplessName)
     }
 
     function capitalizeItemCategory(str: string) {

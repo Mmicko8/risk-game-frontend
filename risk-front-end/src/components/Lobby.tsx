@@ -15,6 +15,7 @@ import {useContext} from "react";
 import AccessContext from "../context/AccessContext";
 import {Alert} from "./Alert";
 import {startGameCall} from "../services/lobbyService";
+import {convertImageNameToPath} from "../services/utilsService";
 
 export function Lobby() {
     const navigate = useNavigate();
@@ -75,7 +76,8 @@ export function Lobby() {
                 <div style={{display: "flex", flexDirection: "row"}}>
                     {lobby.players.map((player: Player, index: number) => {
                         return <Box key={index} className="playerFrameBox" sx={{borderRadius: 3, width:"15vw"}}>
-                            <Avatar sx={{width: "6vw", height: "6vw", margin:"0.5vw"}} src={`/avatar/${player.profilePicture}.png`}/>
+                            <Avatar sx={{width: "6vw", height: "6vw", margin:"0.5vw"}}
+                                    src={convertImageNameToPath(player.profilePicture)}/>
                             <Stack direction="column" spacing={2}>
                                 {lobby.host.username === player.username? <Chip icon={<StarRateIcon/>} color="primary" label="Host"/>: ""}
                                 <Typography>{player.username}</Typography>
