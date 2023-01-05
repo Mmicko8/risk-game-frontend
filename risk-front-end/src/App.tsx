@@ -16,6 +16,7 @@ import Leaderboard from "./components/Leaderboard";
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import {green} from '@mui/material/colors';
 import {Shop} from "./components/Shop";
+import { ForgotPassword } from './components/identity/ForgotPassword';
 
 
 axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL
@@ -56,8 +57,9 @@ function App() {
                             <Route path="/" element={<Home/>}/>
                             <Route path="/sign_in" element={<SignIn/>}/>
                             <Route path="/register" element={<Register/>}/>
-                            <Route path="/game/:id" element={<Game/>}/>
                             <Route path="/registration_confirmation" element={<RegisterConfirmation/>}/>
+                            <Route path="/forgot_password" element={<ForgotPassword/>}/>
+                            <Route path="/game/:id" element={<Game/>}/>
                             <Route path="/lobby/:id" element={<Lobby/>}/>
                             <Route path="/leaderboard" element={<Leaderboard/>}/>
                             <Route path="/shop" element={<Shop/>}/>
