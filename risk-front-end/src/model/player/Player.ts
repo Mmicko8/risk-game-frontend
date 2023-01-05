@@ -3,5 +3,5 @@ export type Player = {
     username: string,
     email: string
     gamesWon: number;
-
+    profilePicture: string;
 }

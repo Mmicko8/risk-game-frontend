@@ -37,6 +37,6 @@ export function startGameCall(lobbyId: number) {
     return axios.post(`/api/game/startGame/lobby/${lobbyId}`)
 }
 
-export function addAiToGame(lobbyId: number) {
-    axios.put(`/api/lobby/${lobbyId}/addAi`)
+export function addAiToGame(lobbyId: string) {
+    return axios.put(`/api/lobby/${lobbyId}/addAi`)
 }

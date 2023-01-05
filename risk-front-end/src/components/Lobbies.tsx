@@ -70,7 +70,12 @@ export function Lobbies({lobbies, action}: OpenLobbiesProps) {
                                 color="success"
                                 label={`Players: ${lobby.players.length}/${lobby.maxPlayers}`}/>
                         </Stack>
-                        <Button size="small" variant="contained" onClick={() => buttonClick(lobby.lobbyId)}>{action}</Button>
+                        <Button size="small" variant="contained"
+                                disabled={lobby.players.length === lobby.maxPlayers && action === homeActions.JOIN}
+                                onClick={() => buttonClick(lobby.lobbyId)}>
+                            {action === homeActions.JOIN && lobby.players.length === lobby.maxPlayers?
+                            "Lobby full" : action}
+                        </Button>
                     </Item>
                 })}
             </Stack>
