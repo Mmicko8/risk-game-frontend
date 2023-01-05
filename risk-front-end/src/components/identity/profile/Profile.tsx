@@ -6,9 +6,12 @@ import Grid from "@mui/material/Grid";
 import Avatar from "@mui/material/Avatar";
 import * as React from "react";
 import EditProfile from "./EditProfile";
+import {useContext} from "react";
+import AccessContext from "../../../context/AccessContext";
 
 export default function Profile() {
     const {isLoading, isError, profile} = useProfile();
+    const {username} = useContext(AccessContext);
 
     if (isLoading) {
         return <Loading/>
@@ -25,7 +28,7 @@ export default function Profile() {
             <Grid item xs={12} md={6}>
                 <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                     <Avatar sx={{width: "120px", height: "120px"}} src="/testAvatar.jpg"/>
-                    <EditProfile id={profile.id} username={profile.username} email={profile.email}/>
+                    <EditProfile id={profile.id} username={username!} email={profile.email}/>
                 </div>
             </Grid>
             <Grid item xs={12} md={6}>
