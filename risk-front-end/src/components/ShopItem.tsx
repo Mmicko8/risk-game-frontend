@@ -24,8 +24,6 @@ export function ShopItem({item, buyItem}: ShopItemProps) {
         return str;
     }
 
-
-    //todo: add a profile picture
     return (
         <Card sx={{width: 340, margin: 1, display: "flex", justifyContent: "space-between"}}>
             <CardContent>
@@ -50,7 +48,6 @@ export function ShopItem({item, buyItem}: ShopItemProps) {
                 :
                 ""
             }
-
         </Card>
     )
 }
