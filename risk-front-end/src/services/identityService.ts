@@ -19,3 +19,11 @@ export function resetPassword(username: string, password: string, token: string)
 export function resetPasswordRequest() {
     return axios.post('/api/password/resetRequest')
 }
+
+export function editPlayerUsername (id: number, username: string ) {
+    return axios.put("/api/player/edit/username", {id, username})
+}
+
+export function editPlayerPicture (id: number, profilePicture: string ) {
+    return axios.put("/api/player/edit/picture", {id, profilePicture})
+}
