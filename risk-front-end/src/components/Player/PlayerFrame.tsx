@@ -25,7 +25,8 @@ export default function PlayerFrame({playerInGame, currentPlayerName}: PlayerFra
 
     return (
         <Box className="playerFrameBox" sx={{border: borderSize(), borderRadius: 3, borderColor: borderColor()}}>
-            <Avatar sx={{ border: `5px solid ${playerInGame.color}` ,width: "6vw", height: "6vw" }} src="/testAvatar.jpg"/>
+            <Avatar sx={{ border: `5px solid ${playerInGame.color}` ,width: "6vw", height: "6vw" }}
+                    src={`/avatar/${playerInGame.player.profilePicture}.png`}/>
             <Typography>{playerInGame.player.username}</Typography>
         </Box>
     );
