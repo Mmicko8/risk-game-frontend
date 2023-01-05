@@ -16,11 +16,9 @@ export function Shop() {
     if (isLoading) {
         return <CircularProgress sx={{position: "fixed", top: "50%", left: "50%"}}/>
     }
-    if (isError) {
-        return <Alert message={errorMessage}/>
-    }
     return (
         <>
+            { isError ? <Alert message={errorMessage}/> : ""}
             <Container>
                 <h1>Shop</h1>
                 {/*TODO make prettier*/}
