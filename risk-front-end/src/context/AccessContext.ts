@@ -16,5 +16,5 @@ export default createContext<IUserContext>(
         setAccessToken: () => {},
         setUsername: () => {},
         removeUsername: () => {},
-        removeAccessToken: () => {}
+        removeAccessToken: () => {},
     });
