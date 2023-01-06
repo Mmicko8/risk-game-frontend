@@ -14,8 +14,14 @@ import ShopItemIcon from '@mui/icons-material/ShoppingBag';
 import Typography from "@mui/material/Typography";
 import {useTheme} from "@mui/material/styles";
 import Divider from "@mui/material/Divider"
-import {convertAchievementNameToImagePath, convertImageNameToPath} from "../../../services/utilsService";
+import {
+    convertAchievementNameToImagePath,
+    getAvatar
+} from "../../../services/utilsService";
 import { Achievement } from "../../../model/Achievement";
+import {ShopItemModel} from "../../../model/ShopItemModel";
+import {Card, CardContent, CardMedia} from "@mui/material";
+import {capitalizeItemCategory, itemNameToImage} from "../../../services/shopItemService";
 
 interface GameStatsProps {
     played: number;
@@ -45,18 +51,18 @@ function GameStats({played, won, lost}: GameStatsProps) {
                 <div style={{color: theme.palette.grey.A700}}>LOST</div>
             </div>
         </div>
-    </div>
+    </div>;
 }
 
 function Achievements({achievements}: {achievements: Achievement[]}) {
     const theme = useTheme();
     if (achievements.length < 1) return <></>
 
-    return <Grid item xs={12} sx={{marginTop: "50px"}}>
+    return <div style={{marginTop: "50px"}}>
         <Typography variant="h4" sx={{display:"flex", justifyContent:"center"}}>
             Achievements
         </Typography>
-        <Grid container style={{display: "flex", justifyContent: "space-evenly", marginTop: "20px"}}>
+        <Grid container style={{justifyContent: "space-evenly", marginTop: "20px"}}>
             {achievements.map((a: Achievement) => {
                 return <Grid item xs={12} xl={4} key={a.achievementId} style={{display: "flex", flexDirection: "column",
                     alignItems: "center", minWidth: "300px"}}>
@@ -66,7 +72,43 @@ function Achievements({achievements}: {achievements: Achievement[]}) {
                 </Grid>
             })}
         </Grid>
-    </Grid>
+    </div>;
+}
+
+function OwnedItems({shopItems}: {shopItems: ShopItemModel[]}) {
+    if (shopItems.length < 1) return <></>;
+
+    return <div style={{marginTop: "50px"}}>
+        <Typography variant="h4"  sx={{display:"flex", justifyContent:"center", marginBottom: "20px"}}>
+            Owned Items
+        </Typography>
+        <Grid container sx={{justifyContent: "space-evenly"}}>
+            {shopItems.map((item: ShopItemModel) => (
+                <Grid item key={item.shopItemId}>
+                    <Card sx={{width: 340, margin: 1, display: "flex", justifyContent: "space-between"}}>
+                        <CardContent>
+                            <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
+                                {capitalizeItemCategory(item.itemCategory)}
+                            </Typography>
+                            <Typography variant="h5" component="div">
+                                {item.name}
+                            </Typography>
+                        </CardContent>
+                        {item.itemCategory === 'PROFILE_PICTURE' ?
+                            <CardMedia
+                                component="img"
+                                sx={{width: 151}}
+                                image={itemNameToImage(item.name)}
+                                alt={item.name}
+                            />
+                            :
+                            ""
+                        }
+                    </Card>
+                </Grid>
+            ))}
+        </Grid>
+    </div>;
 }
 
 export default function Profile() {
@@ -95,7 +137,7 @@ export default function Profile() {
         <Grid container sx={{marginTop: "10vh"}}>
             <Grid item xs={12} md={6}>
                 <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
-                    <Avatar sx={{width: "120px", height: "120px"}} src={convertImageNameToPath(profile.profilePicture)}/>
+                    <Avatar sx={{width: "120px", height: "120px"}} src={getAvatar(profile.profilePicture)}/>
                     <EditProfile id={profile.id} username={username!} email={profile.email}/>
                 </div>
             </Grid>
@@ -117,7 +159,8 @@ export default function Profile() {
                 <Divider flexItem/>
                 <GameStats played={profile.gamesPlayed} won={profile.gamesWon} lost={profile.gamesLost}/>
             </Grid>
-            <Achievements achievements={profile.achievements}/>
         </Grid>
+        <Achievements achievements={profile.achievements}/>
+        <OwnedItems shopItems={profile.shopItems}/>
     </Container>
 }

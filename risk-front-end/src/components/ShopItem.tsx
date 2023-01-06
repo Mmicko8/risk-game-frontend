@@ -2,7 +2,7 @@ import {Card, CardContent, Typography, CardMedia} from "@mui/material";
 import React from "react";
 import {ShopItemModel} from "../model/ShopItemModel";
 import Button from "@mui/material/Button";
-import {convertImageNameToPath} from "../services/utilsService";
+import {capitalizeItemCategory, itemNameToImage} from "../services/shopItemService";
 
 interface ShopItemProps {
     item: ShopItemModel;
@@ -10,21 +10,6 @@ interface ShopItemProps {
 }
 
 export function ShopItem({item, buyItem}: ShopItemProps) {
-
-    function itemNameToImage(name: string) {
-        name = name.replace(/ /g,'')
-        const caplessName = name.slice(0, 1).toLowerCase() + name.slice(1)
-        return convertImageNameToPath(caplessName)
-    }
-
-    function capitalizeItemCategory(str: string) {
-        str = str.toLowerCase();
-        str = str.split('_').map((word: string) => {
-            return word[0].toUpperCase() + word.substring(1);
-        }).join(" ");
-        return str;
-    }
-
     return (
         <Card sx={{width: 340, margin: 1, display: "flex", justifyContent: "space-between"}}>
             <CardContent>
