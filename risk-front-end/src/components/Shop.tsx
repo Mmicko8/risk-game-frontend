@@ -21,10 +21,11 @@ export function Shop() {
             { isError ? <Alert message={errorMessage}/> : ""}
             <Container>
                 <h1>Shop</h1>
-                {/*TODO make prettier*/}
                 <p>Remaining loyalty points: {loyaltyPoints}</p>
                 <Grid container>
-                    {shopItems.map((item: ShopItemModel) => (
+                    {shopItems.length === 0 ? "You already own everything, but don't worry more items are on the way!"
+                        :
+                        shopItems.map((item: ShopItemModel) => (
                         <Grid item key={item.shopItemId}>
                             <ShopItem item={item} buyItem={buyShopItem}/>
                         </Grid>
