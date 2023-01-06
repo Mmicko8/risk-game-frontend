@@ -1,8 +1,5 @@
 import {Controller, useForm} from "react-hook-form";
-import {useContext} from "react";
-import AccessContext from "../../context/AccessContext";
 import {useNavigate} from "react-router-dom";
-import {SignInCredentials} from "../../model/player/SignInCredentials";
 import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
@@ -12,6 +9,8 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import * as React from "react";
+import {ForgotPasswordData} from "../../model/player/PasswordReset";
+import {forgotPassword} from "../../services/identityService";
 
 function Copyright(props: any) {
     return (
@@ -30,28 +29,24 @@ export function ForgotPassword() {
         formState: {errors}
     } = useForm({
         defaultValues: {
-            username: '',
-            password: '',
+            username: ''
         }
     })
 
-    const {setResetPasswordToken} = useContext(AccessContext);
     const navigate = useNavigate()
 
-    const _onSubmit = async (data: SignInCredentials) => {
-        // login(data.username, data.password)
-        //     .then((response) => {
-        //         setAccessToken(response?.headers?.authorization!);
-        //         setUsername(data.username);
-        //         navigate('/');
-        //     })
-        //     .catch(() => {
-        //         setError('password', {
-        //             type: "server",
-        //             message: "The username or password was incorrect"
-        //         })
-        //     })
-        // reset();
+    const _onSubmit = async (data: ForgotPasswordData) => {
+        forgotPassword(data.username)
+            .then(() => {
+                navigate('/');
+            })
+            .catch(() => {
+                setError('username', {
+                    type: "server",
+                    message: "No account with this username was found!"
+                })
+            })
+        reset();
     };
 
     return (
@@ -87,14 +82,14 @@ export function ForgotPassword() {
                             />
                         )}
                     />
-                    <div style={{color:"red"}}>{errors.password?.message}</div>
+                    <div style={{color:"red"}}>{errors.username?.message}</div>
                     <Button
                         type="submit"
                         fullWidth
                         variant="contained"
                         sx={{mt: 3, mb: 2}}
                     >
-                        Request new password
+                        Request password reset
                     </Button>
                 </Box>
             </Box>

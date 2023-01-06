@@ -115,7 +115,7 @@ export default function SignIn() {
                         </Button>
                         <Grid container>
                             <Grid item xs>
-                                <Link to={`/reset_password`}>
+                                <Link to={`/password/forgot`}>
                                     Forgot password?
                                 </Link>
                             </Grid>

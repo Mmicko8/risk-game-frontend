@@ -5,12 +5,8 @@ import * as React from "react";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import {useNavigate} from "react-router-dom";
 
 export default function RegisterConfirmation() {
-    const navigate = useNavigate()
-
     return (
         <Container component="main" maxWidth="lg">
             <CssBaseline/>
@@ -28,13 +24,6 @@ export default function RegisterConfirmation() {
                 <Typography component="p" sx={{fontSize:"large", textAlign:"center"}}>
                     <strong>Registration successful!</strong> <br/> Email confirmation has been sent to your inbox, confirm and then sign in to access your account
                 </Typography>
-                <Button
-                    variant="contained"
-                    sx={{mt: 3, mb: 2, width: "40%"}}
-                    onClick={() => navigate('/sign_in')}
-                >
-                    Sign In
-                </Button>
             </Box>
         </Container>
     );

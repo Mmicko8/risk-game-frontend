@@ -8,7 +8,10 @@ export function login (username: string, password: string) {
     return axios.post("/api/player/login", {username: username, password: password})
 }
 
-export async function forgotPassword() {
-    const response = await axios.post('/api/password/forgot')
-    return response.data
+export function forgotPassword(username: string) {
+    return axios.post(`/api/password/forgot/${username}`)
+}
+
+export function resetPassword(username: string, password: string, token: string) {
+    return axios.put(`/api/password/reset`, {username: username, password: password, token: token})
 }

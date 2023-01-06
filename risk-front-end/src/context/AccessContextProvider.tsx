@@ -9,11 +9,8 @@ interface IWithChildren {
 export default function AccessTokenContextProvider({children}: IWithChildren) {
     const [username, setUsername, removeUsername] = useLocalStorage<string | null>("username", null);
     const [accessToken, setAccessToken, removeAccessToken] = useLocalStorage<string | null>("accessToken", null);
-    const [resetPasswordToken, setResetPasswordToken, removeResetPasswordToken]
-        = useLocalStorage<string | null>("resetPasswordToken", null);
 
-    return (<AccessContext.Provider value={{accessToken, setAccessToken, username, setUsername, removeUsername, removeAccessToken,
-        resetPasswordToken, setResetPasswordToken, removeResetPasswordToken}}>
+    return (<AccessContext.Provider value={{accessToken, setAccessToken, username, setUsername, removeUsername, removeAccessToken}}>
             {children}
         </AccessContext.Provider>
     );
