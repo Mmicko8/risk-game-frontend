@@ -21,6 +21,6 @@ export function capitalizeItemCategory(str: string) {
 
 export function itemNameToImage(name: string) {
     name = name.replace(/ /g,'')
-    const caplessName = name.slice(0, 1).toLowerCase() + name.slice(1)
-    return getAvatar(caplessName)
+    const nameWithoutEmptySpace = name.slice(0, 1).toLowerCase() + name.slice(1)
+    return getAvatar(nameWithoutEmptySpace)
 }
