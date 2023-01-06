@@ -48,6 +48,27 @@ function GameStats({played, won, lost}: GameStatsProps) {
     </div>
 }
 
+function Achievements({achievements}: {achievements: Achievement[]}) {
+    const theme = useTheme();
+    if (achievements.length < 1) return <></>
+
+    return <Grid item xs={12} sx={{marginTop: "50px"}}>
+        <Typography variant="h4" sx={{display:"flex", justifyContent:"center"}}>
+            Achievements
+        </Typography>
+        <Grid container style={{display: "flex", justifyContent: "space-evenly", marginTop: "20px"}}>
+            {achievements.map((a: Achievement) => {
+                return <Grid item xs={12} xl={4} key={a.achievementId} style={{display: "flex", flexDirection: "column",
+                    alignItems: "center", minWidth: "300px"}}>
+                    <img src={convertAchievementNameToImagePath(a.name)} alt={a.name}/>
+                    <Typography variant="h5">{a.name}</Typography>
+                    <Typography sx={{color: theme.palette.grey.A700}}>{a.description}</Typography>
+                </Grid>
+            })}
+        </Grid>
+    </Grid>
+}
+
 export default function Profile() {
     const {isLoading, isError, profile} = useProfile();
     const {username} = useContext(AccessContext);
@@ -96,21 +117,7 @@ export default function Profile() {
                 <Divider flexItem/>
                 <GameStats played={profile.gamesPlayed} won={profile.gamesWon} lost={profile.gamesLost}/>
             </Grid>
-            <Grid item xs={12} sx={{marginTop: "50px"}}>
-                <Typography variant="h4" sx={{display:"flex", justifyContent:"center"}}>
-                    Achievements
-                </Typography>
-                <div style={{display: "flex", justifyContent: "space-evenly", marginTop: "20px"}}>
-                    {profile.achievements.map((a: Achievement) => {
-                        return <div key={a.achievementId} style={{display: "flex", flexDirection: "column",
-                            alignItems: "center", minWidth: "300px"}}>
-                            <img src={convertAchievementNameToImagePath(a.name)} alt={a.name}/>
-                            <Typography variant="h5">{a.name}</Typography>
-                            <Typography sx={{color: theme.palette.grey.A700}}>{a.description}</Typography>
-                        </div>
-                    })}
-                </div>
-            </Grid>
+            <Achievements achievements={profile.achievements}/>
         </Grid>
     </Container>
 }
