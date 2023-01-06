@@ -12,7 +12,6 @@ interface ShopItemProps {
 }
 
 export function ShopItem({item, actionType, action}: ShopItemProps) {
-    console.log(actionType, ShopActionType.PURCHASE, actionType === ShopActionType.PURCHASE)
     return (
         <Card sx={{width: "340px", display: "flex", justifyContent: "space-between"}}>
             <CardContent sx={{display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "start"}}>
