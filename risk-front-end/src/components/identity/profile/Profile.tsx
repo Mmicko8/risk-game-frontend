@@ -95,6 +95,12 @@ export default function Profile() {
                 <Divider flexItem/>
                 <GameStats played={profile.gamesPlayed} won={profile.gamesWon} lost={profile.gamesLost}/>
             </Grid>
+            <Grid item xs={12} sx={{marginTop: "50px"}}>
+                <Typography variant="h4" sx={{display:"flex", justifyContent:"center"}}>
+                    Achievements
+                </Typography>
+            {/*    TODO achievements*/}
+            </Grid>
         </Grid>
     </Container>
 }
