@@ -5,8 +5,8 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Avatar from "@mui/material/Avatar";
 import * as React from "react";
-import EditProfile from "./EditProfile";
 import {useContext} from "react";
+import EditProfile from "./EditProfile";
 import AccessContext from "../../../context/AccessContext";
 import AchievementIcon from '@mui/icons-material/MilitaryTech';
 import LoyaltyPointsIcon from '@mui/icons-material/MonetizationOn';
@@ -14,14 +14,10 @@ import ShopItemIcon from '@mui/icons-material/ShoppingBag';
 import Typography from "@mui/material/Typography";
 import {useTheme} from "@mui/material/styles";
 import Divider from "@mui/material/Divider"
-import {
-    convertAchievementNameToImagePath,
-    getAvatar
-} from "../../../services/utilsService";
-import { Achievement } from "../../../model/Achievement";
+import {convertAchievementNameToImagePath, getAvatar} from "../../../services/utilsService";
+import {Achievement} from "../../../model/Achievement";
 import {ShopItemModel} from "../../../model/ShopItemModel";
-import {Card, CardContent, CardMedia} from "@mui/material";
-import {capitalizeItemCategory, itemNameToImage} from "../../../services/shopItemService";
+import {ShopActionType, ShopItems} from "../../Shop";
 
 interface GameStatsProps {
     played: number;
@@ -76,38 +72,13 @@ function Achievements({achievements}: {achievements: Achievement[]}) {
 }
 
 function OwnedItems({shopItems}: {shopItems: ShopItemModel[]}) {
+    const emptyMessage = "You don't own any items of this type yet. Head over to the shop to check them out!";
+
     if (shopItems.length < 1) return <></>;
 
-    return <div style={{marginTop: "50px"}}>
-        <Typography variant="h4"  sx={{display:"flex", justifyContent:"center", marginBottom: "20px"}}>
-            Owned Items
-        </Typography>
-        <Grid container sx={{justifyContent: "space-evenly"}}>
-            {shopItems.map((item: ShopItemModel) => (
-                <Grid item key={item.shopItemId}>
-                    <Card sx={{width: 340, margin: 1, display: "flex", justifyContent: "space-between"}}>
-                        <CardContent>
-                            <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
-                                {capitalizeItemCategory(item.itemCategory)}
-                            </Typography>
-                            <Typography variant="h5" component="div">
-                                {item.name}
-                            </Typography>
-                        </CardContent>
-                        {item.itemCategory === 'PROFILE_PICTURE' ?
-                            <CardMedia
-                                component="img"
-                                sx={{width: 151}}
-                                image={itemNameToImage(item.name)}
-                                alt={item.name}
-                            />
-                            :
-                            ""
-                        }
-                    </Card>
-                </Grid>
-            ))}
-        </Grid>
+    return <div style={{marginTop: "50px", marginBottom: "50px"}}>
+        <ShopItems emptyMessage={emptyMessage} shopItems={shopItems} actionType={ShopActionType.EQUIP}
+                   action={(id) => console.log(id)}/>
     </div>;
 }
 
@@ -123,8 +94,7 @@ export default function Profile() {
         return <Alert message={"Error loading the profile"}/>
     }
 
-    // Instellen en bekijken van nickname, avatar, password reset, stats (# spelletjes, #gewonnen…),...
-    console.log(profile)
+    // todo Instellen en bekijken van nickname, avatar, password reset, stats (# spelletjes, #gewonnen…),...
 
     const statSx = {color: theme.palette.primary.main, fontSize: "80px"}
     const stats = [

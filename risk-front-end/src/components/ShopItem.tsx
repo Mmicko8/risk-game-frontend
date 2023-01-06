@@ -1,28 +1,37 @@
-import {Card, CardContent, Typography, CardMedia} from "@mui/material";
+import {Card, CardContent, CardMedia, Typography} from "@mui/material";
 import React from "react";
 import {ShopItemModel} from "../model/ShopItemModel";
 import Button from "@mui/material/Button";
 import {capitalizeItemCategory, itemNameToImage} from "../services/shopItemService";
+import {ShopActionType} from "./Shop";
 
 interface ShopItemProps {
     item: ShopItemModel;
-    buyItem: (id: number) => void
+    actionType: ShopActionType;
+    action: (id: number) => void;
 }
 
-export function ShopItem({item, buyItem}: ShopItemProps) {
+export function ShopItem({item, actionType, action}: ShopItemProps) {
+    console.log(actionType, ShopActionType.PURCHASE, actionType === ShopActionType.PURCHASE)
     return (
-        <Card sx={{width: 340, margin: 1, display: "flex", justifyContent: "space-between"}}>
-            <CardContent>
-                <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
-                    {capitalizeItemCategory(item.itemCategory)}
-                </Typography>
-                <Typography variant="h5" component="div">
-                    {item.name}
-                </Typography>
-                <Typography sx={{mb: 1.5}} color="text.secondary">$
-                    {item.price}
-                </Typography>
-                <Button onClick={() => buyItem(item.shopItemId)}>Buy item</Button>
+        <Card sx={{width: "340px", display: "flex", justifyContent: "space-between"}}>
+            <CardContent sx={{display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "start"}}>
+                <div>
+                    <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
+                        {capitalizeItemCategory(item.itemCategory)}
+                    </Typography>
+                    <Typography variant="h5" component="div">
+                        {item.name}
+                    </Typography>
+                    {actionType === ShopActionType.PURCHASE ?
+                        <Typography sx={{mb: 1.5}} color="text.secondary">$
+                            {item.price}
+                        </Typography>
+                        :
+                        ""
+                    }
+                </div>
+                <Button onClick={() => action(item.shopItemId)}>{actionType}</Button>
             </CardContent>
             {item.itemCategory === 'PROFILE_PICTURE' ?
                 <CardMedia
