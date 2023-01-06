@@ -31,7 +31,7 @@ export default function TroopCard({card, isHighlighted, onClick}: CardProps) {
             </svg>
         </div>
         <div>
-            {[...Array(card.stars)].map(() => <StarIcon/>)}
+            {[...Array(card.stars)].map((card, index) => <StarIcon key={index}/>)}
         </div>
     </Paper>
 }

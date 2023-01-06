@@ -3,6 +3,7 @@ import Button from "@mui/material/Button";
 import {GameModel} from "../../../model/game/GameModel";
 import {useState} from "react";
 import TroopCard from "./TroopCard";
+import Grid from "@mui/material/Grid";
 
 interface CardSelectorProps {
     isOpen: boolean;
@@ -22,12 +23,17 @@ export default function CardSelector({isOpen, onClose, onSubmit, game}: CardSele
     }
 
     return (
-        <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="xl">
-            <DialogContent style={{display: "flex", justifyContent: "space-between"}}>
-                {cards.map(c => (
-                    <TroopCard key={c.name} card={c}
-                               onClick={() => toggleCard(c.name)}
-                               isHighlighted={selectedCards.includes(c.name)}/>))}
+        <Dialog open={isOpen} onClose={onClose} maxWidth="md">
+            <DialogContent>
+                <Grid container spacing={4} style={{display: "flex", justifyContent: "center"}}>
+                    {cards.length === 0 ? <Grid item xs={12}><p>You don't have any cards</p></Grid> : ""}
+                    {cards.map(c => (
+                        <Grid item key={c.name} xs={3} sx={{minWidth: "200px"}}>
+                            <TroopCard card={c}
+                                       onClick={() => toggleCard(c.name)}
+                                       isHighlighted={selectedCards.includes(c.name)}/>
+                        </Grid>))}
+                </Grid>
             </DialogContent>
             <DialogActions>
                 <Button variant="contained" fullWidth onClick={() => onSubmit(selectedCards)}>
