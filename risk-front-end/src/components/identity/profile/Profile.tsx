@@ -14,6 +14,8 @@ import ShopItemIcon from '@mui/icons-material/ShoppingBag';
 import Typography from "@mui/material/Typography";
 import {useTheme} from "@mui/material/styles";
 import Divider from "@mui/material/Divider"
+import {convertAchievementNameToImagePath, convertImageNameToPath} from "../../../services/utilsService";
+import { Achievement } from "../../../model/Achievement";
 
 interface GameStatsProps {
     played: number;
@@ -73,7 +75,7 @@ export default function Profile() {
         <Grid container sx={{marginTop: "10vh"}}>
             <Grid item xs={12} md={6}>
                 <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
-                    <Avatar sx={{width: "120px", height: "120px"}} src="/testAvatar.jpg"/>
+                    <Avatar sx={{width: "120px", height: "120px"}} src={convertImageNameToPath(profile.profilePicture)}/>
                     <EditProfile id={profile.id} username={username!} email={profile.email}/>
                 </div>
             </Grid>
@@ -99,7 +101,16 @@ export default function Profile() {
                 <Typography variant="h4" sx={{display:"flex", justifyContent:"center"}}>
                     Achievements
                 </Typography>
-            {/*    TODO achievements*/}
+                <div style={{display: "flex", justifyContent: "space-evenly", marginTop: "20px"}}>
+                    {profile.achievements.map((a: Achievement) => {
+                        return <div key={a.achievementId} style={{display: "flex", flexDirection: "column",
+                            alignItems: "center", minWidth: "300px"}}>
+                            <img src={convertAchievementNameToImagePath(a.name)} alt={a.name}/>
+                            <Typography variant="h5">{a.name}</Typography>
+                            <Typography sx={{color: theme.palette.grey.A700}}>{a.description}</Typography>
+                        </div>
+                    })}
+                </div>
             </Grid>
         </Grid>
     </Container>

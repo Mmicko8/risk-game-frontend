@@ -9,6 +9,12 @@ export function unionArrays(a: any[], b: any[]): any[] {
     return Object.keys(cache).map(key => cache[key]);
 }
 
-export function convertImageNameToPath(imageName:string) {
+export function convertImageNameToPath(imageName: string) {
     return `/avatar/${imageName}.png`
+}
+
+export function convertAchievementNameToImagePath(achievementName: string) {
+    achievementName = achievementName.replace(/ /g,'')
+    achievementName = achievementName.slice(0, 1).toLowerCase() + achievementName.slice(1)
+    return `/achievement/${achievementName}.png`
 }
