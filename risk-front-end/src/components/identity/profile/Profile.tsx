@@ -15,6 +15,37 @@ import Typography from "@mui/material/Typography";
 import {useTheme} from "@mui/material/styles";
 import Divider from "@mui/material/Divider"
 
+interface GameStatsProps {
+    played: number;
+    won: number;
+    lost: number;
+}
+function GameStats({played, won, lost}: GameStatsProps) {
+    const theme = useTheme();
+    return <div>
+        <div style={{display: "flex", justifyContent: "space-around", alignItems: "center"}}>
+            <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+                <Typography variant="h4">{played}</Typography>
+                <div style={{color: theme.palette.grey.A700}}>PLAYED</div>
+            </div>
+
+            <Divider orientation="vertical" flexItem/>
+
+            <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+                <Typography variant="h4">{won}</Typography>
+                <div style={{color: theme.palette.grey.A700}}>WON</div>
+            </div>
+
+            <Divider orientation="vertical" flexItem/>
+
+            <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+                <Typography variant="h4">{lost}</Typography>
+                <div style={{color: theme.palette.grey.A700}}>LOST</div>
+            </div>
+        </div>
+    </div>
+}
+
 export default function Profile() {
     const {isLoading, isError, profile} = useProfile();
     const {username} = useContext(AccessContext);
@@ -46,10 +77,10 @@ export default function Profile() {
                     <EditProfile id={profile.id} username={username!} email={profile.email}/>
                 </div>
             </Grid>
-            <Grid item xs={12} md={6} style={{display: "flex", flexDirection: "column", justifyContent: "center", gap: "50px"}}>
+            <Grid item xs={12} md={6} style={{display: "flex", flexDirection: "column", justifyContent: "center", gap: "20px"}}>
                 <div>
                     <Typography variant="h4"  sx={{display:"flex", justifyContent:"center", marginBottom: "20px"}}>
-                        Trophies
+                        Statistics
                     </Typography>
                     <div style={{display: "flex", justifyContent: "space-around", alignItems: "center"}}>
                         {stats.map((stat, index) =>
@@ -61,27 +92,8 @@ export default function Profile() {
                         )}
                     </div>
                 </div>
-                <div>
-                    <Typography variant="h4" sx={{display:"flex", justifyContent:"center", marginBottom: "20px"}}>
-                        Games
-                    </Typography>
-                    <div style={{display: "flex", justifyContent: "space-around", alignItems: "center"}}>
-                        <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
-                            <Typography variant="h4">{profile.gamesPlayed}</Typography>
-                            <div style={{color: theme.palette.grey.A700}}>PLAYED</div>
-                        </div>
-                        <Divider orientation="vertical" flexItem/>
-                        <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
-                            <Typography variant="h4">{profile.gamesWon}</Typography>
-                            <div style={{color: theme.palette.grey.A700}}>WON</div>
-                        </div>
-                        <Divider orientation="vertical" flexItem/>
-                        <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
-                            <Typography variant="h4">{profile.gamesLost}</Typography>
-                            <div style={{color: theme.palette.grey.A700}}>LOST</div>
-                        </div>
-                    </div>
-                </div>
+                <Divider flexItem/>
+                <GameStats played={profile.gamesPlayed} won={profile.gamesWon} lost={profile.gamesLost}/>
             </Grid>
         </Grid>
     </Container>
