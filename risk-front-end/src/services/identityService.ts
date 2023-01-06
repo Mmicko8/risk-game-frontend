@@ -15,3 +15,7 @@ export function forgotPassword(username: string) {
 export function resetPassword(username: string, password: string, token: string) {
     return axios.put(`/api/password/reset`, {username: username, password: password, token: token})
 }
+
+export function resetPasswordRequest() {
+    return axios.post('/api/password/resetRequest')
+}

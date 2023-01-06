@@ -18,6 +18,7 @@ import {green} from '@mui/material/colors';
 import {Shop} from "./components/Shop";
 import { ForgotPassword } from './components/identity/ForgotPassword';
 import ResetPassword from "./components/identity/ResetPassword";
+import PwResetReqConfirmation from "./components/identity/PwResetReqConfirmation";
 
 
 axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL
@@ -60,6 +61,7 @@ function App() {
                             <Route path="/register" element={<Register/>}/>
                             <Route path="/register/confirmation" element={<RegisterConfirmation/>}/>
                             <Route path="/password/forgot" element={<ForgotPassword/>}/>
+                            <Route path="/password/reset_request/confirmation" element={<PwResetReqConfirmation/>}/>
                             <Route path="/password/reset/:token" element={<ResetPassword/>}/>
                             <Route path="/game/:id" element={<Game/>}/>
                             <Route path="/lobby/:id" element={<Lobby/>}/>

@@ -21,6 +21,10 @@ function Copyright(props: any) {
     );
 }
 
+const MIN_USERNAME_LENGTH = 2;
+const MIN_USERNAME_MSG = `Username must contain at least ${MIN_USERNAME_LENGTH} characters`;
+const MAX_USERNAME_LENGTH = 50;
+const MAX_USERNAME_MSG = `Username can not exceed ${MAX_USERNAME_LENGTH} characters`;
 const MIN_PASSWORD_LENGTH = 6;
 const MIN_PASSWORD_MSG = `Password must contain at least ${MIN_PASSWORD_LENGTH} characters`;
 const MAX_PASSWORD_LENGTH = 50;
@@ -71,8 +75,12 @@ export default function SignUp() {
                             <Controller
                                 name="username"
                                 control={control}
+                                rules={{minLength: {value: MIN_USERNAME_LENGTH, message:MIN_USERNAME_MSG},
+                                    maxLength: {value: MAX_USERNAME_LENGTH, message:MAX_USERNAME_MSG}}}
                                 render={({field}) => (
                                     <TextField
+                                        error={!!errors.username}
+                                        helperText={errors.username?.message}
                                         {...field}
                                         required
                                         fullWidth
