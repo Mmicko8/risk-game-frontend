@@ -29,6 +29,12 @@ export default function EditProfile({id, username, email}: EditProfileProps) {
         }
     });
 
+    // TODO put in config file somewhere and export and use the same thing in Register.tsx
+    const MIN_USERNAME_LENGTH = 2;
+    const MIN_USERNAME_MSG = `Username must contain at least ${MIN_USERNAME_LENGTH} characters`;
+    const MAX_USERNAME_LENGTH = 50;
+    const MAX_USERNAME_MSG = `Username can not exceed ${MAX_USERNAME_LENGTH} characters`;
+
     const _onSubmit = async (data: {username: string}) => {
         editPlayerUsername(id, data.username).then(() => {
             removeUsername();
@@ -47,9 +53,14 @@ export default function EditProfile({id, username, email}: EditProfileProps) {
         <Controller
             name="username"
             control={control}
+            rules={{required: "Username cannot be empty!",
+                    minLength: {value: MIN_USERNAME_LENGTH, message:MIN_USERNAME_MSG},
+                    maxLength: {value: MAX_USERNAME_LENGTH, message:MAX_USERNAME_MSG}}}
             render={({field}) => (
                 <TextField
                     {...field}
+                    error={!!errors.username}
+                    helperText={errors.username?.message}
                     margin="normal"
                     fullWidth
                     id="username"
@@ -68,7 +79,6 @@ export default function EditProfile({id, username, email}: EditProfileProps) {
             defaultValue={email}
             disabled
         />
-        <div style={{color:"red"}}>{errors.username?.message}</div>
 
         <Button
             type="submit"
