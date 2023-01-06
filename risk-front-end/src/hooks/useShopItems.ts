@@ -29,6 +29,7 @@ export function useShopItems() {
         {
             onSuccess: () => {
                 queryClient.invalidateQueries(["shopItems"]);
+                queryClient.invalidateQueries(["loyaltyPoints"]);
             }
         }
     );
