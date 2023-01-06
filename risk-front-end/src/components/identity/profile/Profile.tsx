@@ -109,7 +109,7 @@ export default function Profile() {
 
 
     return <Container>
-        <Grid container sx={{marginTop: "10vh"}}>
+        <Grid container columnSpacing={10} sx={{marginTop: "10vh"}}>
             <Grid item xs={12} md={6}>
                 <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                     <Avatar sx={{width: "120px", height: "120px"}} src={getAvatar(profile.profilePicture)}/>
