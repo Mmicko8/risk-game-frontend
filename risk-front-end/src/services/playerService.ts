@@ -14,3 +14,7 @@ export async function getLeaderboard() {
     const lobby = await axios.get(`/api/player/leaderboard`);
     return lobby.data;
 }
+
+export async function equipShopItem(playerId: number, shopItemId: number) {
+    return await axios.put('/api/player/equip', {playerId, shopItemId});
+}
