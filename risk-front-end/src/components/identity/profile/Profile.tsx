@@ -60,7 +60,6 @@ export default function Profile() {
 
     // Instellen en bekijken van nickname, avatar, password reset, stats (# spelletjes, #gewonnen…),...
     console.log(profile)
-    console.log(theme.palette)
 
     const statSx = {color: theme.palette.primary.main, fontSize: "80px"}
     const stats = [
@@ -68,15 +67,6 @@ export default function Profile() {
         {icon: <LoyaltyPointsIcon sx={statSx}/>, amount: profile.loyaltyPoints, text: "Loyalty Points"},
         {icon: <ShopItemIcon sx={statSx}/>, amount: profile.shopItems.length, text: "Owned Items"}
     ]
-
-
-    const statSx = {color: theme.palette.primary.main, fontSize: "80px"}
-    const stats = [
-        {icon: <AchievementIcon sx={statSx}/>, amount: profile.achievements.length, text: "Achievements"},
-        {icon: <LoyaltyPointsIcon sx={statSx}/>, amount: profile.loyaltyPoints, text: "Loyalty Points"},
-        {icon: <ShopItemIcon sx={statSx}/>, amount: profile.shopItems.length, text: "Owned Items"}
-    ]
-
 
     return <Container>
         <Grid container sx={{marginTop: "10vh"}}>
