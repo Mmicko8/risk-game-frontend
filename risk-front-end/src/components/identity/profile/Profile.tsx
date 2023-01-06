@@ -112,6 +112,10 @@ export default function Profile() {
             <Grid item xs={12} md={6}>
                 <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                     <Avatar sx={{width: "120px", height: "120px"}} src={getAvatar(profile.profilePicture)}/>
+                    {profile.title === null ? ""
+                        :
+                        <Typography sx={{marginY: "8px", fontStyle: "italic"}}>"{profile.title}"</Typography>
+                    }
                     <EditProfile id={profile.id} username={username!} email={profile.email}/>
                 </div>
             </Grid>
