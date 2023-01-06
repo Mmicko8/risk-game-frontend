@@ -1,4 +1,4 @@
-import Board from "./Board";
+import Board from "../Board";
 import {useQuery, useQueryClient} from "react-query";
 import {
     exchangeCards,
@@ -7,30 +7,30 @@ import {
     nextPhase,
     nextTurn,
     Phases
-} from "../services/gameService";
-import Loading from "./Loading";
+} from "../../services/gameService";
+import Loading from "../Loading";
 import {Snackbar} from "@mui/material";
 import AlertMui from "@mui/material/Alert";
 import {
     getAllTerritoriesFromGameState,
     getTerritoriesWithNeighbors, getTerritoryData, placeTroops,
-} from "../services/territoryService";
-import GameStateContextProvider from "../context/GameStateContextProvider";
+} from "../../services/territoryService";
+import GameStateContextProvider from "../../context/GameStateContextProvider";
 import {SyntheticEvent, useContext, useEffect, useReducer, useState} from "react";
-import AccessContext from "../context/AccessContext";
-import TroopSelector from "./dialogs/TroopSelector";
-import PlayerFrame from "./Player/PlayerFrame";
+import AccessContext from "../../context/AccessContext";
+import TroopSelector from "../dialogs/TroopSelector";
+import PlayerFrame from "../Player/PlayerFrame";
 import Grid from "@mui/material/Grid";
-import CurrentPlayer from "./Player/CurrentPlayer";
-import {GameActionType, GameInteractionStateReducer} from "../reducers/gameReducer";
+import CurrentPlayer from "../Player/CurrentPlayer";
+import {GameActionType, GameInteractionStateReducer} from "../../reducers/gameReducer";
 import {useParams} from "react-router-dom";
 import Fab from "@mui/material/Fab";
 import CardsIcon from '@mui/icons-material/Style';
-import CardSelector from "./dialogs/CardSelector/CardSelector";
-import {attack, hasTerritoryEnoughTroopsToAttack} from "../services/attackService";
-import { fortify } from "../services/fortifyService";
+import CardSelector from "../dialogs/CardSelector/CardSelector";
+import {attack, hasTerritoryEnoughTroopsToAttack} from "../../services/attackService";
+import { fortify } from "../../services/fortifyService";
 import DiceBox from "@3d-dice/dice-box-threejs";
-import {Alert} from "./Alert";
+import {Alert} from "../Alert";
 
 
 export default function Game() {

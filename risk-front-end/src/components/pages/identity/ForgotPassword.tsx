@@ -9,8 +9,8 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import * as React from "react";
-import {ForgotPasswordData} from "../../model/player/PasswordReset";
-import {forgotPassword} from "../../services/identityService";
+import {ForgotPasswordData} from "../../../model/player/PasswordReset";
+import {forgotPassword} from "../../../services/identityService";
 
 function Copyright(props: any) {
     return (

@@ -2,24 +2,24 @@ import './App.css';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import React from 'react';
 import axios from "axios";
-import Home from "./components/Home";
-import {NavigationDial} from "./components/nav/NavigationDial";
-import SignIn from "./components/identity/SignIn";
-import Register from "./components/identity/Register";
-import Game from "./components/Game";
+import Home from "./components/pages/Home";
+import {NavigationDial} from "./components/NavigationDial";
+import SignIn from "./components/pages/identity/SignIn";
+import Register from "./components/pages/identity/Register";
+import Game from "./components/pages/Game";
 import {QueryClient, QueryClientProvider} from "react-query";
 import AccessTokenContextProvider from "./context/AccessContextProvider";
 import localForage from "localforage";
-import RegisterConfirmation from "./components/identity/RegisterConfirmation";
-import {Lobby} from "./components/Lobby";
-import Leaderboard from "./components/Leaderboard";
+import RegisterConfirmation from "./components/pages/identity/RegisterConfirmation";
+import {Lobby} from "./components/pages/Lobby";
+import Leaderboard from "./components/pages/Leaderboard";
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import {green} from '@mui/material/colors';
-import {Shop} from "./components/Shop";
-import Profile from "./components/identity/profile/Profile";
-import { ForgotPassword } from './components/identity/ForgotPassword';
-import ResetPassword from "./components/identity/ResetPassword";
-import PwResetReqConfirmation from "./components/identity/PwResetReqConfirmation";
+import {Shop} from "./components/pages/Shop";
+import Profile from "./components/pages/identity/Profile";
+import { ForgotPassword } from './components/pages/identity/ForgotPassword';
+import ResetPassword from "./components/pages/identity/ResetPassword";
+import PwResetReqConfirmation from "./components/pages/identity/PwResetReqConfirmation";
 
 
 axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL

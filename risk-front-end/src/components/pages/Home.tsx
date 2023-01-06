@@ -1,20 +1,20 @@
 import {Fab, Tooltip, Container} from "@mui/material"
 import AddIcon from "@mui/icons-material/Add";
 import {useContext, useState} from "react";
-import CreateLobby from "./dialogs/CreateLobby";
-import AccessContext from "../context/AccessContext";
-import {CreateLobbyData, CreateLobbyDataNoUsername} from "../model/CreateLobbyData";
-import {createLobbyCall, getJoinedLobbies, homeActions} from "../services/lobbyService";
-import {useLobbies} from "../hooks/useLobbies";
-import {Lobbies} from "./Lobbies";
+import CreateLobby from "../dialogs/CreateLobby";
+import AccessContext from "../../context/AccessContext";
+import {CreateLobbyData, CreateLobbyDataNoUsername} from "../../model/CreateLobbyData";
+import {createLobbyCall, getJoinedLobbies, homeActions} from "../../services/lobbyService";
+import {useLobbies} from "../../hooks/useLobbies";
+import {Lobbies} from "../Lobbies";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import {useQuery} from "react-query";
-import Loading from "./Loading";
+import Loading from "../Loading";
 import {useNavigate} from "react-router-dom";
-import {getActiveGames} from "../services/gameService";
-import {Games} from "./Games";
-import {Alert} from "./Alert";
+import {getActiveGames} from "../../services/gameService";
+import {Games} from "../Games";
+import {Alert} from "../Alert";
 
 export default function Home() {
     const navigate = useNavigate()

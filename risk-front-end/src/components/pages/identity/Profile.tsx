@@ -6,7 +6,7 @@ import Grid from "@mui/material/Grid";
 import Avatar from "@mui/material/Avatar";
 import * as React from "react";
 import {useContext} from "react";
-import EditProfile from "./EditProfile";
+import EditProfile from "../../EditProfile";
 import AccessContext from "../../../context/AccessContext";
 import AchievementIcon from '@mui/icons-material/MilitaryTech';
 import LoyaltyPointsIcon from '@mui/icons-material/MonetizationOn';
@@ -17,7 +17,7 @@ import Divider from "@mui/material/Divider"
 import {convertAchievementNameToImagePath, getAvatar} from "../../../services/utilsService";
 import {Achievement} from "../../../model/Achievement";
 import {ShopItemModel} from "../../../model/ShopItemModel";
-import {ShopActionType, ShopItems} from "../../Shop";
+import {ShopActionType, ShopItems} from "../Shop";
 
 interface GameStatsProps {
     played: number;

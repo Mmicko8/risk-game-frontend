@@ -3,7 +3,7 @@ import React from "react";
 import {ShopItemModel} from "../model/ShopItemModel";
 import Button from "@mui/material/Button";
 import {capitalizeItemCategory, itemNameToImage} from "../services/shopItemService";
-import {ShopActionType} from "./Shop";
+import {ShopActionType} from "./pages/Shop";
 
 interface ShopItemProps {
     item: ShopItemModel;

@@ -1,7 +1,7 @@
 import {useNavigate, useParams} from "react-router-dom";
-import {useLobby} from "../hooks/useLobby";
+import {useLobby} from "../../hooks/useLobby";
 import {CircularProgress, Stack, Chip} from "@mui/material";
-import {Player} from "../model/player/Player";
+import {Player} from "../../model/player/Player";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
@@ -12,10 +12,10 @@ import PersonIcon from '@mui/icons-material/Person';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import Button from "@mui/material/Button";
 import {useContext} from "react";
-import AccessContext from "../context/AccessContext";
-import {Alert} from "./Alert";
-import {startGameCall} from "../services/lobbyService";
-import {getAvatar} from "../services/utilsService";
+import AccessContext from "../../context/AccessContext";
+import {Alert} from "../Alert";
+import {startGameCall} from "../../services/lobbyService";
+import {getAvatar} from "../../services/utilsService";
 
 export function Lobby() {
     const navigate = useNavigate();

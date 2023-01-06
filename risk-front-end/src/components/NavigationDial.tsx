@@ -6,7 +6,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import {useNavigate} from "react-router-dom";
 import {useContext} from "react";
-import AccessContext from "../../context/AccessContext";
+import AccessContext from "../context/AccessContext";
 import MenuIcon from '@mui/icons-material/Menu';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import LeaderboardIcon from '@mui/icons-material/Leaderboard';

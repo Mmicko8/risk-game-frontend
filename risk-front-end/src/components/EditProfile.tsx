@@ -3,9 +3,9 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import * as React from "react";
-import {editPlayerUsername, resetPasswordRequest} from "../../../services/identityService";
+import {editPlayerUsername, resetPasswordRequest} from "../services/identityService";
 import {useContext} from "react";
-import AccessContext from "../../../context/AccessContext";
+import AccessContext from "../context/AccessContext";
 import {useNavigate} from "react-router-dom";
 import Grid from "@mui/material/Grid";
 

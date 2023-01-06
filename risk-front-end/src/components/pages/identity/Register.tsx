@@ -1,18 +1,17 @@
-import Typography from "@mui/material/Typography";
-import {useNavigate, useParams} from "react-router-dom";
-import {Controller, useForm} from "react-hook-form";
-import Container from "@mui/material/Container";
-import CssBaseline from "@mui/material/CssBaseline";
-import Box from "@mui/material/Box";
-import Avatar from "@mui/material/Avatar";
-import LockResetIcon from '@mui/icons-material/LockReset';
-import Grid from "@mui/material/Grid";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import * as React from "react";
-import {PasswordReset} from "../../model/player/PasswordReset";
-import {resetPassword} from "../../services/identityService";
-import {useState} from "react";
+import * as React from 'react';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import {Link, useNavigate} from "react-router-dom";
+import {useForm, Controller} from "react-hook-form";
+import {SignUpCredentials} from "../../../model/player/SignUpCredentials";
+import {register} from "../../../services/identityService";
 
 function Copyright(props: any) {
     return (
@@ -22,48 +21,35 @@ function Copyright(props: any) {
     );
 }
 
+const MIN_USERNAME_LENGTH = 2;
+const MIN_USERNAME_MSG = `Username must contain at least ${MIN_USERNAME_LENGTH} characters`;
+const MAX_USERNAME_LENGTH = 50;
+const MAX_USERNAME_MSG = `Username can not exceed ${MAX_USERNAME_LENGTH} characters`;
 const MIN_PASSWORD_LENGTH = 6;
 const MIN_PASSWORD_MSG = `Password must contain at least ${MIN_PASSWORD_LENGTH} characters`;
 const MAX_PASSWORD_LENGTH = 50;
 const MAX_PASSWORD_MSG = `Password can not exceed ${MAX_PASSWORD_LENGTH} characters`;
 
-export default function ResetPassword() {
+export default function SignUp() {
     const navigate = useNavigate()
-    const {token} = useParams<{ token: string }>()
-    const [isServerError, setIsServerError] = useState(true)
 
     const {
         control,
         handleSubmit,
         reset,
-        setError,
         formState: {errors}
     } = useForm({
         defaultValues: {
             username: '',
-            newPassword: '',
-            confirmNewPassword: '',
+            email: '',
+            password: '',
         }
     })
 
-    const _onSubmit = (data: PasswordReset) => {
-        if (data.newPassword !== data.confirmNewPassword) {
-            setError('confirmNewPassword', {
-                type: "validation",
-                message: "Please make sure your passwords match."
-            })
-        } else {
-            if (token !== undefined) {
-                resetPassword(data.username, data.newPassword, token)
-                    .then(() => {
-                        navigate('/sign_in')
-                    })
-                    .catch(() => {
-                        setIsServerError(false)
-                    })
-                reset()
-            }
-        }
+    const _onSubmit = (data: SignUpCredentials) => {
+        register(data.username, data.email, data.password);
+        navigate('/register/confirmation');
+        reset()
     };
 
     return (
@@ -78,10 +64,10 @@ export default function ResetPassword() {
                 }}
             >
                 <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
-                    <LockResetIcon/>
+                    <LockOutlinedIcon/>
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                    Reset password
+                    Sign up
                 </Typography>
                 <Box component="form" onSubmit={handleSubmit(_onSubmit)} sx={{mt: 3}}>
                     <Grid container spacing={2}>
@@ -89,8 +75,12 @@ export default function ResetPassword() {
                             <Controller
                                 name="username"
                                 control={control}
+                                rules={{minLength: {value: MIN_USERNAME_LENGTH, message:MIN_USERNAME_MSG},
+                                    maxLength: {value: MAX_USERNAME_LENGTH, message:MAX_USERNAME_MSG}}}
                                 render={({field}) => (
                                     <TextField
+                                        error={!!errors.username}
+                                        helperText={errors.username?.message}
                                         {...field}
                                         required
                                         fullWidth
@@ -103,48 +93,46 @@ export default function ResetPassword() {
                         </Grid>
                         <Grid item xs={12}>
                             <Controller
-                                name="newPassword"
+                                name="email"
                                 control={control}
-                                rules={{minLength: {value: MIN_PASSWORD_LENGTH, message:MIN_PASSWORD_MSG},
-                                    maxLength: {value: MAX_PASSWORD_LENGTH, message:MAX_PASSWORD_MSG}}}
+                                rules={{pattern: {
+                                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                        message: "Invalid email address"
+                                    }}}
                                 render={({field}) => (
                                     <TextField
-                                        error={!!errors.newPassword}
-                                        helperText={errors.newPassword?.message}
+                                        error={!!errors.email}
+                                        helperText={errors.email?.message}
                                         {...field}
                                         required
                                         fullWidth
-                                        id="newPassword"
-                                        label="New Password"
-                                        type="password"
-                                        autoComplete="New Password"
+                                        id="email"
+                                        label="Email Address"
+                                        autoComplete="email"
                                     />
                                 )}
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <Controller
-                                name="confirmNewPassword"
+                                name="password"
                                 control={control}
+                                rules={{minLength: {value: MIN_PASSWORD_LENGTH, message:MIN_PASSWORD_MSG},
+                                maxLength: {value: MAX_PASSWORD_LENGTH, message:MAX_PASSWORD_MSG}}}
                                 render={({field}) => (
                                     <TextField
-                                        error={!!errors.confirmNewPassword}
-                                        helperText={errors.confirmNewPassword?.message}
+                                        error={!!errors.password}
+                                        helperText={errors.password?.message}
                                         {...field}
                                         required
                                         fullWidth
-                                        label="Confirm New Password"
+                                        label="Password"
                                         type="password"
-                                        id="confirmNewPassword"
-                                        autoComplete="Confirm New Password"
+                                        id="password"
+                                        autoComplete="new-password"
                                     />
                                 )}
                             />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Typography hidden={isServerError} sx={{color:"red"}}>
-                                Something went wrong resetting the password.
-                            </Typography>
                         </Grid>
                     </Grid>
                     <Button
@@ -153,11 +141,19 @@ export default function ResetPassword() {
                         variant="contained"
                         sx={{mt: 3, mb: 2}}
                     >
-                        Reset password
+                        Sign Up
                     </Button>
+                    <Grid container justifyContent="flex-end">
+                        <Grid item>
+                            <Link to={"/sign_in"}>
+                                Already have an account? Sign in
+                            </Link>
+                        </Grid>
+                    </Grid>
                 </Box>
             </Box>
             <Copyright sx={{mt: 5}}/>
         </Container>
     );
 }
+

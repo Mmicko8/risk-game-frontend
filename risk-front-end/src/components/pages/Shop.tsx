@@ -1,10 +1,10 @@
-import {useShopItems} from "../hooks/useShopItems";
+import {useShopItems} from "../../hooks/useShopItems";
 import * as React from "react";
-import {ShopItemModel} from "../model/ShopItemModel";
+import {ShopItemModel} from "../../model/ShopItemModel";
 import {CircularProgress, Grid} from "@mui/material";
-import {ShopItem} from "./ShopItem";
+import {ShopItem} from "../ShopItem";
 import Container from "@mui/material/Container";
-import {Alert} from "./Alert";
+import {Alert} from "../Alert";
 import Typography from "@mui/material/Typography";
 
 export enum ShopActionType {

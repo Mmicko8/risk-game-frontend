@@ -1,4 +1,4 @@
-import {useLeaderboard} from "../hooks/useLeaderboard";
+import {useLeaderboard} from "../../hooks/useLeaderboard";
 import * as React from "react";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -8,10 +8,10 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import {styled} from '@mui/material/styles';
 import TableCell, {tableCellClasses} from '@mui/material/TableCell';
-import {Player} from "../model/player/Player";
+import {Player} from "../../model/player/Player";
 import { useTheme } from '@mui/material/styles';
-import {Alert} from "./Alert";
-import Loading from "./Loading";
+import {Alert} from "../Alert";
+import Loading from "../Loading";
 
 export default function Leaderboard() {
     const theme = useTheme();
