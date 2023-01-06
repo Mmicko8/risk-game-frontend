@@ -60,7 +60,7 @@ function Achievements({achievements}: {achievements: Achievement[]}) {
         </Typography>
         <Grid container style={{justifyContent: "space-evenly", marginTop: "20px"}}>
             {achievements.map((a: Achievement) => {
-                return <Grid item xs={12} xl={4} key={a.achievementId} style={{display: "flex", flexDirection: "column",
+                return <Grid item xs={12} md={6} xl={4} key={a.achievementId} style={{display: "flex", flexDirection: "column",
                     alignItems: "center", minWidth: "300px"}}>
                     <img src={convertAchievementNameToImagePath(a.name)} alt={a.name}/>
                     <Typography variant="h5">{a.name}</Typography>
@@ -71,19 +71,23 @@ function Achievements({achievements}: {achievements: Achievement[]}) {
     </div>;
 }
 
-function OwnedItems({shopItems}: {shopItems: ShopItemModel[]}) {
+interface OwnedItemsProps {
+    shopItems: ShopItemModel[];
+    equipItem: (shopItemId: number) => void;
+}
+function OwnedItems({shopItems, equipItem}: OwnedItemsProps) {
     const emptyMessage = "You don't own any items of this type yet. Head over to the shop to check them out!";
 
     if (shopItems.length < 1) return <></>;
 
     return <div style={{marginTop: "50px", marginBottom: "50px"}}>
         <ShopItems emptyMessage={emptyMessage} shopItems={shopItems} actionType={ShopActionType.EQUIP}
-                   action={(id) => console.log(id)}/>
+                   action={(shopItemId) => equipItem(shopItemId)}/>
     </div>;
 }
 
 export default function Profile() {
-    const {isLoading, isError, profile} = useProfile();
+    const {isLoading, isError, profile, equipItemMutation} = useProfile();
     const {username} = useContext(AccessContext);
     const theme = useTheme();
 
@@ -132,6 +136,6 @@ export default function Profile() {
             </Grid>
         </Grid>
         <Achievements achievements={profile.achievements}/>
-        <OwnedItems shopItems={profile.shopItems}/>
+        <OwnedItems shopItems={profile.shopItems} equipItem={equipItemMutation}/>
     </Container>
 }
