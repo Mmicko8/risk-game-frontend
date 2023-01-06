@@ -52,7 +52,10 @@ export function Lobbies({lobbies, action}: OpenLobbiesProps) {
             return <Typography>No joined lobbies! Join a lobby or create one to play a game!</Typography>
         }
         if (action === homeActions.JOIN) {
-            return <Typography>No open lobbies! Create a lobby to play a game!</Typography>
+            if (!username)
+                return <Typography>No open lobbies! Sign in and create a lobby to play a game!</Typography>
+            else
+                return <Typography>No open lobbies! Create a lobby to play a game!</Typography>
         }
     }
 

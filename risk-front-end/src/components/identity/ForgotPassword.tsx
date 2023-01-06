@@ -38,7 +38,7 @@ export function ForgotPassword() {
     const _onSubmit = async (data: ForgotPasswordData) => {
         forgotPassword(data.username)
             .then(() => {
-                navigate('/password/forgot/confirmation');
+                navigate('/password/reset_request/confirmation');
             })
             .catch(() => {
                 setError('username', {
