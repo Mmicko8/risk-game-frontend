@@ -12,7 +12,7 @@ interface ShopItemProps {
 export function ShopItem({item, buyItem}: ShopItemProps) {
 
     function itemNameToImage(name: string) {
-        name = name.replace(' ', '')
+        name = name.replace(/ /g,'')
         const caplessName = name.slice(0, 1).toLowerCase() + name.slice(1)
         return convertImageNameToPath(caplessName)
     }
