@@ -3,7 +3,7 @@ import AddIcon from "@mui/icons-material/Add";
 import {useContext, useState} from "react";
 import CreateLobby from "../dialogs/CreateLobby";
 import AccessContext from "../../context/AccessContext";
-import {CreateLobbyData, CreateLobbyDataNoUsername} from "../../model/CreateLobbyData";
+import {CreateLobbyData, CreateLobbyDataNoUsername} from "../../model/lobby/CreateLobbyData";
 import {createLobbyCall, getJoinedLobbies, homeActions} from "../../services/lobbyService";
 import {useLobbies} from "../../hooks/useLobbies";
 import {Lobbies} from "../Lobbies";

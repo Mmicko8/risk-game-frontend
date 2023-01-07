@@ -11,7 +11,7 @@ import {
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import {Controller, useForm} from "react-hook-form";
-import {CreateLobbyDataNoUsername} from "../../model/CreateLobbyData";
+import {CreateLobbyDataNoUsername} from "../../model/lobby/CreateLobbyData";
 
 interface CreateLobbyProps {
     isOpen: boolean;

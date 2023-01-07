@@ -11,17 +11,24 @@ import * as React from "react";
 import PersonIcon from '@mui/icons-material/Person';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import Button from "@mui/material/Button";
-import {useContext} from "react";
+import {useContext, useState} from "react";
 import AccessContext from "../../context/AccessContext";
 import {Alert} from "../Alert";
-import {startGameCall} from "../../services/lobbyService";
+import {invitePlayerWithEmail, invitePlayerWithUsername, startGameCall} from "../../services/lobbyService";
 import {getAvatar} from "../../services/utilsService";
+import EmailInvitationDialog from "../dialogs/EmailInvitationDialog";
+import {EmailInvitation} from "../../model/lobby/EmailInvitation";
 
 export function Lobby() {
     const navigate = useNavigate();
+    const [isInviteScreenOpen, setIsInviteScreenOpen] = useState(false);
     const {username} = useContext(AccessContext);
     const {id} = useParams<{ id: string }>();
     const {isLoading, isError, lobby, addAi, errorAddingAi} = useLobby(id!);
+
+    if (!username) {
+        navigate("/sign_in")
+    }
 
     if (isLoading) {
         return <CircularProgress sx={{position: "fixed", top: "50%", left: "50%"}}/>
@@ -44,6 +51,15 @@ export function Lobby() {
 
     function addAI() {
         addAi()
+    }
+
+    function invitePlayer(data: EmailInvitation) {
+        if (data.type === 'username') {
+            invitePlayerWithUsername(data.usernameOrEmail, parseInt(id!))
+        }
+        if (data.type === 'email') {
+            invitePlayerWithEmail(data.usernameOrEmail, parseInt(id!))
+        }
     }
 
     return (
@@ -72,6 +88,9 @@ export function Lobby() {
                             </Button>
                         </>
                         :""}
+                    <Button disabled={lobby.players.length >= lobby.maxPlayers} variant="contained" onClick={() => setIsInviteScreenOpen(true)}>
+                        Send email invitation
+                    </Button>
                 </Stack>
                 <div style={{display: "flex", flexDirection: "row"}}>
                     {lobby.players.map((player: Player, index: number) => {
@@ -92,6 +111,7 @@ export function Lobby() {
                     })}
                 </div>
             </Box>
+            <EmailInvitationDialog isOpen={isInviteScreenOpen} onClose={() => setIsInviteScreenOpen(false)} onSubmit={invitePlayer}/>
         </Container>
     )
 }
