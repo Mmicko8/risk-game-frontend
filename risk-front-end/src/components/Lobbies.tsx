@@ -1,5 +1,5 @@
 import {Box, Chip, Stack, Avatar} from "@mui/material";
-import {Lobby} from "../model/Lobby";
+import {Lobby} from "../model/lobby/Lobby";
 import {styled} from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import GroupsIcon from '@mui/icons-material/Groups';
