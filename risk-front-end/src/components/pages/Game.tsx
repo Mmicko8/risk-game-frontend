@@ -32,6 +32,7 @@ import { fortify } from "../../services/fortifyService";
 import DiceBox from "@3d-dice/dice-box-threejs";
 import {Alert} from "../Alert";
 import GameOverDialog from "../dialogs/GameOverDialog";
+import {getPlayerInGameStats} from "../../services/playerService";
 
 
 export default function Game() {
@@ -212,7 +213,8 @@ export default function Game() {
                 <Grid item xs={2}>
                     {game.playersInGame.map((playerInGame) => {
                         return <PlayerFrame playerInGame={playerInGame} key={playerInGame.playerInGameId}
-                                            currentPlayerName={game.playersInGame[game.currentPlayerIndex].player.username}/>
+                                            currentPlayerName={game.playersInGame[game.currentPlayerIndex].player.username}
+                                            playerInGameStats={getPlayerInGameStats(game, playerInGame)}/>
                     })}
                 </Grid>
             </Grid>
