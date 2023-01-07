@@ -16,7 +16,7 @@ import AccessContext from "../../context/AccessContext";
 import {Alert} from "../Alert";
 import {invitePlayerWithEmail, invitePlayerWithUsername, startGameCall} from "../../services/lobbyService";
 import {getAvatar} from "../../services/utilsService";
-import EmailInvitationScreen from "../dialogs/EmailInvitationScreen";
+import EmailInvitationDialog from "../dialogs/EmailInvitationDialog";
 import {EmailInvitation} from "../../model/lobby/EmailInvitation";
 
 export function Lobby() {
@@ -111,7 +111,7 @@ export function Lobby() {
                     })}
                 </div>
             </Box>
-            <EmailInvitationScreen isOpen={isInviteScreenOpen} onClose={() => setIsInviteScreenOpen(false)} onSubmit={invitePlayer}/>
+            <EmailInvitationDialog isOpen={isInviteScreenOpen} onClose={() => setIsInviteScreenOpen(false)} onSubmit={invitePlayer}/>
         </Container>
     )
 }

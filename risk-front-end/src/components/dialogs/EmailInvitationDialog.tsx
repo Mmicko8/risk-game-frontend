@@ -21,7 +21,7 @@ interface EmailInvitationProps {
     onSubmit: (data: EmailInvitation) => void;
 }
 
-export default function EmailInvitationScreen({isOpen, onClose, onSubmit}: EmailInvitationProps) {
+export default function EmailInvitationDialog({isOpen, onClose, onSubmit}: EmailInvitationProps) {
     const {
         control,
         handleSubmit,
