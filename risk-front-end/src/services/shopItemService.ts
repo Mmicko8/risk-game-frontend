@@ -3,7 +3,6 @@ import {getAvatar} from "./utilsService";
 
 export async function getShopItems() {
     const shopItem = await axios.get(`/api/shopItem/forPlayer`);
-    console.log(shopItem.data);
     return shopItem.data;
 }
 
