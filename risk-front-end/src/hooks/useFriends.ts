@@ -20,7 +20,8 @@ export function useFriends() {
         isLoading: loadingRequests,
         isError: isErrorRequests,
         data: requests
-    } = useQuery(['requests'], () => getFriendRequests());
+    } = useQuery(['requests'], () => getFriendRequests(), {
+        refetchInterval: 8000});
 
     const {
         isError: errorAcceptingRequest,

@@ -13,7 +13,6 @@ import {SyntheticEvent, useState} from "react";
 import {sendFriendRequestCall} from "../../services/playerService";
 import AlertMui from "@mui/material/Alert";
 import {Snackbar} from "@mui/material";
-import {GameActionType} from "../../reducers/gameReducer";
 
 export enum FriendActionType {
     REMOVE = "REMOVE",
