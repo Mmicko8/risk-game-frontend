@@ -22,6 +22,12 @@ export default function CardSelector({isOpen, onClose, onSubmit, game}: CardSele
         else setSelectedCards([...selectedCards, cardName]);
     }
 
+    function handleSubmit() {
+        const cards = selectedCards;
+        setSelectedCards([]);
+        onSubmit(cards);
+    }
+
     return (
         <Dialog open={isOpen} onClose={onClose} maxWidth="md">
             <DialogContent>
@@ -36,7 +42,7 @@ export default function CardSelector({isOpen, onClose, onSubmit, game}: CardSele
                 </Grid>
             </DialogContent>
             <DialogActions>
-                <Button variant="contained" fullWidth onClick={() => onSubmit(selectedCards)}>
+                <Button variant="contained" fullWidth onClick={() => handleSubmit()}>
                     Exchange Cards
                 </Button>
             </DialogActions>

@@ -138,6 +138,7 @@ export default function Game() {
     }
 
     const handleExchangeCards = async (cardNames: string[]) => {
+        dispatch({type: GameActionType.CLOSE_CARD_SELECTOR})
         await exchangeCards(gameId, cardNames);
         await queryClient.invalidateQueries(["game", gameId]);
     }
