@@ -4,15 +4,13 @@ import {useContext, useState} from "react";
 import CreateLobby from "../dialogs/CreateLobby";
 import AccessContext from "../../context/AccessContext";
 import {CreateLobbyData, CreateLobbyDataNoUsername} from "../../model/lobby/CreateLobbyData";
-import {createLobbyCall, getJoinedLobbies, homeActions} from "../../services/lobbyService";
-import {useLobbies} from "../../hooks/useLobbies";
+import {createLobbyCall, homeActions} from "../../services/lobbyService";
+import {useHome} from "../../hooks/useHome";
 import {Lobbies} from "../Lobbies";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
-import {useQuery} from "react-query";
 import Loading from "../Loading";
 import {useNavigate} from "react-router-dom";
-import {getActiveGames} from "../../services/gameService";
 import {Games} from "../Games";
 import {Alert} from "../Alert";
 
@@ -20,11 +18,7 @@ export default function Home() {
     const navigate = useNavigate()
     const [isCreateLobbyOpen, setIsCreateLobbyOpen] = useState(false);
     const {username} = useContext(AccessContext);
-    const {isLoading, isError, lobbies} = useLobbies(20);
-    const {isLoading: loadingJoined, isError: errorJoined, data: joinedLobbies} = useQuery(['joinedLobbies', username],
-        () => getJoinedLobbies(username));
-    const {isLoading: loadingGames, isError: errorGettingGames, data: activeGames} = useQuery(['activeGames', username],
-        () => getActiveGames(username));
+    const {isLoading, isError, lobbies, joinedLobbies, activeGames} = useHome(20, username);
 
     async function createLobby(data: CreateLobbyDataNoUsername) {
         if (username) {
@@ -37,14 +31,11 @@ export default function Home() {
         }
     }
 
-    if (isLoading || loadingJoined || loadingGames) {
+    if (isLoading) {
         return <Loading/>
     }
-    if (isError || errorJoined) {
-        return <Alert message={"Error loading lobbies"}/>
-    }
-    if (errorGettingGames) {
-        return <Alert message={"Error loading games"}/>
+    if (isError) {
+        return <Alert message={"Error loading homepage"}/>
     }
 
     return (

@@ -7,7 +7,7 @@ import {ShopActionType} from "./pages/Shop";
 
 interface ShopItemProps {
     item: ShopItemModel;
-    actionType: ShopActionType;
+    actionType: string;
     action: (id: number) => void;
 }
 

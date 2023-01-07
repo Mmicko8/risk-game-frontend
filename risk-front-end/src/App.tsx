@@ -21,6 +21,7 @@ import { ForgotPassword } from './components/pages/identity/ForgotPassword';
 import ResetPassword from "./components/pages/identity/ResetPassword";
 import PwResetReqConfirmation from "./components/pages/identity/PwResetReqConfirmation";
 import LobbyFull from "./components/pages/LobbyFull";
+import Friends from "./components/pages/Friends";
 
 
 axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL
@@ -71,6 +72,7 @@ function App() {
                             <Route path="/leaderboard" element={<Leaderboard/>}/>
                             <Route path="/shop" element={<Shop/>}/>
                             <Route path="/profile" element={<Profile/>}/>
+                            <Route path="/friends" element={<Friends/>}/>
                         </Routes>
                     </BrowserRouter>
                 </AccessTokenContextProvider>
