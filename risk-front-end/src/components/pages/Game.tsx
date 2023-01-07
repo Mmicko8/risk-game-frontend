@@ -31,6 +31,7 @@ import {attack, hasTerritoryEnoughTroopsToAttack} from "../../services/attackSer
 import { fortify } from "../../services/fortifyService";
 import DiceBox from "@3d-dice/dice-box-threejs";
 import {Alert} from "../Alert";
+import GameOverDialog from "../dialogs/GameOverDialog";
 
 
 export default function Game() {
@@ -224,6 +225,8 @@ export default function Game() {
             {/*Dialog component for selecting cards to exchange*/}
             <CardSelector isOpen={state.isOpenCardSelector} onClose={() => dispatch({type: GameActionType.CLOSE_CARD_SELECTOR})}
                           onSubmit={handleExchangeCards} game={game}/>
+            {/*Dialog component for showing the game over screen*/}
+            <GameOverDialog game={game} isOpen={game.endTime !== null}/>
             {/*Temporary message for displaying user errors (ex: when user tries to attack from territory with only 1 troop)*/}
             <Snackbar open={state.isOpenErrorToast} autoHideDuration={4000} onClose={handleCloseSnackbar}>
                 <AlertMui onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
