@@ -41,12 +41,12 @@ export function NavigationDial() {
                 direction={"right"}
             >
                 {getNavigationActions().map((action) => (
-                    <SpeedDialAction
-                        key={action.name}
-                        icon={action.icon}
-                        tooltipTitle={action.name}
-                        onClick={action.action}
-                    />
+                        <SpeedDialAction
+                            key={action.name}
+                            icon={action.icon}
+                            tooltipTitle={action.name}
+                            onClick={action.action}
+                        />
                 ))}
             </SpeedDial>
         </div>
