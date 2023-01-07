@@ -41,3 +41,10 @@ export async function nextPhase(gameId: number) {
 export async function nextTurn(gameId: number) {
     await axios.put(`/api/game/${gameId}/nextTurn`)
 }
+
+export function getWinner(game: GameModel) {
+    for (const playerInGame of game.playersInGame) {
+        if (playerInGame.winner)
+            return playerInGame;
+    }
+}

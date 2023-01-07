@@ -5,7 +5,8 @@ import {PlayerCard} from "../PlayerCard";
 export interface PlayerInGame {
     playerInGameId: number;
     color: string;
-    player: Player
+    player: Player;
     remainingTroopsToReinforce: number;
-    playerCards: PlayerCard[]
+    playerCards: PlayerCard[];
+    winner: boolean;
 }

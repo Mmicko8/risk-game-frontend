@@ -10,4 +10,8 @@ export interface GameModel {
     turn: number;
     currentPlayerIndex: number;
     phase: string;
+    timer: number;
+    startTime: string;
+    endTime: string;
+    afkThreshold: string;
 }
