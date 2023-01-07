@@ -98,8 +98,6 @@ export default function Profile() {
         return <Alert message={"Error loading the profile"}/>
     }
 
-    // todo Instellen en bekijken van nickname, avatar, password reset, stats (# spelletjes, #gewonnen…),...
-
     const statSx = {color: theme.palette.primary.main, fontSize: "80px"}
     const stats = [
         {icon: <AchievementIcon sx={statSx}/>, amount: profile.achievements.length, text: "Achievements"},
