@@ -4,6 +4,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import FingerprintIcon from '@mui/icons-material/Fingerprint';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import PeopleIcon from '@mui/icons-material/People';
 import {useNavigate} from "react-router-dom";
 import {useContext} from "react";
 import AccessContext from "../context/AccessContext";
@@ -23,6 +24,7 @@ export function NavigationDial() {
         if (username) {
             actions.push({ icon: <ShoppingCartIcon/>, name: "Shop", action: () => navigate("/shop")})
             actions.push({ icon: <AccountBoxIcon />, name: "Profile", action: () => navigate("/profile")})
+            actions.push({ icon: <PeopleIcon />, name: "Social hub", action: () => navigate("/friends")})
             actions.push({ icon: <LogoutIcon />, name: "Logout", action: () => {removeUsername(); removeAccessToken();
                 navigate("/")}});
         } else {

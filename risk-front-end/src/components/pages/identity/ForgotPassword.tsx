@@ -11,6 +11,7 @@ import Button from "@mui/material/Button";
 import * as React from "react";
 import {ForgotPasswordData} from "../../../model/player/PasswordReset";
 import {forgotPassword} from "../../../services/identityService";
+import {FormControl} from "@mui/material";
 
 function Copyright(props: any) {
     return (
@@ -67,21 +68,23 @@ export function ForgotPassword() {
                     Forgot password
                 </Typography>
                 <Box component="form" onSubmit={handleSubmit(_onSubmit)} noValidate sx={{mt: 1}}>
-                    <Controller
-                        name="username"
-                        control={control}
-                        render={({field}) => (
-                            <TextField
-                                {...field}
-                                margin="normal"
-                                fullWidth
-                                id="username"
-                                label="Username"
-                                autoComplete="username"
-                                autoFocus
-                            />
-                        )}
-                    />
+                    <FormControl fullWidth sx={{mt: "10px"}}>
+                        <Controller
+                            name="username"
+                            control={control}
+                            render={({field}) => (
+                                <TextField
+                                    {...field}
+                                    margin="normal"
+                                    fullWidth
+                                    id="username"
+                                    label="Username"
+                                    autoComplete="username"
+                                    autoFocus
+                                />
+                            )}
+                        />
+                    </FormControl>
                     <div style={{color:"red"}}>{errors.username?.message}</div>
                     <Button
                         type="submit"

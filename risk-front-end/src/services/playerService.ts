@@ -18,3 +18,29 @@ export async function getLeaderboard() {
 export async function equipShopItem(playerId: number, shopItemId: number) {
     return await axios.put('/api/player/equip', {playerId, shopItemId});
 }
+
+export async function getFriends() {
+    const friends = await axios.get('/api/friend')
+    return friends.data;
+}
+
+export async function getFriendRequests() {
+    const friendRequests = await axios.get('/api/friend/requests')
+    return friendRequests.data
+}
+
+export async function sendFriendRequestCall(username: string) {
+    return await axios.put(`/api/friend/send/${username}`)
+}
+
+export async function acceptFriendRequest(username: string) {
+    return await axios.put(`/api/friend/accept/${username}`)
+}
+
+export async function declineFriendRequest(username: string) {
+    return await axios.put(`/api/friend/decline/${username}`)
+}
+
+export async function removeFriendRequest(username: string) {
+    return await axios.delete(`/api/friend/remove/${username}`)
+}

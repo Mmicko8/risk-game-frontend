@@ -1,7 +1,7 @@
 import {useNavigate, useParams} from "react-router-dom";
 import {useLobby} from "../../hooks/useLobby";
-import {CircularProgress, Stack, Chip} from "@mui/material";
-import {Player} from "../../model/player/Player";
+import {Stack, Chip} from "@mui/material";
+import {FriendInvite, Player} from "../../model/player/Player";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
@@ -18,11 +18,16 @@ import {invitePlayerWithEmail, invitePlayerWithUsername, startGameCall} from "..
 import {getAvatar} from "../../services/utilsService";
 import EmailInvitationScreen from "../dialogs/EmailInvitationScreen";
 import {EmailInvitation} from "../../model/lobby/EmailInvitation";
+import Loading from "../Loading";
+import {useFriends} from "../../hooks/useFriends";
+import FriendEmailInviteDialog from "../dialogs/FriendEmailInviteDialog";
 
 export function Lobby() {
     const navigate = useNavigate();
-    const [isInviteScreenOpen, setIsInviteScreenOpen] = useState(false);
+    const [isFriendInviteDialogOpen, setIsFriendInviteDialogOpen] = useState(false);
+    const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false);
     const {username} = useContext(AccessContext);
+    const {friends, isLoading: isLoadingFriends} = useFriends()
     const {id} = useParams<{ id: string }>();
     const {isLoading, isError, lobby, addAi, errorAddingAi} = useLobby(id!);
 
@@ -30,8 +35,8 @@ export function Lobby() {
         navigate("/sign_in")
     }
 
-    if (isLoading) {
-        return <CircularProgress sx={{position: "fixed", top: "50%", left: "50%"}}/>
+    if (isLoading || isLoadingFriends) {
+        return <Loading/>
     }
     if (isError || errorAddingAi) {
         return <Alert message={"Error loading the lobby"}/>
@@ -62,8 +67,12 @@ export function Lobby() {
         }
     }
 
+    function inviteFriend(data: FriendInvite) {
+        invitePlayerWithUsername(data.username, parseInt(id!))
+    }
+
     return (
-        <Container component="main" maxWidth="md">
+        <Container component="main" maxWidth="xl">
             <Box
                 sx={{
                     marginTop: 8,
@@ -88,8 +97,12 @@ export function Lobby() {
                             </Button>
                         </>
                         :""}
-                    <Button disabled={lobby.players.length >= lobby.maxPlayers} variant="contained" onClick={() => setIsInviteScreenOpen(true)}>
+                    <Button disabled={lobby.players.length >= lobby.maxPlayers} variant="contained" onClick={() => setIsInviteDialogOpen(true)}>
                         Send email invitation
+                    </Button>
+                    <Button disabled={lobby.players.length >= lobby.maxPlayers || friends.length <= 0} variant="contained"
+                            onClick={() => setIsFriendInviteDialogOpen(true)}>
+                        Send email invitation to friend
                     </Button>
                 </Stack>
                 <div style={{display: "flex", flexDirection: "row"}}>
@@ -111,7 +124,9 @@ export function Lobby() {
                     })}
                 </div>
             </Box>
-            <EmailInvitationScreen isOpen={isInviteScreenOpen} onClose={() => setIsInviteScreenOpen(false)} onSubmit={invitePlayer}/>
+            <FriendEmailInviteDialog isOpen={isFriendInviteDialogOpen} onClose={() => setIsFriendInviteDialogOpen(false)}
+                                     onSubmit={inviteFriend} friends={friends}/>
+            <EmailInvitationScreen isOpen={isInviteDialogOpen} onClose={() => setIsInviteDialogOpen(false)} onSubmit={invitePlayer}/>
         </Container>
     )
 }

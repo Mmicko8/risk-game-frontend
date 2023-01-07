@@ -42,9 +42,9 @@ export function addAiToGame(lobbyId: string) {
 }
 
 export function invitePlayerWithUsername(username: string, lobbyId: number) {
-    return axios.post('/api/invite/emailInviteWithUsername', {username: username, lobbyId: lobbyId})
+    axios.post('/api/invite/emailInviteWithUsername', {username: username, lobbyId: lobbyId})
 }
 
 export function invitePlayerWithEmail(email: string, lobbyId: number) {
-    return axios.post('/api/invite/emailInviteWithEmail', {email: email, lobbyId: lobbyId})
+    axios.post('/api/invite/emailInviteWithEmail', {email: email, lobbyId: lobbyId})
 }
