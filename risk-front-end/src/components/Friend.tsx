@@ -1,30 +1,41 @@
-import {Card, CardContent, CardMedia, Typography} from "@mui/material";
+import {Card, CardContent, CardMedia, Stack, Typography} from "@mui/material";
 import {itemNameToImage} from "../services/shopItemService";
 import Button from "@mui/material/Button";
 import React from "react";
 import {Player} from "../model/player/Player";
+import {FriendActionType} from "./pages/Friends";
 
 interface FriendProps {
-    player: Player
+    player: Player;
+    actionTypes: FriendActionType[];
+    handleFriendAction: (actionType: FriendActionType, username: string) => void;
 }
 
-export default function Friend({player}:FriendProps) {
+export default function Friend({player, actionTypes, handleFriendAction}:FriendProps) {
     return (
-        <Card sx={{width: "340px", display: "flex", justifyContent: "space-between"}}>
+        <Card sx={{display: "flex", justifyContent: "space-between", margin: "10px"}}>
             <CardContent sx={{display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "start"}}>
                 <div>
                     <Typography variant="h6" component="div">
                         {player.username}
                     </Typography>
-                    <Typography sx={{mb: 1.5}} color="text.secondary">
-                            Games won: {player.gamesWon}
-                    </Typography>
+                    {player.title === null ? ""
+                        :
+                        <Typography sx={{marginY: "8px", fontStyle: "italic"}}>"{player.title}"</Typography>}
                 </div>
-                {/*<Button onClick={() => action(item.shopItemId)}>{actionType}</Button>*/}
+                <Stack direction="row" spacing={2}>
+                    {actionTypes.map((actionType, index) => {
+                        return <Button key={index} size="small" variant="contained"
+                                       color={actionType === FriendActionType.ACCEPT ? "success" : "error"}
+                                       onClick={() => handleFriendAction(actionType, player.username)}>
+                            {actionType}
+                        </Button>
+                    })}
+                </Stack>
             </CardContent>
             <CardMedia
                 component="img"
-                sx={{width: 151}}
+                sx={{width: 130}}
                 image={itemNameToImage(player.profilePicture)}
                 alt={player.profilePicture}
             />
