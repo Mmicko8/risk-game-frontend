@@ -21,11 +21,13 @@ import {EmailInvitation} from "../../model/lobby/EmailInvitation";
 import Loading from "../Loading";
 import {useFriends} from "../../hooks/useFriends";
 import FriendEmailInviteDialog from "../dialogs/FriendEmailInviteDialog";
+import LocalPlayerDialog from "../dialogs/LocalPlayerDialog";
 
 export function Lobby() {
     const navigate = useNavigate();
     const [isFriendInviteDialogOpen, setIsFriendInviteDialogOpen] = useState(false);
     const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false);
+    const [isLocalPlayerDialogOpen, setLocalPlayerDialogOpen] = useState(false);
     const {username} = useContext(AccessContext);
     const {friends, isLoading: isLoadingFriends} = useFriends()
     const {id} = useParams<{ id: string }>();
@@ -104,6 +106,9 @@ export function Lobby() {
                             onClick={() => setIsFriendInviteDialogOpen(true)}>
                         Send email invitation to friend
                     </Button>
+                    <Button disabled={lobby.players.length >= lobby.maxPlayers} variant="contained" onClick={() => setLocalPlayerDialogOpen(true)}>
+                        Local players
+                    </Button>
                 </Stack>
                 <div style={{display: "flex", flexDirection: "row"}}>
                     {lobby.players.map((player: Player, index: number) => {
@@ -127,6 +132,7 @@ export function Lobby() {
             <FriendEmailInviteDialog isOpen={isFriendInviteDialogOpen} onClose={() => setIsFriendInviteDialogOpen(false)}
                                      onSubmit={inviteFriend} friends={friends}/>
             <EmailInvitationDialog isOpen={isInviteDialogOpen} onClose={() => setIsInviteDialogOpen(false)} onSubmit={invitePlayer}/>
+            <LocalPlayerDialog isOpen={isLocalPlayerDialogOpen} onClose={() => setLocalPlayerDialogOpen(false)} onSubmit={invitePlayer}/>
         </Container>
     )
 }
