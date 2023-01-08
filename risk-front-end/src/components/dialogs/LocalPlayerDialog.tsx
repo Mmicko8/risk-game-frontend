@@ -1,5 +1,5 @@
 import {EmailInvitation} from "../../model/lobby/EmailInvitation";
-import {Dialog} from "@mui/material";
+import {Dialog, DialogTitle} from "@mui/material";
 import * as React from "react";
 import {useLocalPlayers} from "../../hooks/useLocalPlayers";
 import Loading from "../Loading";
@@ -10,6 +10,7 @@ import {styled, useTheme} from '@mui/material/styles';
 import TableCell, {tableCellClasses} from "@mui/material/TableCell";
 import Button from "@mui/material/Button";
 import Table from "@mui/material/Table";
+import Typography from "@mui/material/Typography";
 
 interface LocalPlayProps {
     isOpen: boolean;
@@ -53,7 +54,7 @@ export default function LocalPlayerDialog({isOpen, onClose, onSubmit}: LocalPlay
 
     function getPlayers() {
         if(players.length === 0) {
-            return <h4 style={{"margin": 0, "textAlign": "center"}}>No local players found</h4>
+            return <Typography textAlign="center">No local players found</Typography>
         }else{
             return <>
                 {
@@ -81,7 +82,7 @@ export default function LocalPlayerDialog({isOpen, onClose, onSubmit}: LocalPlay
 
     return (
         <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="xs">
-            <h2 style={{"margin": 0, "textAlign": "center"}}>Local players</h2>
+            <DialogTitle>Local players</DialogTitle>
             {getPlayers()}
         </Dialog>
     );
