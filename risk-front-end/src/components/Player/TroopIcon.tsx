@@ -7,7 +7,7 @@ interface TroopIconProps {
 }
 
 export default function TroopIcon({color, troopCount}: TroopIconProps) {
-    return <Badge color="primary" overlap="circular" badgeContent={troopCount}>
+    return <Badge color="primary" overlap="circular" badgeContent={troopCount} data-testid="troopIconBadge">
         <div style={{height: "4vw", width: "4vw"}}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill={color}>
             <path

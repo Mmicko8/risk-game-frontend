@@ -1,7 +1,7 @@
 import {TerritoryModel} from "../model/territory/TerritoryModel";
 import {getFortifiableTerritories} from "./fortifyService";
 
-let allTerritories: TerritoryModel[] = [
+let territoriesTestData: TerritoryModel[] = [
     {
         "territoryId": 1,
         "name": "Ural",
@@ -298,10 +298,10 @@ let allTerritories: TerritoryModel[] = [
 ];
 
 test('testDataCheck', () => {
-    expect(allTerritories.length).toBe(42);
-    expect(allTerritories[2].name).toBe("Mongolia");
-    expect(allTerritories[41].neighbors.length).toBe(3);
-    expect(allTerritories[41].neighbors.toString()).toBe([{"name": "EastAfrica"}, {"name": "SouthAfrica"}, {"name": "NorthAfrica"}].toString());
+    expect(territoriesTestData.length).toBe(42);
+    expect(territoriesTestData[2].name).toBe("Mongolia");
+    expect(territoriesTestData[41].neighbors.length).toBe(3);
+    expect(territoriesTestData[41].neighbors.toString()).toBe([{"name": "EastAfrica"}, {"name": "SouthAfrica"}, {"name": "NorthAfrica"}].toString());
 })
 
 
@@ -311,7 +311,7 @@ test('getFortifiableTerritories', () => {
         "neighbors": [{"name": "Irkutsk"}, {"name": "Kamchatka"}, {"name": "Siberia"}]
     };
 
-    const result = getFortifiableTerritories(startTerritory, [startTerritory.name], allTerritories);
+    const result = getFortifiableTerritories(startTerritory, [startTerritory.name], territoriesTestData);
     expect(result.length).toBe(4);
     expect(result.includes("Kamchatka")).toBe(true);
     expect(result.includes("Alberta")).toBe(true);

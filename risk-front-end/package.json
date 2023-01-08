@@ -38,7 +38,7 @@
   },
   "jest": {
     "transformIgnorePatterns": [
-      "node_modules/(?!(axios|@3d-dice/dice-box-threejs))"
+      "node_modules\/(?!(axios|@3d-dice/dice-box-threejs))"
     ]
   },
   "eslintConfig": {
@@ -61,6 +61,7 @@
   },
   "devDependencies": {
     "cypress": "^12.3.0",
-    "dotenv": "^16.0.3"
+    "dotenv": "^16.0.3",
+    "jest": "^27.5.1"
   }
 }

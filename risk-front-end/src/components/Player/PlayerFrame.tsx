@@ -35,10 +35,10 @@ export default function PlayerFrame({playerInGame, currentPlayerName, playerInGa
                     src={getAvatar(playerInGame.player.profilePicture)}/>
             <div style={{display: "flex", flexDirection: "column", justifyContent: "space-around", alignItems: "center", height: "100%", width: "151px"}}>
                 <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
-                    <Typography sx={{fontWeight: "bold"}}>{playerInGame.player.username}</Typography>
+                    <Typography sx={{fontWeight: "bold"}} data-testid="playerFrame-username">{playerInGame.player.username}</Typography>
                     {playerInGame.player.title === null ? ""
                         :
-                        <Typography sx={{fontStyle: "italic", textAlign: "center", marginTop: "4px"}}>
+                        <Typography sx={{fontStyle: "italic", textAlign: "center", marginTop: "4px"}} data-testid="playerFrame-playerTitle">
                             "{playerInGame.player.title}"
                         </Typography>
                     }
@@ -46,15 +46,15 @@ export default function PlayerFrame({playerInGame, currentPlayerName, playerInGa
                 <div style={{display: "flex"}}>
                     <div style={{marginLeft: "10px", marginRight: "10px", textAlign: "center"}}>
                         <CardIcon sx={{fontSize: "28px"}}/>
-                        <span>{playerInGameStats.amountOfCards}</span>
+                        <span data-testid="playerFrame-cardAmount">{playerInGameStats.amountOfCards}</span>
                     </div>
                     <div style={{marginLeft: "10px", marginRight: "10px", textAlign: "center"}}>
                         <TerritoryIcon sx={{fontSize: "28px"}}/>
-                        <span>{playerInGameStats.amountOfTerritories}</span>
+                        <span data-testid="playerFrame-territoryAmount">{playerInGameStats.amountOfTerritories}</span>
                     </div>
                     <div style={{marginLeft: "10px", marginRight: "10px", textAlign: "center"}}>
                         <TroopIcon sx={{fontSize: "28px"}}/>
-                        <span>{playerInGameStats.amountOfTroops}</span>
+                        <span data-testid="playerFrame-troopAmount">{playerInGameStats.amountOfTroops}</span>
                     </div>
                 </div>
             </div>
