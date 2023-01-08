@@ -87,7 +87,7 @@ export default function CreateLobby({isOpen, onClose, onSubmit}: CreateLobbyProp
                     </Box>
                 </DialogContent>
                 <DialogActions>
-                    <Button type="submit" variant="contained" fullWidth>Create</Button>
+                    <Button type="submit" variant="contained" fullWidth data-testid="CreateLobbySubmit">Create</Button>
                 </DialogActions>
             </form>
         </Dialog>
