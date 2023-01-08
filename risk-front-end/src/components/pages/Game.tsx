@@ -84,7 +84,7 @@ export default function Game() {
             );
             defenderDB.initialize();
             setDefenderDiceBox(defenderDB);
-        }, 200);
+        }, 600);
     }, []);
 
     const handleCloseSnackbar = (event?: SyntheticEvent | Event, reason?: string) => {
@@ -97,6 +97,26 @@ export default function Game() {
     if (isError || !game) {
         return <Alert message={"Game state could not be loaded"}/>;
     }
+
+    function clearDiceBox() {
+        try {
+            attackerDiceBox.clearDice();
+            defenderDiceBox.clearDice();
+        }
+        catch (error) {
+            console.warn("Resetting diceboxes failed, error:")
+            console.log(error)
+        }
+    }
+
+    const clearDiceBoxDelayed = async () => {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                clearDiceBox()
+                resolve(true);
+            }, 4750);
+        });
+    };
 
     const troopSelectorFunction = async (troops: number, action: string) => {
         if (action === "Reinforce") {
@@ -116,8 +136,15 @@ export default function Game() {
             const updatedAttacker = getTerritoryData(newTers, attacker.name)!;
             const updatedDefender = getTerritoryData(newTers, defender.name)!;
 
-            attackerDiceBox.roll(diceResults.attackerDiceNotation);
-            defenderDiceBox.roll(diceResults.defenderDiceNotation);
+            try {
+                attackerDiceBox.roll(diceResults.attackerDiceNotation);
+                defenderDiceBox.roll(diceResults.defenderDiceNotation);
+                clearDiceBoxDelayed();
+            }
+            catch (error) {
+                console.warn("Dice rolls failed, error:")
+                console.log(error)
+            }
 
             if (updatedDefender.ownerId === attacker.ownerId)
                 dispatch({type: GameActionType.ANNEXATION_FORTIFICATION});
@@ -136,6 +163,7 @@ export default function Game() {
             }
         }
         else if (action === "Fortify") {
+            clearDiceBox();
             await fortify(gameId, state.selectedStartTerritory!.name, state.selectedEndTerritory!.name, troops);
             await queryClient.invalidateQueries(["game", gameId]);
             dispatch({type: GameActionType.RESET});
@@ -168,6 +196,7 @@ export default function Game() {
     }
 
     const handleNextPhase = async () => {
+        clearDiceBox();
         await nextPhase(gameId);
         await queryClient.invalidateQueries(["game", gameId]);
         dispatch({type: GameActionType.RESET});
