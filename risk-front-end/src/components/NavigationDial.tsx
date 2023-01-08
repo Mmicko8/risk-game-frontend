@@ -12,7 +12,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import LeaderboardIcon from '@mui/icons-material/Leaderboard';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import {logout} from "../services/playerService";
 
 export function NavigationDial() {
     const {username, removeUsername, removeAccessToken} = useContext(AccessContext);
@@ -27,15 +26,9 @@ export function NavigationDial() {
             actions.push({icon: <ShoppingCartIcon/>, name: "Shop", action: () => navigate("/shop")})
             actions.push({icon: <AccountBoxIcon/>, name: "Profile", action: () => navigate("/profile")})
             actions.push({icon: <PeopleIcon/>, name: "Social hub", action: () => navigate("/friends")})
-            actions.push({
-                icon: <LogoutIcon/>, name: "Logout", action: () => {
-                    logout().then(() => {
-                        removeUsername();
-                        removeAccessToken()
-                    });
+            actions.push({icon: <LogoutIcon/>, name: "Logout", action: () => { removeUsername(); removeAccessToken();
                     navigate("/")
-                }
-            });
+            }});
         } else {
             actions.push({icon: <PersonAddIcon/>, name: "Register", action: () => navigate("/register")})
             actions.push({icon: <FingerprintIcon/>, name: "Login", action: () => navigate("/sign_in")})

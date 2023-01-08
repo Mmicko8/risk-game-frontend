@@ -42,7 +42,6 @@ export function addAiToGame(lobbyId: string) {
 }
 
 export function invitePlayerWithUsername(username: string, lobbyId: number) {
-    console.log("Inviting player with username: " + username + " to lobby with id: " + lobbyId);
     axios.post('/api/invite/emailInviteWithUsername', {username: username, lobbyId: lobbyId})
 }
 

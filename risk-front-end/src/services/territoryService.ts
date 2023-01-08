@@ -15,11 +15,6 @@ export function getAllTerritoriesFromGameState(game: GameModel) {
     return territories;
 }
 
-export function getOwnerOfTerritory(game: GameModel, territoryName: string) {
-    const territory = getTerritoryData(getAllTerritoriesFromGameState(game), territoryName);
-    return territory?.ownerId;
-}
-
 export function getTerritoryData(territories: TerritoryModel[], territoryName: string) {
     for (let i = 0; i < territories.length; i++) {
         if (territories[i].name === territoryName) {
