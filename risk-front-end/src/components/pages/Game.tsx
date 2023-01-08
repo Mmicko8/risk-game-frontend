@@ -61,11 +61,14 @@ export default function Game() {
 
     useEffect(() => {
         setTimeout(() => {
+            const ATTACK_DICE_BACKGROUND_COLOR = "#700808"
+            const DEFEND_DICE_BACKGROUND_COLOR = "#000000"
+            const DICE_FOREGROUND_COLOR = "#ffffff"
+
             const attackerDB = new DiceBox("#attacker-dice-box", {
-                // todo no hardcoded colors
                     theme_customColorset: {
-                        background: "#700808",
-                        foreground: "#ffffff"
+                        background: ATTACK_DICE_BACKGROUND_COLOR,
+                        foreground: DICE_FOREGROUND_COLOR
                     }
                 }
             );
@@ -74,8 +77,8 @@ export default function Game() {
 
             const defenderDB = new DiceBox("#defender-dice-box", {
                     theme_customColorset: {
-                        background: "#000000",
-                        foreground: "#ffffff"
+                        background: DEFEND_DICE_BACKGROUND_COLOR,
+                        foreground: DICE_FOREGROUND_COLOR
                     }
                 }
             );

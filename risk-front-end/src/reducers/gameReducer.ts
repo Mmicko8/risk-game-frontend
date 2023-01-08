@@ -40,7 +40,6 @@ interface GameAction {
     payload?: GameActionPayload;
 }
 
-// todo refactor to not give GameModel since only needs currentPlayer
 interface GameActionPayload {
     game: GameModel; // BEWARE: contains territories BUT WITHOUT neighbors, use 'territories' from payload instead
     selectedTerritoryName: string;
