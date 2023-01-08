@@ -63,3 +63,12 @@ export async function declineFriendRequest(username: string) {
 export async function removeFriendRequest(username: string) {
     return await axios.delete(`/api/friend/remove/${username}`)
 }
+
+export async function getLocalPlayers() {
+    const players = await axios.get(`/api/player/getLocalPlayers`)
+    return players.data
+}
+
+export async function logout() {
+    await axios.put(`/api/player/logout`)
+}
