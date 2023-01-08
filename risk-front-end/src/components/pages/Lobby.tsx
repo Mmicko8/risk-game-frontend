@@ -89,10 +89,12 @@ export function Lobby() {
                     <Chip icon={<AccessTimeIcon/>} color="success" label={`Round timer: ${lobby.timer}s`}/>
                     {lobby.host.username === username?
                         <>
-                            <Button disabled={lobby.players.length < 2} variant="contained" onClick={() => startGame()}>
+                            <Button disabled={lobby.players.length < 2} variant="contained" data-testid="StartGame"
+                                    onClick={() => startGame()}>
                                 Start game
                             </Button>
-                            <Button disabled={lobby.players.length >= lobby.maxPlayers} variant="contained" onClick={() => addAI()}>
+                            <Button disabled={lobby.players.length >= lobby.maxPlayers} variant="contained" data-testid="AddAi"
+                                    onClick={() => addAI()}>
                                 Add AI
                             </Button>
                         </>

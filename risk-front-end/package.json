@@ -32,11 +32,13 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "cypress-open": "cypress open",
+    "cypress-run": "cypress run"
   },
   "jest": {
     "transformIgnorePatterns": [
-      "node_modules\/(?!(axios|@3d-dice/dice-box-threejs))"
+      "node_modules/(?!(axios|@3d-dice/dice-box-threejs))"
     ]
   },
   "eslintConfig": {
@@ -58,6 +60,7 @@
     ]
   },
   "devDependencies": {
+    "cypress": "^12.3.0",
     "dotenv": "^16.0.3"
   }
 }
