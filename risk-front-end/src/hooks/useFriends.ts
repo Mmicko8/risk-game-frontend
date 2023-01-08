@@ -14,7 +14,8 @@ export function useFriends() {
         isLoading: loadingFriends,
         isError: isErrorFriends,
         data: friends,
-    } = useQuery(['friends'], () => getFriends());
+    } = useQuery(['friends'], () => getFriends(), {
+        refetchInterval: 8000});
 
     const {
         isLoading: loadingRequests,
