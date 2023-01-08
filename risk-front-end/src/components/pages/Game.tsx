@@ -114,7 +114,7 @@ export default function Game() {
             setTimeout(() => {
                 clearDiceBox()
                 resolve(true);
-            }, 4750);
+            }, 5000);
         });
     };
 
@@ -196,13 +196,14 @@ export default function Game() {
     }
 
     const handleNextPhase = async () => {
-        clearDiceBox();
+        clearDiceBoxDelayed();
         await nextPhase(gameId);
         await queryClient.invalidateQueries(["game", gameId]);
         dispatch({type: GameActionType.RESET});
     }
 
     const handleNextTurn = async () => {
+        clearDiceBox();
         await nextTurn(gameId);
         await queryClient.invalidateQueries(["game", gameId]);
         dispatch({type: GameActionType.RESET});
