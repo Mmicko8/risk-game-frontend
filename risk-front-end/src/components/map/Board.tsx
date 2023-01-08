@@ -1,10 +1,10 @@
 
-import {getTerritoryDrawData} from "../services/territoryService";
-import Territory from "./map/Territory";
-import {TerritoryModel} from "../model/territory/TerritoryModel";
+import {getTerritoryDrawData} from "../../services/territoryService";
+import Territory from "./Territory";
+import {TerritoryModel} from "../../model/territory/TerritoryModel";
 import {useContext} from "react";
-import GameStateContext from "../context/GameStateContext";
-import {GameModel} from "../model/game/GameModel";
+import GameStateContext from "../../context/GameStateContext";
+import {GameModel} from "../../model/game/GameModel";
 import {useTheme} from "@mui/material/styles";
 
 interface BoardProps {

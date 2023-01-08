@@ -1,4 +1,4 @@
-import Board from "../Board";
+import Board from "../map/Board";
 import {useQuery, useQueryClient} from "react-query";
 import {
     exchangeCards,
