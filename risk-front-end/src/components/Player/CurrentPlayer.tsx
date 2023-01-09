@@ -13,6 +13,7 @@ import Typography from "@mui/material/Typography";
 import {getPhaseFromNumber, Phases} from "../../services/gameService";
 import TroopIndicator from "./TroopIcon";
 import {getAvatar} from "../../services/utilsService";
+import '../hideMobile.css'
 
 interface CurrentPlayerProps {
     nextPhase: () => void;
@@ -58,7 +59,7 @@ export default function CurrentPlayer({nextPhase, nextTurn, currentPhase, curren
             <Avatar src={getAvatar(currentPlayer.player.profilePicture)}
                     sx={{height: "5vw", width: "5vw", marginLeft: "0.5vw", border: `5px solid ${currentPlayer.color}`}}/>
             <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "space-around" ,height:"100%"}}>
-                <Typography>{currentPlayer.player.username}</Typography>
+                <Typography className="hidden-mobile">{currentPlayer.player.username}</Typography>
                 <Stepper activeStep={currentPhase} alternativeLabel>
                     {steps.map((label) => (
                         <Step key={label}>

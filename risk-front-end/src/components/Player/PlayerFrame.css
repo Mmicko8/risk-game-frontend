@@ -8,3 +8,10 @@
     align-items: center;
     background-color: rgba(98,98,98,0.53)
 }
+
+@media (max-width: 950px) {
+    .playerFrameBox{
+        background-color: rgba(0,0,0,0);
+        border: none!important;
+    }
+}
