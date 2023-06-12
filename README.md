@@ -1,12 +1,17 @@
 # Team 6 Front-end risk
 
-## Team Members
+## Front-End
+- [X] [Alexander Wuyts]
+- [X] [Michel Matthe]
 
-- [X] [Giuseppe Janssens]
+## Back-end
 - [X] [Branko Leemans]
 - [X] [Alexander Wuyts]
 - [X] [Janno Van Walleghem]
 - [X] [Michel Matthe]
+
+## AI
+- [X] [Giuseppe Janssens]
 
 ## Coach
 
